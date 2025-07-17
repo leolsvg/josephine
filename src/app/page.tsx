@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import CarteMenu from "@/components/carte";
 
 export default function Home() {
   return (
@@ -17,16 +18,16 @@ export default function Home() {
             <img className="w-8" src="/favicon.ico" alt="Logo de Joséphine" />
             <ul className="flex space-x-6 text-sm">
               <li>
-                <Link href="/menu">Menu</Link>
+                <a href="#menu">Menu</a>
               </li>
               <li>
-                <Link href="/fournisseurs">Fournisseurs</Link>
+                <a href="#fournisseurs">Fournisseurs</a>
               </li>
               <li>
-                <Link href="/reservation">Réserver</Link>
+                <a href="#reservation">Réserver</a>
               </li>
               <li>
-                <Link href="/contact">Contact</Link>
+                <a href="#contact">Contact</a>
               </li>
             </ul>
           </nav>
@@ -39,18 +40,33 @@ export default function Home() {
           </section>
         </div>
       </div>
-      <div>
-        <h1 className="text-3xl font-bold">Nos menus</h1>
-        <div className="w-80 flex ml-75 gap-4">
-          <img src="/img/lunch.png" alt="Nos menus" />
-          <img src="/img/wine-1.png" alt="Nos menus" />
-        </div>
-        <div className="flex justify-center gap-4">
-          <p>--)</p>
-          <p>(--</p>
+      <div className="bg-yellow-50">
+        <h1 className="text-black uppercase text-center text-[90px] font-bold">
+          menu & cartes
+        </h1>
+        <div
+          id="menu"
+          className="min-h-screen flex flex-wrap gap-8 justify-center items-center pb-1"
+        >
+          <CarteMenu
+            logoSrc="/favicon.ico"
+            titre="MENU DÉJEUNER"
+            href="/menu"
+          />
+          <CarteMenu
+            logoSrc="/favicon.ico"
+            titre="CARTE DU SOIR ET WEEK-END"
+            href="/carte"
+          />
+          <CarteMenu logoSrc="/favicon.ico" titre="NOS VINS" href="/dimanche" />
+          <CarteMenu
+            logoSrc="/favicon.ico"
+            titre="NOS BOISSONS"
+            href="/cocktails"
+          />
         </div>
       </div>
-      <div>
+      <div id="fournisseurs">
         <h1 className="text-3xl font-bold">Nos fournisseurs</h1>
         <p>
           Chez Joséphine, la qualité commence par le choix des bons partenaires.
@@ -135,7 +151,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div>
+            <div id="contact">
               <h2 className="text-lg font-semibold mb-2">Informations</h2>
               <ul>
                 <li>
