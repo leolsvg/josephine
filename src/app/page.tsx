@@ -14,11 +14,7 @@ export default function Home() {
         <div className="relative z-10">
           {/* NAVBAR */}
           <nav className="w-full p-4 flex justify-between items-center text-white">
-            <img
-              className="w-8"
-              src="/favicon.ico"
-              alt="Logo de Joséphine"
-            />
+            <img className="w-8" src="/favicon.ico" alt="Logo de Joséphine" />
             <ul className="flex space-x-6 text-sm">
               <li>
                 <Link href="/menu">Menu</Link>
@@ -28,6 +24,9 @@ export default function Home() {
               </li>
               <li>
                 <Link href="/reservation">Réserver</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
               </li>
             </ul>
           </nav>
@@ -66,6 +65,100 @@ export default function Home() {
       </div>
       <div>
         <h1 className="text-3xl font-bold">Nos avis clients</h1>
+      </div>
+      <div className="h-px bg-gray-300 my-8 w-full">
+        <footer className="bg-gray-900 text-white px-6 py-10">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Contact</h2>
+              <p className="mb-1">
+                <a
+                  href="mailto:contact@josephine.fr"
+                  className="hover:underline"
+                >
+                  contact@josephine.fr
+                </a>
+              </p>
+              <p className="mb-1">
+                <a href="tel:+33233873164" className="hover:underline">
+                  +33 2 33 87 31 64
+                </a>
+              </p>
+              <p>
+                <a
+                  href="https://maps.app.goo.gl/nUairufUmvsgi8mT6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  12 Place de la République, 50100 Cherbourg
+                </a>
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Suivez-nous</h2>
+              <div className="flex flex-col gap-4 mt-2">
+                <a
+                  href="https://www.instagram.com/josephine_cherbourg/"
+                  target="_blank"
+                  aria-label="Instagram"
+                >
+                  <img
+                    src="/img/instagram.svg"
+                    alt="Instagram"
+                    className="w-10 h-10 hover:opacity-75 transition"
+                  />
+                </a>
+                <a
+                  href="https://www.facebook.com/josephine.cherbourg"
+                  target="_blank"
+                  aria-label="Facebook"
+                >
+                  <img
+                    src="/img/facebook.svg"
+                    alt="Facebook"
+                    className="w-10 h-10 hover:opacity-75 transition"
+                  />
+                </a>
+                <a
+                  href="https://g.co/kgs/BFut6H7"
+                  target="_blank"
+                  aria-label="Google"
+                >
+                  <img
+                    src="/img/google.svg"
+                    alt="Google"
+                    className="w-10 h-10 hover:opacity-75 transition"
+                  />
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Informations</h2>
+              <ul>
+                <li>
+                  <a href="/mentions-legales" className="hover:underline">
+                    Mentions légales
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/politique-confidentialite"
+                    className="hover:underline"
+                  >
+                    Confidentialité
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-400">
+            © 2025 Restaurant Joséphine. Tous droits réservés.
+          </div>
+        </footer>
       </div>
     </div>
   );
