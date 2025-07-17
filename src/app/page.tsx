@@ -14,8 +14,13 @@ export default function Home() {
 
         <div className="relative z-10">
           {/* NAVBAR */}
-          <nav className="w-full p-4 flex justify-between items-center text-white">
-            <img className="w-8" src="/favicon.ico" alt="Logo de Joséphine" />
+          <nav className="w-full p-4 flex items-center justify-center text-white relative">
+            {/* Logo à gauche */}
+            <div className="absolute left-4">
+              <img className="w-8" src="/favicon.ico" alt="Logo de Joséphine" />
+            </div>
+
+            {/* Liens centrés */}
             <ul className="flex space-x-6 text-sm">
               <li>
                 <a href="#menu">Menu</a>
@@ -24,12 +29,17 @@ export default function Home() {
                 <a href="#fournisseurs">Fournisseurs</a>
               </li>
               <li>
-                <a href="#reservation">Réserver</a>
-              </li>
-              <li>
                 <a href="#contact">Contact</a>
               </li>
             </ul>
+
+            {/* Bouton "Réserver" fixé à l'écran */}
+            <a
+              className="fixed top-4 right-4 bg-[#000150] text-white pt-1.5 pb-1.5 pl-3 pr-3 rounded z-50 shadow-md"
+              href="#reservation"
+            >
+              Réserver
+            </a>
           </nav>
 
           {/* TEXTE ACCUEIL */}
