@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import CarteMenu from "@/components/carte";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Home() {
   return (
@@ -12,7 +14,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 top-2">
           {/* NAVBAR */}
           <nav className="w-full p-4 flex items-center justify-center text-white relative">
             {/* Logo à gauche */}
@@ -35,7 +37,7 @@ export default function Home() {
 
             {/* Bouton "Réserver" fixé à l'écran */}
             <a
-              className="fixed top-4 right-4 bg-[#000150] text-white pt-1.5 pb-1.5 pl-3 pr-3 rounded z-50 shadow-md"
+              className=" uppercase fixed top-4 right-4 bg-[#000150] text-white pt-1.5 pb-1.5 pl-6.5 pr-6.5 rounded z-50 shadow-md"
               href="#reservation"
             >
               Réserver
@@ -54,27 +56,27 @@ export default function Home() {
         <h1 className="text-black uppercase text-center text-[90px] font-bold">
           menu & cartes
         </h1>
-        <div
-          id="menu"
-          className="min-h-screen flex flex-wrap gap-8 justify-center items-center pb-1"
-        >
-          <CarteMenu
-            logoSrc="/favicon.ico"
-            titre="MENU DÉJEUNER"
-            href="/menu"
-          />
-          <CarteMenu
-            logoSrc="/favicon.ico"
-            titre="CARTE DU SOIR ET WEEK-END"
-            href="/carte"
-          />
-          <CarteMenu logoSrc="/favicon.ico" titre="NOS VINS" href="/dimanche" />
-          <CarteMenu
-            logoSrc="/favicon.ico"
-            titre="NOS BOISSONS"
-            href="/cocktails"
-          />
-        </div>
+        <ScrollArea className="w-full overflow-x-auto px-6" id="menu">
+          <div className="flex w-max gap-6 py-12">
+            <CarteMenu
+              logoSrc="/favicon.ico"
+              titre="MENU DÉJEUNER"
+              href="/menu"
+            />
+            <CarteMenu
+              logoSrc="/favicon.ico"
+              titre="CARTE DU SOIR ET WEEK-END"
+              href="/carte"
+            />
+            <CarteMenu logoSrc="/favicon.ico" titre="NOS VINS" href="/vins" />
+            <CarteMenu
+              logoSrc="/favicon.ico"
+              titre="NOS BOISSONS"
+              href="/boissons"
+            />
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
       <div id="fournisseurs">
         <h1 className="text-3xl font-bold">Nos fournisseurs</h1>
