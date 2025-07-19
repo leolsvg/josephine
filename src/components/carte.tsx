@@ -14,7 +14,7 @@ export default function CarteMenu({ logoSrc, titre, href }: CarteMenuProps) {
       {/* Logo et texte */}
       <div className="bg-white p-4 flex flex-col items-center justify-start h-[100%] gap-4">
         <Image src={logoSrc} alt="Logo" width={80} height={80} />
-        <h2 className="text-center text-sm text-[#937800] mt-4 uppercase">
+        <h2 className="text-center font-bold text-sm text-[#937800] mt-4 uppercase">
           {titre}
         </h2>
       </div>
