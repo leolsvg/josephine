@@ -29,7 +29,7 @@ export default function Home() {
         {/* Bouton "Réserver" à droite */}
         <a
           className="uppercase fixed top-4 right-4 bg-[#000150] text-white pt-1.5 pb-1.5 px-6 rounded z-50 shadow-md"
-          href="#reservation"
+          href="/reservation"
         >
           Réserver
         </a>
@@ -74,18 +74,22 @@ export default function Home() {
             <CarteMenu
               logoSrc="/favicon.ico"
               titre="MENU DÉJEUNER"
-              href="/carte/menu_lunch"
+              href="/les_cartes/menu_dejeuner"
             />
             <CarteMenu
               logoSrc="/favicon.ico"
               titre="CARTE DU SOIR ET WEEK-END"
-              href="/carte"
+              href="/les_cartes/soir_weekend"
             />
-            <CarteMenu logoSrc="/favicon.ico" titre="NOS VINS" href="/vins" />
+            <CarteMenu
+              logoSrc="/favicon.ico"
+              titre="NOS VINS"
+              href="/les_cartes/les_vins"
+            />
             <CarteMenu
               logoSrc="/favicon.ico"
               titre="NOS BOISSONS"
-              href="/boissons"
+              href="/les_cartes/les_boissons"
             />
           </div>
           <ScrollBar orientation="horizontal" />
