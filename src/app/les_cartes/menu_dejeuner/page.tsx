@@ -8,6 +8,7 @@ interface Plat {
   titre: string;
   description: string;
   categorie: string;
+  cartes: string;
 }
 
 export default function CartePage() {
@@ -15,7 +16,10 @@ export default function CartePage() {
 
   useEffect(() => {
     const fetchPlats = async () => {
-      const { data, error } = await supabase.from("menus").select("*");
+      const { data, error } = await supabase
+        .from("menus")
+        .select("*")
+        .eq("cartes", "midi"); // ✅ NE GARDER QUE LES PLATS DU MIDI
 
       if (error) {
         console.error("Erreur chargement menu :", error);
@@ -73,9 +77,7 @@ export default function CartePage() {
 
       {/* Contenu scrollable à gauche */}
       <div className="w-full lg:w-1/2 px-8 py-20 space-y-20">
-        <h1 className="text-[46px] mb-10 text-[#000000]">
-          Carte du soir et du week-end
-        </h1>
+        <h1 className="text-[46px] mb-10 text-[#000000]">Carte du déjeuner</h1>
 
         {categoriesOrdre.map((catKey) => {
           const platsCat = plats.filter((p) => p.categorie === catKey);

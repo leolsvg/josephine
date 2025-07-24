@@ -45,6 +45,11 @@ export default function AdminPage() {
             Voir les réservations
           </button>
         </Link>
+        <Link href="/admin/menu_edit">
+          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+            Modifier le menu
+          </button>
+        </Link>
 
         <button
           onClick={handleLogout}
