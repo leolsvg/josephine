@@ -52,7 +52,6 @@ export default function AdminReservations() {
 
   useEffect(() => {
     fetchData();
-
     const interval = setInterval(fetchData, 30000); // actualise toutes les 30s
     return () => clearInterval(interval);
   }, []);
@@ -113,8 +112,8 @@ export default function AdminReservations() {
   if (loading) return <p className="p-6">Chargement...</p>;
 
   return (
-    <div className="p-6 min-h-screen bg-gray-100">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-4 sm:p-6 min-h-screen bg-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 className="text-2xl font-bold">Réservations</h1>
         <button
           onClick={handleLogout}
@@ -134,7 +133,7 @@ export default function AdminReservations() {
       {showForm && (
         <form
           onSubmit={handleFormSubmit}
-          className="bg-white p-4 rounded shadow mb-6 space-y-2"
+          className="bg-white p-4 rounded shadow mb-6 space-y-3"
         >
           <input
             type="text"
@@ -196,49 +195,51 @@ export default function AdminReservations() {
       {reservations.length === 0 ? (
         <p>Aucune réservation pour le moment.</p>
       ) : (
-        <table className="w-full bg-white shadow rounded overflow-hidden">
-          <thead>
-            <tr className="bg-gray-200 text-left text-sm">
-              <th className="p-3">Nom</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Téléphone</th>
-              <th className="p-3">Personnes</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Notes</th>
-              <th className="p-3">Arrivé ?</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reservations.map((res) => (
-              <tr key={res.id} className="border-t text-sm">
-                <td className="p-3">{res.nom}</td>
-                <td className="p-3">{res.email}</td>
-                <td className="p-3">{res.telephone}</td>
-                <td className="p-3">{res.personnes}</td>
-                <td className="p-3">
-                  {new Date(res.date).toLocaleString("fr-FR")}
-                </td>
-                <td className="p-3">{res.notes}</td>
-                <td className="p-3 text-center">
-                  <input
-                    type="checkbox"
-                    checked={!!res.arrivee}
-                    onChange={() => handleCheckArrivee(res)}
-                  />
-                </td>
-                <td className="p-3">
-                  <button
-                    onClick={() => handleDelete(res.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs"
-                  >
-                    Supprimer
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full bg-white shadow rounded text-sm">
+            <thead>
+              <tr className="bg-gray-200 text-left">
+                <th className="p-3 min-w-[120px]">Nom</th>
+                <th className="p-3 min-w-[160px]">Email</th>
+                <th className="p-3 min-w-[120px]">Téléphone</th>
+                <th className="p-3 min-w-[90px]">Personnes</th>
+                <th className="p-3 min-w-[160px]">Date</th>
+                <th className="p-3 min-w-[160px]">Notes</th>
+                <th className="p-3 min-w-[70px] text-center">Arrivé ?</th>
+                <th className="p-3 min-w-[100px]">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {reservations.map((res) => (
+                <tr key={res.id} className="border-t">
+                  <td className="p-3">{res.nom}</td>
+                  <td className="p-3">{res.email}</td>
+                  <td className="p-3">{res.telephone}</td>
+                  <td className="p-3">{res.personnes}</td>
+                  <td className="p-3">
+                    {new Date(res.date).toLocaleString("fr-FR")}
+                  </td>
+                  <td className="p-3">{res.notes}</td>
+                  <td className="p-3 text-center">
+                    <input
+                      type="checkbox"
+                      checked={!!res.arrivee}
+                      onChange={() => handleCheckArrivee(res)}
+                    />
+                  </td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => handleDelete(res.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

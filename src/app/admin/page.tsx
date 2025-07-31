@@ -10,7 +10,6 @@ export default function AdminPage() {
   const [session, setSession] = useState<any>(null);
 
   useEffect(() => {
-    // Vérifie si l'utilisateur est connecté
     const checkSession = async () => {
       const {
         data: { session },
@@ -37,28 +36,33 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Espace Administrateur</h1>
-        <Link href="/admin/reservation">
-          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+      <h1 className="text-2xl font-bold mb-6 text-center sm:text-left">
+        Espace Administrateur
+      </h1>
+
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-start items-stretch max-w-3xl mx-auto">
+        <Link href="/admin/reservation" className="w-full sm:w-auto">
+          <button className="w-full bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
             Voir les réservations
           </button>
         </Link>
-        <Link href="/admin/menu_edit">
-          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+
+        <Link href="/admin/menu_edit" className="w-full sm:w-auto">
+          <button className="w-full bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
             Modifier le menu
           </button>
         </Link>
-        <Link href="/admin/parametre_reservation">
-          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
-            Modifier les paramètres de réservation
+
+        <Link href="/admin/parametre_reservation" className="w-full sm:w-auto">
+          <button className="w-full bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+            Paramètres de réservation
           </button>
         </Link>
 
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="w-full sm:w-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Déconnexion
         </button>

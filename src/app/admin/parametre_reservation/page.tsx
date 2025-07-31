@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function ParametresReservation() {
   const [params, setParams] = useState<{
-    id?: string; // UUID ici
+    id?: string;
     personnes_min_par_resa: number;
     personnes_max_par_resa: number;
     capacite_max_par_creneau: number;
@@ -66,59 +66,71 @@ export default function ParametresReservation() {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-12 space-y-4">
-      <h1 className="text-2xl font-bold">Paramètres de réservation</h1>
+    <div className="max-w-xl w-full mx-auto mt-12 px-4 sm:px-6">
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Paramètres de réservation
+      </h1>
 
-      <label className="block">
-        Nombre minimum de personnes :
-        <input
-          type="number"
-          name="personnes_min_par_resa"
-          value={params.personnes_min_par_resa}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-      </label>
+      <div className="space-y-4">
+        <div>
+          <label className="block font-medium mb-1">
+            Nombre minimum de personnes :
+          </label>
+          <input
+            type="number"
+            name="personnes_min_par_resa"
+            value={params.personnes_min_par_resa}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
 
-      <label className="block">
-        Nombre maximum de personnes pour une réservation :
-        <input
-          type="number"
-          name="personnes_max_par_resa"
-          value={params.personnes_max_par_resa}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-      </label>
+        <div>
+          <label className="block font-medium mb-1">
+            Nombre maximum de personnes pour une réservation :
+          </label>
+          <input
+            type="number"
+            name="personnes_max_par_resa"
+            value={params.personnes_max_par_resa}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
 
-      <label className="block">
-        Capacité maximum par créneau :
-        <input
-          type="number"
-          name="capacite_max_par_creneau"
-          value={params.capacite_max_par_creneau}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-      </label>
+        <div>
+          <label className="block font-medium mb-1">
+            Capacité maximum par créneau :
+          </label>
+          <input
+            type="number"
+            name="capacite_max_par_creneau"
+            value={params.capacite_max_par_creneau}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
 
-      <label className="block">
-        Capacité maximum par service :
-        <input
-          type="number"
-          name="capacite_max_par_service"
-          value={params.capacite_max_par_service}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-      </label>
+        <div>
+          <label className="block font-medium mb-1">
+            Capacité maximum par service :
+          </label>
+          <input
+            type="number"
+            name="capacite_max_par_service"
+            value={params.capacite_max_par_service}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
 
-      <button
-        onClick={handleSave}
-        className="bg-black text-white p-2 rounded hover:bg-gray-800"
-      >
-        Sauvegarder
-      </button>
+        <button
+          onClick={handleSave}
+          className="w-full sm:w-auto mt-4 bg-[#000150] text-white px-6 py-2 rounded hover:bg-[#1a1a80] transition"
+        >
+          Sauvegarder
+        </button>
+      </div>
     </div>
   );
 }

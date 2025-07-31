@@ -46,7 +46,7 @@ export default function CartePage() {
   const categoriesOrdre = ["partager", "entree", "plat", "fromage", "dessert"];
 
   return (
-    <div className="relative flex">
+    <div className="relative flex flex-col lg:flex-row">
       {/* Bouton retour accueil */}
       <a
         href="/"
@@ -69,15 +69,17 @@ export default function CartePage() {
         </svg>
       </a>
 
-      {/* Image fixe à droite */}
+      {/* Image : fixe à droite sur grand écran, en haut sinon */}
       <div
-        className="hidden lg:block w-1/2 h-screen fixed right-0 top-0 bg-cover bg-center"
+        className="w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
         style={{ backgroundImage: "url('/img/bar.jpg')" }}
       />
 
-      {/* Contenu scrollable à gauche */}
-      <div className="w-full lg:w-1/2 px-8 py-20 space-y-20">
-        <h1 className="text-[46px] mb-10 text-[#000000]">Carte du déjeuner</h1>
+      {/* Contenu scrollable */}
+      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-20 lg:mr-auto">
+        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-[#000000] text-center lg:text-left">
+          Carte du déjeuner
+        </h1>
 
         {categoriesOrdre.map((catKey) => {
           const platsCat = plats.filter((p) => p.categorie === catKey);
@@ -85,14 +87,14 @@ export default function CartePage() {
 
           return (
             <section key={catKey}>
-              <h2 className="text-3xl font-bold mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#000000]">
                 {titresCategorie[catKey]}
               </h2>
               <ul className="space-y-4">
                 {platsCat.map((plat) => (
                   <li
                     key={plat.id}
-                    className="flex justify-between border-b pb-2 text-black"
+                    className="flex justify-between border-b pb-2 text-black text-sm sm:text-base"
                   >
                     <p>{plat.description}</p>
                   </li>
@@ -106,7 +108,7 @@ export default function CartePage() {
       {/* Bouton Réserver */}
       <a
         href="/#reservation"
-        className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-6 py-3 rounded-full shadow-lg hover:bg-[#1a1a80] transition"
+        className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver
       </a>
