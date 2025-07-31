@@ -29,29 +29,32 @@ export default function AdminReservations() {
 
   const router = useRouter();
 
+  const fetchData = async () => {
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
+      router.push("/login");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("reservation")
+      .select("*")
+      .order("date", { ascending: true });
+
+    if (error) {
+      console.error("Erreur de récupération :", error.message);
+    } else {
+      setReservations(data as Reservation[]);
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        router.push("/login");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("reservation")
-        .select("*")
-        .order("date", { ascending: true });
-
-      if (error) {
-        console.error("Erreur de récupération :", error.message);
-      } else {
-        setReservations(data as Reservation[]);
-      }
-
-      setLoading(false);
-    };
-
     fetchData();
+
+    const interval = setInterval(fetchData, 30000); // actualise toutes les 30s
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = async () => {
@@ -60,6 +63,11 @@ export default function AdminReservations() {
   };
 
   const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cette réservation ?"
+    );
+    if (!confirmDelete) return;
+
     const { error } = await supabase.from("reservation").delete().eq("id", id);
     if (error) {
       console.error("Erreur lors de la suppression :", error.message);
@@ -77,7 +85,6 @@ export default function AdminReservations() {
     if (error) {
       console.error("Erreur maj arrivée:", error.message);
     } else {
-      console.log("MAJ OK", { id: res.id, nouveauStatut: !res.arrivee });
       setReservations((prev) =>
         prev.map((r) => (r.id === res.id ? { ...r, arrivee: !res.arrivee } : r))
       );
@@ -99,11 +106,7 @@ export default function AdminReservations() {
         notes: "",
       });
       setShowForm(false);
-      const { data } = await supabase
-        .from("reservation")
-        .select("*")
-        .order("date", { ascending: true });
-      setReservations(data as Reservation[]);
+      fetchData();
     }
   };
 

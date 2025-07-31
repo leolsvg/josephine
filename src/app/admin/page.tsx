@@ -50,6 +50,11 @@ export default function AdminPage() {
             Modifier le menu
           </button>
         </Link>
+        <Link href="/admin/parametre_reservation">
+          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+            Modifier les paramètres de réservation
+          </button>
+        </Link>
 
         <button
           onClick={handleLogout}
@@ -57,13 +62,6 @@ export default function AdminPage() {
         >
           Déconnexion
         </button>
-      </div>
-
-      <div className="bg-white p-6 rounded shadow">
-        <p>
-          Bienvenue dans la page admin. Tu peux afficher ici les réservations,
-          modifier le menu, etc.
-        </p>
       </div>
     </div>
   );
