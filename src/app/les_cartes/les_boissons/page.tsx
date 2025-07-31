@@ -71,8 +71,8 @@ export default function CartePage() {
   ];
 
   return (
-    <div className="relative flex">
-      {/* Image fixe à droite */}
+    <div className="relative flex flex-col lg:flex-row">
+      {/* Bouton retour en haut à gauche */}
       <a
         href="/"
         className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition"
@@ -93,26 +93,30 @@ export default function CartePage() {
           />
         </svg>
       </a>
+
+      {/* Image */}
       <div
-        className="hidden lg:block w-1/2 h-screen fixed right-0 top-0 bg-cover bg-center"
+        className="w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
         style={{ backgroundImage: "url('/img/bar.jpg')" }}
       />
 
-      {/* Contenu scrollable à gauche */}
-      <div className="w-full lg:w-1/2 px-8 py-20 space-y-20">
-        {/* ✅ TITRE PRINCIPAL */}
-        <h1 className="text-[46px]  mb-10  text-[#000000]">
+      {/* Contenu scrollable */}
+      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-20 lg:ml-0 lg:mr-auto">
+        {/* Titre principal */}
+        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-[#000000] text-center lg:text-left">
           Carte du soir et du week-end
         </h1>
 
         {categories.map((cat, index) => (
           <section key={index}>
-            <h2 className="text-3xl font-bold mb-6">{cat.title}</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#000000]">
+              {cat.title}
+            </h2>
             <ul className="space-y-4">
               {cat.items.map((item, i) => (
                 <li
                   key={i}
-                  className="flex justify-between border-b pb-2 text-black"
+                  className="flex justify-between border-b pb-2 text-black text-sm sm:text-base"
                 >
                   <p className={item.italic ? "italic" : ""}>{item.name}</p>
                   <span className="font-semibold">{item.price}</span>
@@ -122,10 +126,11 @@ export default function CartePage() {
           </section>
         ))}
       </div>
-      {/* Bouton Réserver en bas */}
+
+      {/* Bouton réserver */}
       <a
         href="/#reservation"
-        className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-6 py-3 rounded-full shadow-lg hover:bg-[#1a1a80] transition"
+        className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver
       </a>

@@ -57,16 +57,16 @@ export default function AdminHoraires() {
   }
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-center">
         Gestion des horaires d’ouverture
       </h1>
 
-      <div className="flex gap-4 mb-6 items-end">
+      <div className="flex flex-wrap gap-4 mb-6 items-end">
         <select
           value={jour}
           onChange={(e) => setJour(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="border p-2 rounded w-full sm:w-auto flex-1 min-w-[120px]"
         >
           {[
             "lundi",
@@ -87,57 +87,59 @@ export default function AdminHoraires() {
           type="time"
           value={heureDebut}
           onChange={(e) => setHeureDebut(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full sm:w-auto flex-1 min-w-[100px]"
         />
         <input
           type="time"
           value={heureFin}
           onChange={(e) => setHeureFin(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full sm:w-auto flex-1 min-w-[100px]"
         />
 
         <button
           onClick={ajouterHoraire}
-          className="bg-black text-white px-4 py-2 rounded"
+          className="bg-black text-white px-4 py-2 rounded w-full sm:w-auto"
         >
           Ajouter
         </button>
       </div>
 
-      <table className="w-full border text-left">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2">Jour</th>
-            <th className="p-2">Heure début</th>
-            <th className="p-2">Heure fin</th>
-            <th className="p-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {horaires.map((horaire) => (
-            <tr key={horaire.id} className="border-t">
-              <td className="p-2 capitalize">{horaire.jour}</td>
-              <td className="p-2">{horaire.heure_debut}</td>
-              <td className="p-2">{horaire.heure_fin}</td>
-              <td className="p-2">
-                <button
-                  onClick={() => supprimerHoraire(horaire.id)}
-                  className="text-red-600 hover:underline"
-                >
-                  Supprimer
-                </button>
-              </td>
+      <div className="overflow-auto">
+        <table className="w-full border text-left text-sm">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-2">Jour</th>
+              <th className="p-2">Heure début</th>
+              <th className="p-2">Heure fin</th>
+              <th className="p-2">Action</th>
             </tr>
-          ))}
-          {horaires.length === 0 && (
-            <tr>
-              <td colSpan={4} className="p-4 text-center text-gray-500">
-                Aucun horaire pour l’instant.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {horaires.map((horaire) => (
+              <tr key={horaire.id} className="border-t">
+                <td className="p-2 capitalize">{horaire.jour}</td>
+                <td className="p-2">{horaire.heure_debut}</td>
+                <td className="p-2">{horaire.heure_fin}</td>
+                <td className="p-2">
+                  <button
+                    onClick={() => supprimerHoraire(horaire.id)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {horaires.length === 0 && (
+              <tr>
+                <td colSpan={4} className="p-4 text-center text-gray-500">
+                  Aucun horaire pour l’instant.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

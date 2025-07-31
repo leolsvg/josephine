@@ -71,7 +71,6 @@ export default function ModifierCartePage() {
     updatePlat: (id: string, field: string, value: string) => void,
     deletePlat: (id: string) => void
   ) => {
-    // Trier les plats par ordre de catégories défini
     const platsTries = [...data].sort(
       (a, b) =>
         categoriesOrdre.indexOf(a.categorie) -
@@ -79,10 +78,10 @@ export default function ModifierCartePage() {
     );
 
     return (
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border rounded">
+      <div className="overflow-x-auto border rounded">
+        <table className="min-w-full bg-white text-sm">
           <thead>
-            <tr className="bg-gray-200 text-left">
+            <tr className="bg-gray-100 text-left">
               <th className="p-2">Description</th>
               <th className="p-2">Prix</th>
               <th className="p-2">Catégorie</th>
@@ -93,29 +92,29 @@ export default function ModifierCartePage() {
           <tbody>
             {platsTries.map((plat) => (
               <tr key={plat.id} className="border-t">
-                <td className="p-2">
+                <td className="p-2 min-w-[200px]">
                   <input
                     defaultValue={plat.description}
                     onBlur={(e) =>
                       updatePlat(plat.id, "description", e.target.value)
                     }
-                    className="w-full border px-2 py-1"
+                    className="w-full border px-2 py-1 rounded"
                   />
                 </td>
-                <td className="p-2">
+                <td className="p-2 min-w-[80px]">
                   <input
                     defaultValue={plat.prix}
                     onBlur={(e) => updatePlat(plat.id, "prix", e.target.value)}
-                    className="w-full border px-2 py-1"
+                    className="w-full border px-2 py-1 rounded"
                   />
                 </td>
-                <td className="p-2">
+                <td className="p-2 min-w-[120px]">
                   <select
                     defaultValue={plat.categorie}
                     onBlur={(e) =>
                       updatePlat(plat.id, "categorie", e.target.value)
                     }
-                    className="w-full border px-2 py-1"
+                    className="w-full border px-2 py-1 rounded"
                   >
                     <option value="partager">À partager</option>
                     <option value="entree">Entrée</option>
@@ -124,22 +123,22 @@ export default function ModifierCartePage() {
                     <option value="dessert">Dessert</option>
                   </select>
                 </td>
-                <td className="p-2">
+                <td className="p-2 min-w-[100px]">
                   <select
                     defaultValue={plat.cartes}
                     onBlur={(e) =>
                       updatePlat(plat.id, "cartes", e.target.value)
                     }
-                    className="w-full border px-2 py-1"
+                    className="w-full border px-2 py-1 rounded"
                   >
                     <option value="midi">Midi</option>
                     <option value="soir">Soir</option>
                   </select>
                 </td>
-                <td className="p-2">
+                <td className="p-2 min-w-[90px]">
                   <button
                     onClick={() => deletePlat(plat.id)}
-                    className="text-red-500 hover:underline"
+                    className="text-red-600 hover:underline"
                   >
                     Supprimer
                   </button>
@@ -155,14 +154,14 @@ export default function ModifierCartePage() {
   if (loading) return <div className="p-8">Chargement...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex justify-between items-center mb-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Modifier la carte</h1>
       </div>
 
       {/* 🟡 MENU MIDI */}
       <div className="mb-10">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
           <h2 className="text-xl font-semibold">Menu du midi</h2>
           <button
             onClick={() => ajouterPlat("midi")}
@@ -181,7 +180,7 @@ export default function ModifierCartePage() {
 
       {/* 🔵 MENU SOIR */}
       <div>
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
           <h2 className="text-xl font-semibold">Menu du soir</h2>
           <button
             onClick={() => ajouterPlat("soir")}
