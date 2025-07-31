@@ -256,15 +256,12 @@ export default function Home() {
             <h2 className="text-lg font-semibold mb-2">Informations</h2>
             <ul>
               <li>
-                <a href="/mentions-legales" className="hover:underline">
+                <a href="/mentions_legales" className="hover:underline">
                   Mentions légales
                 </a>
               </li>
               <li>
-                <a
-                  href="/politique-confidentialite"
-                  className="hover:underline"
-                >
+                <a href="/confidentialite" className="hover:underline">
                   Confidentialité
                 </a>
               </li>
