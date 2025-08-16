@@ -1,15 +1,33 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-const categoriesOrdre = ["partager", "entree", "plat", "fromage", "dessert"];
+const categoriesOrdre = [
+  "partager",
+  "entree",
+  "plat",
+  "fromage",
+  "dessert",
+] as const;
+
+type Categorie = (typeof categoriesOrdre)[number];
+type Carte = "midi" | "soir";
+
+interface MenuItem {
+  id: string;
+  description: string;
+  prix: string | number;
+  categorie: Categorie;
+  cartes: Carte;
+}
 
 export default function ModifierCartePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
-  const [plats, setPlats] = useState<any[]>([]);
+  const [, setSession] = useState<unknown>(null); // on n'utilise pas session → on ignore la 1ère valeur
+  const [plats, setPlats] = useState<MenuItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
@@ -17,38 +35,60 @@ export default function ModifierCartePage() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+
       if (!session) {
         router.push("/login");
-      } else {
-        setSession(session);
-        fetchPlats();
-        setLoading(false);
+        return;
       }
+
+      setSession(session);
+      await fetchPlats();
+      setLoading(false);
     };
+
     checkSession();
-  }, []);
+  }, [router]); // ajoute router pour éviter le warning react-hooks/exhaustive-deps
 
   const fetchPlats = async () => {
     const { data, error } = await supabase.from("menus").select("*");
-    if (!error) setPlats(data || []);
+    if (error) {
+      console.error("❌ Erreur fetch menus :", error.message);
+      return;
+    }
+    setPlats((data as MenuItem[]) || []);
   };
 
-  const updatePlat = async (id: string, field: string, value: string) => {
+  const updatePlat = async (
+    id: string,
+    field: keyof MenuItem,
+    value: string
+  ) => {
     const { error } = await supabase
       .from("menus")
       .update({ [field]: value })
       .eq("id", id);
     if (error) {
       console.error("❌ Erreur update :", error.message);
+      return;
     }
+    // Optionnel: mettre à jour localement pour une sensation instantanée
+    setPlats((prev) =>
+      prev.map((p) =>
+        p.id === id ? ({ ...p, [field]: value } as MenuItem) : p
+      )
+    );
   };
 
   const deletePlat = async (id: string) => {
-    await supabase.from("menus").delete().eq("id", id);
-    fetchPlats();
+    const { error } = await supabase.from("menus").delete().eq("id", id);
+    if (error) {
+      console.error("❌ Erreur delete :", error.message);
+      return;
+    }
+    setPlats((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const ajouterPlat = async (type: "midi" | "soir") => {
+  const ajouterPlat = async (type: Carte) => {
     setIsAdding(true);
     const { data, error } = await supabase
       .from("menus")
@@ -60,16 +100,22 @@ export default function ModifierCartePage() {
       })
       .select();
 
-    if (!error && data) {
-      fetchPlats();
+    if (error) {
+      console.error("❌ Erreur insert :", error.message);
+      setIsAdding(false);
+      return;
+    }
+
+    if (data && data.length) {
+      setPlats((prev) => [...prev, data[0] as MenuItem]);
     }
     setIsAdding(false);
   };
 
   const renderTable = (
-    data: any[],
-    updatePlat: (id: string, field: string, value: string) => void,
-    deletePlat: (id: string) => void
+    data: MenuItem[],
+    updatePlatFn: (id: string, field: keyof MenuItem, value: string) => void,
+    deletePlatFn: (id: string) => void
   ) => {
     const platsTries = [...data].sort(
       (a, b) =>
@@ -96,15 +142,17 @@ export default function ModifierCartePage() {
                   <input
                     defaultValue={plat.description}
                     onBlur={(e) =>
-                      updatePlat(plat.id, "description", e.target.value)
+                      updatePlatFn(plat.id, "description", e.target.value)
                     }
                     className="w-full border px-2 py-1 rounded"
                   />
                 </td>
                 <td className="p-2 min-w-[80px]">
                   <input
-                    defaultValue={plat.prix}
-                    onBlur={(e) => updatePlat(plat.id, "prix", e.target.value)}
+                    defaultValue={String(plat.prix)}
+                    onBlur={(e) =>
+                      updatePlatFn(plat.id, "prix", e.target.value)
+                    }
                     className="w-full border px-2 py-1 rounded"
                   />
                 </td>
@@ -112,7 +160,11 @@ export default function ModifierCartePage() {
                   <select
                     defaultValue={plat.categorie}
                     onBlur={(e) =>
-                      updatePlat(plat.id, "categorie", e.target.value)
+                      updatePlatFn(
+                        plat.id,
+                        "categorie",
+                        e.target.value as Categorie
+                      )
                     }
                     className="w-full border px-2 py-1 rounded"
                   >
@@ -127,7 +179,7 @@ export default function ModifierCartePage() {
                   <select
                     defaultValue={plat.cartes}
                     onBlur={(e) =>
-                      updatePlat(plat.id, "cartes", e.target.value)
+                      updatePlatFn(plat.id, "cartes", e.target.value as Carte)
                     }
                     className="w-full border px-2 py-1 rounded"
                   >
@@ -137,7 +189,7 @@ export default function ModifierCartePage() {
                 </td>
                 <td className="p-2 min-w-[90px]">
                   <button
-                    onClick={() => deletePlat(plat.id)}
+                    onClick={() => deletePlatFn(plat.id)}
                     className="text-red-600 hover:underline"
                   >
                     Supprimer

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function CartePage() {
   const categories = [
     {
@@ -73,7 +75,7 @@ export default function CartePage() {
   return (
     <div className="relative flex flex-col lg:flex-row">
       {/* Bouton retour en haut à gauche */}
-      <a
+      <Link
         href="/"
         className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition"
         aria-label="Retour à l'accueil"
@@ -92,7 +94,7 @@ export default function CartePage() {
             d="M15 19l-7-7 7-7"
           />
         </svg>
-      </a>
+      </Link>
 
       {/* Image */}
       <div
@@ -107,15 +109,15 @@ export default function CartePage() {
           Carte du soir et du week-end
         </h1>
 
-        {categories.map((cat, index) => (
-          <section key={index}>
+        {categories.map((cat) => (
+          <section key={cat.title}>
             <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#000000]">
               {cat.title}
             </h2>
             <ul className="space-y-4">
-              {cat.items.map((item, i) => (
+              {cat.items.map((item) => (
                 <li
-                  key={i}
+                  key={item.name}
                   className="flex justify-between border-b pb-2 text-black text-sm sm:text-base"
                 >
                   <p className={item.italic ? "italic" : ""}>{item.name}</p>
@@ -128,12 +130,12 @@ export default function CartePage() {
       </div>
 
       {/* Bouton réserver */}
-      <a
+      <Link
         href="/#reservation"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver
-      </a>
+      </Link>
     </div>
   );
 }

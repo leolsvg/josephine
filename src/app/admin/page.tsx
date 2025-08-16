@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function AdminPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
+  const [, setSession] = useState<unknown>(null); // session supprimée de la lecture
 
   useEffect(() => {
     const checkSession = async () => {
@@ -24,7 +24,7 @@ export default function AdminPage() {
     };
 
     checkSession();
-  }, []);
+  }, [router]); // on ajoute router dans les dépendances
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

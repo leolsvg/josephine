@@ -6,6 +6,7 @@ import CarteMenu from "@/components/carte";
 import { motion } from "framer-motion";
 import Fournisseurs from "@/components/fournisseur";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,17 +16,23 @@ export default function Home() {
       {/* NAVBAR pour desktop */}
       <nav className="hidden md:flex fixed top-0 left-0 w-full p-4 md:p-6 items-center justify-center text-black font z-50 bg-white/80 backdrop-blur-md shadow-md">
         <div className="absolute left-4">
-          <img className="w-8" src="/favicon.ico" alt="Logo de Joséphine" />
+          <Image
+            className="w-8"
+            width={48}
+            height={48}
+            src="/favicon.ico"
+            alt="Logo de Joséphine"
+          />
         </div>
         <ul className="flex space-x-6 text-sm">
           <li>
-            <a href="#menu">Menu</a>
+            <Link href="#menu">Menu</Link>
           </li>
           <li>
-            <a href="#fournisseurs">Fournisseurs</a>
+            <Link href="#fournisseurs">Fournisseurs</Link>
           </li>
           <li>
-            <a href="#contact">Contact</a>
+            <Link href="#contact">Contact</Link>
           </li>
         </ul>
       </nav>
@@ -43,37 +50,37 @@ export default function Home() {
 
       {menuOpen && (
         <div className="md:hidden fixed top-16 left-4 bg-white p-4 rounded shadow z-50 space-y-2">
-          <a
+          <Link
             href="#menu"
             onClick={() => setMenuOpen(false)}
             className="block text-sm text-black"
           >
             Menu
-          </a>
-          <a
+          </Link>
+          <Link
             href="#fournisseurs"
             onClick={() => setMenuOpen(false)}
             className="block text-sm text-black"
           >
             Fournisseurs
-          </a>
-          <a
+          </Link>
+          <Link
             href="#contact"
             onClick={() => setMenuOpen(false)}
             className="block text-sm text-black"
           >
             Contact
-          </a>
+          </Link>
         </div>
       )}
 
       {/* BOUTON RÉSERVER (toujours visible) */}
-      <a
+      <Link
         className="uppercase fixed top-4 right-4 bg-[#000150] text-white pt-1.5 pb-1.5 px-4 md:px-6 rounded z-50 text-sm shadow-md"
         href="/reservation"
       >
         Réserver
-      </a>
+      </Link>
 
       {/* IMAGE D'ACCUEIL */}
       <div
@@ -192,63 +199,72 @@ export default function Home() {
           <div>
             <h2 className="text-lg font-semibold mb-2">Contact</h2>
             <p className="mb-1">
-              <a href="mailto:contact@josephine.fr" className="hover:underline">
+              <Link
+                href="mailto:contact@josephine.fr"
+                className="hover:underline"
+              >
                 contact@josephine.fr
-              </a>
+              </Link>
             </p>
             <p className="mb-1">
-              <a href="tel:+33233873164" className="hover:underline">
+              <Link href="tel:+33233873164" className="hover:underline">
                 +33 2 33 87 31 64
-              </a>
+              </Link>
             </p>
             <p>
-              <a
+              <Link
                 href="https://maps.app.goo.gl/nUairufUmvsgi8mT6"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:underline"
               >
                 12 Place de la République, 50100 Cherbourg
-              </a>
+              </Link>
             </p>
           </div>
 
           <div>
             <h2 className="text-lg font-semibold mb-2">Suivez-nous</h2>
             <div className="flex gap-4 mt-2">
-              <a
+              <Link
                 href="https://www.instagram.com/josephine_cherbourg/"
                 target="_blank"
                 aria-label="Instagram"
               >
-                <img
+                <Image
                   src="/img/instagram.svg"
                   alt="Instagram"
                   className="w-8 h-8 hover:opacity-75 transition"
+                  width={48}
+                  height={48}
                 />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://www.facebook.com/josephine.cherbourg"
                 target="_blank"
                 aria-label="Facebook"
               >
-                <img
+                <Image
                   src="/img/facebook.svg"
                   alt="Facebook"
                   className="w-8 h-8 hover:opacity-75 transition"
+                  width={48}
+                  height={48}
                 />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://g.co/kgs/BFut6H7"
                 target="_blank"
                 aria-label="Google"
               >
-                <img
+                <Image
                   src="/img/google.svg"
                   alt="Google"
                   className="w-8 h-8 hover:opacity-75 transition"
+                  width={48}
+                  height={48}
                 />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -256,14 +272,14 @@ export default function Home() {
             <h2 className="text-lg font-semibold mb-2">Informations</h2>
             <ul>
               <li>
-                <a href="/mentions_legales" className="hover:underline">
+                <Link href="/mentions_legales" className="hover:underline">
                   Mentions légales
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/confidentialite" className="hover:underline">
+                <Link href="/confidentialite" className="hover:underline">
                   Confidentialité
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
