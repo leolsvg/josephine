@@ -78,7 +78,7 @@ export default function Home() {
       {/* IMAGE D'ACCUEIL */}
       <div
         className="relative pt-20 min-h-screen bg-cover bg-fixed bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/img/bar.jpg')" }}
+        style={{ backgroundImage: "url('/img/bar.jpeg')" }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="relative z-10 flex flex-col justify-center items-center min-h-[calc(100vh-80px)] px-4">
