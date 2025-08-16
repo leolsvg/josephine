@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import DatePicker from "react-datepicker";
@@ -8,68 +8,80 @@ import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
 
 interface Horaire {
-  jour: string;
-  heure_debut: string;
-  heure_fin: string;
+  jour: string; // ex: "lundi"
+  heure_debut: string; // "12:00:00"
+  heure_fin: string; // "14:00:00"
 }
 
+/* ---------- Utils ---------- */
+const weekdayFr = (d: Date) =>
+  d.toLocaleDateString("fr-FR", { weekday: "long" }).toLowerCase();
+
+const strTimeToMinutes = (t: string) => {
+  // supporte "HH:MM" et "HH:MM:SS"
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + (m || 0);
+};
+
+const dateLocalMinutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
+
+const sameWallTimeUTC = (d: Date) =>
+  new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString();
+
+/* ---------- Child: DatePickerReservation (utilise les horaires du parent) ---------- */
 function DatePickerReservation({
   date,
   setDate,
+  horaires,
 }: {
   date: Date | null;
   setDate: (date: Date | null) => void;
+  horaires: Horaire[];
 }) {
-  const [horaires, setHoraires] = useState<Horaire[]>([]);
+  const isDayAllowed = useCallback(
+    (dateToCheck: Date) => {
+      const dayName = weekdayFr(dateToCheck);
+      return horaires.some((h) => h.jour.trim().toLowerCase() === dayName);
+    },
+    [horaires]
+  );
 
-  useEffect(() => {
-    const fetchHoraires = async () => {
-      const { data } = await supabase.from("horaires_ouverture").select("*");
-      const horairesValides = (data || []).filter(
-        (h) => h.jour && h.heure_debut && h.heure_fin
+  const getIncludedTimes = useCallback(
+    (d: Date) => {
+      const dayName = weekdayFr(d);
+      const filtered = horaires.filter(
+        (h) => h.jour.trim().toLowerCase() === dayName
       );
-      setHoraires(horairesValides);
-    };
-    fetchHoraires();
-  }, []);
 
-  const isDayAllowed = (dateToCheck: Date) => {
-    const dayName = dateToCheck
-      .toLocaleDateString("fr-FR", { weekday: "long" })
-      .toLowerCase();
-    return horaires.some((h) => h.jour?.trim().toLowerCase() === dayName);
-  };
+      const times: Date[] = [];
+      filtered.forEach((h) => {
+        const startM = strTimeToMinutes(h.heure_debut);
+        const endM = strTimeToMinutes(h.heure_fin);
 
-  const getIncludedTimes = (date: Date) => {
-    const dayName = date
-      .toLocaleDateString("fr-FR", { weekday: "long" })
-      .toLowerCase();
-    const filtered = horaires.filter(
-      (h) =>
-        h.jour?.trim().toLowerCase() === dayName && h.heure_debut && h.heure_fin
-    );
+        // créneaux toutes les 15 min
+        let current = setHours(
+          setMinutes(new Date(d), startM % 60),
+          Math.floor(startM / 60)
+        );
+        const end = setHours(
+          setMinutes(new Date(d), endM % 60),
+          Math.floor(endM / 60)
+        );
+        while (current < end) {
+          times.push(new Date(current));
+          current = new Date(current.getTime() + 15 * 60000);
+        }
+      });
 
-    const times: Date[] = [];
-    filtered.forEach((h) => {
-      const [startH, startM] = h.heure_debut.split(":").map(Number);
-      const [endH, endM] = h.heure_fin.split(":").map(Number);
-      let current = setHours(setMinutes(new Date(date), startM), startH);
-      const end = setHours(setMinutes(new Date(date), endM), endH);
-      while (current < end) {
-        times.push(new Date(current));
-        current = new Date(current.getTime() + 15 * 60000);
-      }
-    });
-
-    return times;
-  };
+      return times;
+    },
+    [horaires]
+  );
 
   const includedTimes = useMemo(() => {
-    if (date && isDayAllowed(date)) {
-      return getIncludedTimes(date);
-    }
+    if (date && isDayAllowed(date)) return getIncludedTimes(date);
     return [];
-  }, [date, horaires]);
+  }, [date, isDayAllowed, getIncludedTimes]);
 
   return (
     <div className="space-y-2">
@@ -86,7 +98,6 @@ function DatePickerReservation({
         filterDate={isDayAllowed}
         includeTimes={includedTimes}
       />
-
       {date && includedTimes.length === 0 && (
         <p className="text-red-500 text-sm">
           Aucun créneau disponible ce jour-là.
@@ -96,6 +107,7 @@ function DatePickerReservation({
   );
 }
 
+/* ---------- Page ---------- */
 export default function ReservationPage() {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
@@ -105,7 +117,57 @@ export default function ReservationPage() {
   const [notes, setNotes] = useState("");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [horaires, setHoraires] = useState<Horaire[]>([]);
   const router = useRouter();
+
+  /* Charge les horaires UNE fois */
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase
+        .from("horaires_ouverture")
+        .select("*");
+      if (error) {
+        console.error(error);
+        setHoraires([]);
+        return;
+      }
+      const valides = (data || []).filter(
+        (h: Horaire) => h.jour && h.heure_debut && h.heure_fin
+      );
+      setHoraires(
+        valides.map((h: Horaire) => ({
+          ...h,
+          jour: h.jour.trim().toLowerCase(),
+        }))
+      );
+    })();
+  }, []);
+
+  /* Vérifie si la date sélectionnée est dans les horaires, en réutilisant la même logique que le DatePicker */
+  const isSelectedSlotOpen = useCallback(
+    (d: Date) => {
+      const day = weekdayFr(d);
+      const tMin = dateLocalMinutes(d);
+      const intervals = horaires
+        .filter((h) => h.jour === day)
+        .map((h) => ({
+          start: strTimeToMinutes(h.heure_debut),
+          end: strTimeToMinutes(h.heure_fin),
+        }));
+
+      console.debug(
+        "[HORAIRES] day:",
+        day,
+        "selected minutes:",
+        tMin,
+        "intervals:",
+        intervals
+      );
+
+      return intervals.some(({ start, end }) => tMin >= start && tMin < end);
+    },
+    [horaires]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,17 +182,22 @@ export default function ReservationPage() {
     const telTrimmed = telephone.trim();
     if (!telTrimmed)
       return setError("Veuillez renseigner votre numéro de téléphone.");
-    if (!/^\d{10,10}$/.test(telTrimmed))
+    if (!/^\d{10}$/.test(telTrimmed))
       return setError(
-        "Le numéro de téléphone doit contenir au moins 10 chiffres sans espace."
+        "Le numéro de téléphone doit contenir 10 chiffres sans espace."
       );
 
-    const { data: paramsData } = await supabase
+    // Vérifier ouverture avec la même logique que le picker
+    if (!isSelectedSlotOpen(date)) {
+      return setError("Ce créneau n’est pas dans les horaires d’ouverture.");
+    }
+
+    // Paramètres globaux
+    const { data: paramsData, error: paramsErr } = await supabase
       .from("parametres_reservation")
       .select("*")
       .single();
-
-    if (!paramsData)
+    if (paramsErr || !paramsData)
       return setError("Erreur lors du chargement des paramètres.");
 
     const {
@@ -144,94 +211,97 @@ export default function ReservationPage() {
       return setError(
         `Vous devez réserver pour au moins ${personnes_min_par_resa} personnes.`
       );
-
     if (personnesVal > personnes_max_par_resa)
       return setError(
-        `La limite de réservation pour une table est de ${personnes_max_par_resa} personnes. Merci de votre compréhension.`
+        `La limite de réservation pour une table est de ${personnes_max_par_resa} personnes.`
       );
 
-    const selectedDate = new Date(date);
-    const jourSemaine = selectedDate
-      .toLocaleDateString("fr-FR", { weekday: "long" })
-      .toLowerCase();
-    const heure = selectedDate.toTimeString().slice(0, 5);
-    const heureInt = parseInt(heure.split(":")[0]);
-    const service = heureInt < 17 ? "midi" : "soir";
+    // Détection service pour la capacité
+    const service = date.getHours() < 17 ? "midi" : "soir";
 
-    const { data: horaires } = await supabase
-      .from("horaires_ouverture")
-      .select("*");
-    const horaireValide = horaires?.some(
-      (h) =>
-        h.jour.toLowerCase() === jourSemaine &&
-        h.heure_debut <= heure &&
-        h.heure_fin > heure
-    );
+    // Fenêtre UTC "même heure murale" pour cohérence avec l'insert
+    const slotStartUTC = sameWallTimeUTC(date);
+    const slotEndUTC = sameWallTimeUTC(new Date(date.getTime() + 15 * 60000));
 
-    if (!horaireValide)
-      return setError("Ce créneau n’est pas dans les horaires d’ouverture.");
-
-    const { data: dejaPrises } = await supabase
+    // Capacité par créneau (15 min)
+    const { data: dejaPrises, error: capErr } = await supabase
       .from("reservation")
       .select("personnes, date")
-      .gte("date", selectedDate.toISOString().slice(0, 16))
-      .lt(
-        "date",
-        new Date(selectedDate.getTime() + 15 * 60000).toISOString().slice(0, 16)
-      );
+      .gte("date", slotStartUTC)
+      .lt("date", slotEndUTC);
+    if (capErr) {
+      console.error(capErr);
+      return setError("Erreur lors du contrôle de capacité du créneau.");
+    }
 
     const totalSurCreneau =
-      dejaPrises?.reduce((acc, r) => acc + r.personnes, 0) || 0;
-
+      (dejaPrises || []).reduce(
+        (acc: number, r: { personnes: number }) => acc + r.personnes,
+        0
+      ) || 0;
     if (totalSurCreneau + personnesVal > capacite_max_par_creneau)
       return setError("Ce créneau est déjà complet.");
 
-    const debutService = new Date(selectedDate);
-    debutService.setHours(service === "midi" ? 10 : 17, 0, 0, 0);
-    const finService = new Date(selectedDate);
-    finService.setHours(service === "midi" ? 17 : 23, 59, 59, 999);
+    // Capacité par service
+    const debutServiceLocal = new Date(date);
+    const finServiceLocal = new Date(date);
+    if (service === "midi") {
+      debutServiceLocal.setHours(10, 0, 0, 0);
+      finServiceLocal.setHours(17, 0, 0, 0);
+    } else {
+      debutServiceLocal.setHours(17, 0, 0, 0);
+      finServiceLocal.setHours(23, 59, 59, 999);
+    }
+    const debutServiceUTC = sameWallTimeUTC(debutServiceLocal);
+    const finServiceUTC = sameWallTimeUTC(finServiceLocal);
 
-    const { data: serviceData } = await supabase
+    const { data: serviceData, error: servErr } = await supabase
       .from("reservation")
       .select("personnes")
-      .gte("date", debutService.toISOString())
-      .lte("date", finService.toISOString());
+      .gte("date", debutServiceUTC)
+      .lte("date", finServiceUTC);
+    if (servErr) {
+      console.error(servErr);
+      return setError("Erreur lors du contrôle de capacité du service.");
+    }
 
     const totalService =
-      serviceData?.reduce((acc, r) => acc + r.personnes, 0) || 0;
-
+      (serviceData || []).reduce(
+        (acc: number, r: { personnes: number }) => acc + r.personnes,
+        0
+      ) || 0;
     if (totalService + personnesVal > capacite_max_par_service)
       return setError("Le service est complet.");
 
-    const { error } = await supabase.from("reservation").insert([
+    // Insert (UTC "même heure murale")
+    const { error: insertErr } = await supabase.from("reservation").insert([
       {
         nom,
         email,
         telephone: telTrimmed,
         personnes: personnesVal,
-        date: new Date(
-          date.getTime() - date.getTimezoneOffset() * 60000
-        ).toISOString(),
+        date: sameWallTimeUTC(date),
         notes,
       },
     ]);
 
-    if (error) {
-      console.error(error);
+    if (insertErr) {
+      console.error(insertErr);
       setError("Une erreur est survenue. Veuillez réessayer.");
-    } else {
-      setSuccess(true);
-      setNom("");
-      setEmail("");
-      setTelephone("");
-      setPersonnes(1);
-      setDate(null);
-      setNotes("");
-
-      setTimeout(() => {
-        router.push("/");
-      }, 4000);
+      return;
     }
+
+    setSuccess(true);
+    setNom("");
+    setEmail("");
+    setTelephone("");
+    setPersonnes(1);
+    setDate(null);
+    setNotes("");
+
+    setTimeout(() => {
+      router.push("/");
+    }, 4000);
   };
 
   return (
@@ -279,7 +349,11 @@ export default function ReservationPage() {
           required
         />
 
-        <DatePickerReservation date={date} setDate={setDate} />
+        <DatePickerReservation
+          date={date}
+          setDate={setDate}
+          horaires={horaires}
+        />
 
         <textarea
           placeholder="Notes (facultatif)"

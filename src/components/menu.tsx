@@ -1,5 +1,7 @@
 // src/components/ui/menu.tsx
 
+import Image from "next/image";
+
 interface MenuItem {
   name: string;
   description?: string;
@@ -49,7 +51,7 @@ export default function MenuSectionWithImage({
 
       {/* Image à droite */}
       <div className="w-full lg:w-1/2 h-[500px] lg:h-auto">
-        <img
+        <Image
           src={image}
           alt="illustration menu"
           className="w-full h-full object-cover"
