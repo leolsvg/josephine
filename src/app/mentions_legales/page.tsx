@@ -48,9 +48,7 @@ export default function MentionsLegales() {
         <h2 className="text-xl font-semibold mb-2">
           Conception et développement
         </h2>
-        <p>
-          Ce site a été conçu et développé par Léo Renouf et Joshua Jourdan.
-        </p>
+        <p>Ce site a été conçu et développé par Léo Renouf.</p>
       </section>
 
       <section>
