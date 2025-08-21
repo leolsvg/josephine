@@ -164,6 +164,11 @@ export default function Home() {
                 titre="NOS BOISSONS"
                 href="/les_cartes/les_boissons"
               />
+              <CarteMenu
+                logoSrc="/favicon.ico"
+                titre="NOS SPIRITUEUX"
+                href="/les_cartes/les_spiritueux"
+              />
             </div>
           </div>
         </div>
@@ -203,7 +208,7 @@ export default function Home() {
                 href="mailto:contact@josephine.fr"
                 className="hover:underline"
               >
-                contact@josephine.fr
+                contact@josephine-cherbourg.fr
               </Link>
             </p>
             <p className="mb-1">
@@ -234,19 +239,6 @@ export default function Home() {
                 <Image
                   src="/img/instagram.svg"
                   alt="Instagram"
-                  className="w-8 h-8 hover:opacity-75 transition"
-                  width={48}
-                  height={48}
-                />
-              </Link>
-              <Link
-                href="https://www.facebook.com/josephine.cherbourg"
-                target="_blank"
-                aria-label="Facebook"
-              >
-                <Image
-                  src="/img/facebook.svg"
-                  alt="Facebook"
                   className="w-8 h-8 hover:opacity-75 transition"
                   width={48}
                   height={48}

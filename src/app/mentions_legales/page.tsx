@@ -10,17 +10,17 @@ export default function MentionsLegales() {
         <p>
           <strong>Restaurant Joséphine</strong>
           <br />
-          SAS au capital de [à compléter si connu]
+          SARL au capital de 5000€
           <br />
           12 Place de la République, 50100 Cherbourg
           <br />
           Téléphone : 02 33 87 31 64
           <br />
-          Email : contact@josephine.fr
+          Email : contact@josephine-cherbourg.fr
           <br />
           Numéro SIRET : [à compléter]
           <br />
-          Directeur de la publication : [Nom du responsable légal]
+          Directeur de la publication : Sarah Scelles
         </p>
       </section>
 

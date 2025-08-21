@@ -2,71 +2,203 @@
 
 import Link from "next/link";
 
+type CategoryItem = {
+  name: string;
+  price: string;
+  description?: string;
+};
+
+type Category = {
+  title: string;
+  subtitle?: string;
+  items: CategoryItem[];
+};
+
 export default function CartePage() {
-  const categories = [
+  const categories: Category[] = [
     {
-      title: "À PARTAGER",
+      title: "NOS BULLES",
       items: [
         {
-          name: "Involtini de chèvre speck / boudin ibérique",
-          price: "9€",
+          name: 'Crémant de Bourgogne AOP "Noir et Blanc" des Caves de Bailly Lapierre',
+          price: "12,5cl : 7€",
+        },
+        {
+          name: 'Crémant de Bourgogne AOP "Noir et Blanc" des Caves de Bailly Lapierre',
+          price: "75cl : 28€",
+        },
+        {
+          name: "Champagne Grand Cru Brut AOP Blanc de Blanc “Éclat de Craie” Domaine R. Champion",
+          price: "12,5cl : 11€",
+        },
+        {
+          name: "Champagne Grand Cru Brut AOP Blanc de Blanc “Éclat de Craie” Domaine R. Champion",
+          price: "75cl : 52€",
+        },
+        {
+          name: "Champagne Brut AOP Billecart Salmon",
+          price: "75cl : 85€",
         },
       ],
     },
     {
-      title: "ENTRÉES",
+      title: "NOS CIDRES",
       items: [
         {
-          name: "Crudo de merlu / tomate / poivron / basilic",
-          price: "9€",
+          name: 'Cidre Brut AOP "Cuvée Amour" Maison Hérout',
+          price: "33cl : 4,90€",
         },
         {
-          name: "Velouté de courgettes / œuf parfait / crumble sésame et satay",
-          price: "10€",
+          name: 'Cidre Brut AOP "Tradition" Maison Hérout',
+          price: "75cl : 18€",
         },
       ],
     },
     {
-      title: "PLATS",
+      title: "NOS ROSÉS",
+      subtitle: "La Provence",
       items: [
         {
-          name: "Noix de veau / choux-fleur / jus au foin",
-          price: "26€",
+          name: 'Côte de Provence AOP "Élégance" Mas de Pampelonne',
+          price: "12,5cl : 5,20€",
         },
         {
-          name: "Pêche du jour / Fregola / émulsion bisque de langoustines",
-          price: "24€",
-          italic: true,
+          name: 'Côte de Provence AOP "Élégance" Mas de Pampelonne',
+          price: "75cl : 29€",
         },
         {
-          name: "Filet mignon de cochon / sarrasin grillé / jus aux épices douces",
-          price: "25€",
+          name: 'Côte de Provence AOP "Prestige" de chez Minuty',
+          price: "12,5cl : 7,90€",
         },
         {
-          name: "Plat végétarien : Riz vénéré, cuisson pilaf / écume lait coco gingembre",
-          price: "18€",
+          name: 'Côte de Provence AOP "Prestige" de chez Minuty',
+          price: "75cl : 45€",
+        },
+        {
+          name: 'IGP d\'Oc "French Défilé" de Chez Anne de Joyeuse',
+          price: "12,5cl : 3,80€",
+        },
+        {
+          name: 'IGP d\'Oc "French Défilé" de Chez Anne de Joyeuse',
+          price: "75cl : 21€",
         },
       ],
     },
     {
-      title: "FROMAGE",
+      title: "NOS ROSÉS",
+      subtitle: "La Vallée de la Loire",
       items: [
         {
-          name: "Sélection “La cave à fromages” / chutney",
-          price: "11€",
+          name: 'Cabernet d\'Anjou AOP "Domaine Cady" bio',
+          price: "12,5cl : 3,90€",
+        },
+        {
+          name: 'Cabernet d\'Anjou AOP "Domaine Cady" bio',
+          price: "75cl : 22€",
         },
       ],
     },
     {
-      title: "DESSERTS",
+      title: "NOS BLANCS",
+      subtitle: "La Bourgogne",
       items: [
         {
-          name: "Tartelette aux abricots et romarin / chantilly au chocolat ivoire",
-          price: "10€",
+          name: "Bourgogne Aligoté AOP Domaine J.L. Maldant",
+          price: "12,5cl : 5€",
         },
         {
-          name: "Mousse au chocolat / caramel à la vanille / chouchous aux noix de pécan",
-          price: "9€",
+          name: "Bourgogne Aligoté AOP Domaine J.L. Maldant",
+          price: "75cl : 28€",
+        },
+        {
+          name: 'St Véran AOP "Les Charmones" Domaine de la Feuillarde',
+          price: "12,5cl : 5,50€",
+        },
+        {
+          name: 'St Véran AOP "Les Charmones" Domaine de la Feuillarde',
+          price: "75cl : 32€",
+        },
+        { name: "Chablis AOP Domaine Lavantureux", price: "12,5cl : 7,90€" },
+        { name: "Chablis AOP Domaine Lavantureux", price: "75cl : 45€" },
+        {
+          name: 'Pouilly Fuissé AOP "Terre de Menhir" Domaine Gilles Morat',
+          price: "12,5cl : 9,50€",
+        },
+        {
+          name: 'Pouilly Fuissé AOP "Terre de Menhir" Domaine Gilles Morat',
+          price: "75cl : 52€",
+        },
+      ],
+    },
+    {
+      title: "NOS BLANCS",
+      subtitle: "La Vallée de la Loire",
+      items: [
+        {
+          name: 'IGP du Val de Loire Sauvignon "Mmm" Domaine Fournier',
+          price: "12,5cl : 4,50€",
+        },
+        {
+          name: 'IGP du Val de Loire Sauvignon "Mmm" Domaine Fournier',
+          price: "75cl : 26€",
+        },
+        { name: "Muscadet sur Lie AOP Château Thébaud", price: "12,5cl : 5€" },
+        { name: "Muscadet sur Lie AOP Château Thébaud", price: "75cl : 28€" },
+        { name: "Coteaux du Layon AOP Domaine Cady", price: "12,5cl : 5€" },
+        { name: "Coteaux du Layon AOP Domaine Cady", price: "75cl : 28€" },
+        {
+          name: 'Sancerre AOP "Roc Abbaye" Domaine Florian Mollet',
+          price: "12,5cl : 7€",
+        },
+        {
+          name: 'Sancerre AOP "Roc Abbaye" Domaine Florian Mollet',
+          price: "75cl : 39€",
+        },
+        {
+          name: 'Pouilly Fumé AOP "En Travertin" Domaine Henry Bourgeois',
+          price: "12,5cl : 7,50€",
+        },
+        {
+          name: 'Pouilly Fumé AOP "En Travertin" Domaine Henry Bourgeois',
+          price: "75cl : 42€",
+        },
+      ],
+    },
+    {
+      title: "NOS BLANCS",
+      subtitle: "La Vallée du Rhône",
+      items: [
+        {
+          name: 'Côte du Rhône AOP "Le Temps est venu" Domaine Stéphane Ogier',
+          price: "12,5cl : 5,20€",
+        },
+        {
+          name: 'Côte du Rhône AOP "Le Temps est venu" Domaine Stéphane Ogier',
+          price: "75cl : 29€",
+        },
+      ],
+    },
+    {
+      title: "NOS ROUGES",
+      subtitle: "La Bourgogne",
+      items: [
+        { name: "Mâcon Mancey AOP Domaine Chapuis", price: "12,5cl : 5,20€" },
+        { name: "Mâcon Mancey AOP Domaine Chapuis", price: "75cl : 29€" },
+        {
+          name: "Chorey-lès-Beaunes AOP Domaine Jean-Luc Maldant",
+          price: "12,5cl : 7,90€",
+        },
+        {
+          name: "Chorey-lès-Beaunes AOP Domaine Jean-Luc Maldant",
+          price: "75cl : 45€",
+        },
+        {
+          name: "Givry 1er Cru AOP Domaine Choffley Valdenaire",
+          price: "12,5cl : 12€",
+        },
+        {
+          name: "Givry 1er Cru AOP Domaine Choffley Valdenaire",
+          price: "75cl : 66€",
         },
       ],
     },
@@ -103,24 +235,26 @@ export default function CartePage() {
       />
 
       {/* Contenu scrollable */}
-      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-20 lg:ml-0 lg:mr-auto">
-        {/* Titre principal */}
+      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-16 lg:ml-0 lg:mr-auto">
         <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-[#000000] text-center lg:text-left">
-          Carte du soir et du week-end
+          NOS VINS
         </h1>
 
-        {categories.map((cat) => (
-          <section key={cat.title}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#000000]">
+        {categories.map((cat, idx) => (
+          <section key={`${cat.title}-${idx}`}>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000]">
               {cat.title}
             </h2>
+            {cat.subtitle && (
+              <p className="mt-1 mb-4 italic text-gray-700">{cat.subtitle}</p>
+            )}
             <ul className="space-y-4">
               {cat.items.map((item) => (
                 <li
-                  key={item.name}
+                  key={item.name + item.price}
                   className="flex justify-between border-b pb-2 text-black text-sm sm:text-base"
                 >
-                  <p className={item.italic ? "italic" : ""}>{item.name}</p>
+                  <p className="font-medium">{item.name}</p>
                   <span className="font-semibold">{item.price}</span>
                 </li>
               ))}
@@ -131,7 +265,7 @@ export default function CartePage() {
 
       {/* Bouton réserver */}
       <Link
-        href="/#reservation"
+        href="/reservation"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver

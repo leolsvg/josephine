@@ -73,7 +73,7 @@ export default function CartePage() {
       {/* Image : fixe à droite sur grand écran, en haut sinon */}
       <div
         className="w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
-        style={{ backgroundImage: "url('/img/bar.jpg')" }}
+        style={{ backgroundImage: "url('/img/table.jpeg')" }}
       />
 
       {/* Contenu scrollable */}
@@ -108,7 +108,7 @@ export default function CartePage() {
 
       {/* Bouton Réserver */}
       <Link
-        href="/#reservation"
+        href="/reservation"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver
