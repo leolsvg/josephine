@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 
 interface Plat {
   id: string;
@@ -48,7 +49,7 @@ export default function CartePage() {
   return (
     <div className="relative flex flex-col lg:flex-row">
       {/* Bouton retour accueil */}
-      <a
+      <Link
         href="/"
         className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition"
         aria-label="Retour à l'accueil"
@@ -67,7 +68,7 @@ export default function CartePage() {
             d="M15 19l-7-7 7-7"
           />
         </svg>
-      </a>
+      </Link>
 
       {/* Image : fixe à droite sur grand écran, en haut sinon */}
       <div
@@ -106,12 +107,12 @@ export default function CartePage() {
       </div>
 
       {/* Bouton Réserver */}
-      <a
+      <Link
         href="/#reservation"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver
-      </a>
+      </Link>
     </div>
   );
 }

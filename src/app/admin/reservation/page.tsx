@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +29,7 @@ export default function AdminReservations() {
 
   const router = useRouter();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const { data: sessionData } = await supabase.auth.getSession();
     if (!sessionData.session) {
       router.push("/login");
@@ -48,13 +48,13 @@ export default function AdminReservations() {
     }
 
     setLoading(false);
-  };
+  }, [router]);
 
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 30000); // actualise toutes les 30s
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchData]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

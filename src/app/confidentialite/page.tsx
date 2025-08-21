@@ -57,9 +57,9 @@ export default function PolitiqueConfidentialite() {
           (RGPD), vous disposez des droits suivants :
         </p>
         <ul className="list-disc ml-6">
-          <li>Droit d'accès à vos données</li>
+          <li>Droit d&apos;accès à vos données</li>
           <li>Droit de rectification ou de suppression</li>
-          <li>Droit à la limitation ou à l’opposition du traitement</li>
+          <li>Droit à la limitation ou à l&apos;opposition du traitement</li>
         </ul>
         <p className="mt-2">
           Pour exercer vos droits, contactez-nous à :{" "}
