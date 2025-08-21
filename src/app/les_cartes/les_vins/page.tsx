@@ -248,11 +248,11 @@ export default function CartePage() {
 
         {categories.map((cat, idx) => (
           <section key={`${cat.title}-${idx}`}>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000] mb-6">
               {cat.title}
             </h2>
             {cat.subtitle && (
-              <p className="mt-1 mb-4 italic text-gray-700">{cat.subtitle}</p>
+              <p className="mt-5 mb-4 italic text-gray-700">{cat.subtitle}</p>
             )}
             <ul className="space-y-4">
               {cat.items.map((item) => (
