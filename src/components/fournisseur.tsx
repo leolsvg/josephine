@@ -36,19 +36,19 @@ export default function Fournisseurs() {
         {fournisseurs.map((fournisseur) => (
           <div
             key={fournisseur.nom}
-            className="border p-6 bg-gray-400 flex flex-col items-center justify-center"
+            className="w-60 h-60 border bg-gray-400 flex flex-col items-center justify-center p-6"
           >
             <Image
               src={fournisseur.src}
               alt={fournisseur.alt}
-              width={200}
-              height={200}
+              width={fournisseur.nom === "Verges de la Passion" ? 200 : 160}
+              height={fournisseur.nom === "Verges de la Passion" ? 200 : 160}
               className="object-contain max-h-40"
             />
 
             {/* Affiche le nom uniquement pour "La Cave a Fromage" */}
             {fournisseur.nom === "La Cave a Fromage" && (
-              <p className="mt-4 text-sm font-medium text-black">
+              <p className="mt-4 text-sm font-medium text-black text-center">
                 {fournisseur.nom}
               </p>
             )}

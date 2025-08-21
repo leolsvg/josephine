@@ -84,7 +84,7 @@ export default function Home() {
 
       {/* IMAGE D'ACCUEIL */}
       <div
-        className="relative pt-20 min-h-screen bg-cover bg-fixed bg-center bg-no-repeat"
+        className="relative pt-20 min-h-[100svh] bg-cover bg-center bg-no-repeat md:bg-fixed"
         style={{ backgroundImage: "url('/img/bar.jpeg')" }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
