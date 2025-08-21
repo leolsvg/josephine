@@ -250,7 +250,7 @@ export default function CartePage() {
 
       {/* Image */}
       <div
-        className="w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
+        className="hidden lg:block w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
         style={{ backgroundImage: "url('/img/table2.jpeg')" }}
       />
 

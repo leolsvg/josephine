@@ -72,15 +72,20 @@ export default function CartePage() {
 
       {/* Image : fixe à droite sur grand écran, en haut sinon */}
       <div
-        className="w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
+        className="hidden lg:block w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
         style={{ backgroundImage: "url('/img/table.jpeg')" }}
       />
 
       {/* Contenu scrollable */}
-      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-20 lg:mr-auto">
-        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-[#000000] text-center lg:text-left">
+      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-10 lg:mr-auto">
+        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-6 text-[#000000] text-center lg:text-left">
           Carte du déjeuner
         </h1>
+        <h2 className="font-bold text-[16px] sm:text-[28px] lg:text-[22px] text-[#000000] text-center lg:text-left leading-relaxed">
+          Entrée + Plat ou Plat + Dessert 19€ <br />
+          Entrée + Plat + Dessert 24€ <br />
+          Plat seul 16€
+        </h2>
 
         {categoriesOrdre.map((catKey) => {
           const platsCat = plats.filter((p) => p.categorie === catKey);

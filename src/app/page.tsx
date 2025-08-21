@@ -138,6 +138,11 @@ export default function Home() {
             titre="NOS BOISSONS"
             href="/les_cartes/les_boissons"
           />
+          <CarteMenu
+            logoSrc="/favicon.ico"
+            titre="NOS SPIRITUEUX"
+            href="/les_cartes/les_spiritueux"
+          />
         </div>
 
         {/* Affichage desktop (carrousel horizontal) */}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Joséphine",
@@ -16,7 +17,8 @@ export default function RootLayout({
     <html lang="fr">
       <body>
         {children}
-        {/* Exemple: remplace tout <script src="..."></script> par: */}
+        <Analytics />
+
         <Script src="/js/some-client.js" strategy="afterInteractive" />
       </body>
     </html>
