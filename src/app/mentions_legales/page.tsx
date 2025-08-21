@@ -18,7 +18,7 @@ export default function MentionsLegales() {
           <br />
           Email : contact@josephine-cherbourg.fr
           <br />
-          Numéro SIRET : [à compléter]
+          Numéro SIRET : 94164427000014
           <br />
           Directeur de la publication : Sarah Scelles
         </p>
