@@ -28,6 +28,9 @@ const dateLocalMinutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
 const sameWallTimeUTC = (d: Date) =>
   new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString();
 
+// frontière midi/soir (17h = 17:00)
+const isMidiByMinutes = (minutes: number) => Math.floor(minutes / 60) < 17;
+
 /* ---------- Child: DatePickerReservation (utilise les horaires du parent) ---------- */
 function DatePickerReservation({
   date,
@@ -72,6 +75,37 @@ function DatePickerReservation({
           current = new Date(current.getTime() + 15 * 60000);
         }
       });
+
+      // === BLOQUER LE SERVICE DU JOUR DÈS QU'IL A COMMENCÉ ===
+      const now = new Date();
+      const sameDay = now.toDateString() === d.toDateString();
+      if (sameDay) {
+        // service de la sélection (selon l'heure choisie par l'utilisateur)
+        const selectedService: "midi" | "soir" =
+          d.getHours() < 17 ? "midi" : "soir";
+
+        // heure de début (en minutes depuis 00:00) du service correspondant pour ce jour
+        const starts: number[] = [];
+        filtered.forEach((h) => {
+          const startM = strTimeToMinutes(h.heure_debut);
+          const isMidi = isMidiByMinutes(startM);
+          if (
+            (selectedService === "midi" && isMidi) ||
+            (selectedService === "soir" && !isMidi)
+          ) {
+            starts.push(startM);
+          }
+        });
+        const serviceStartMin = starts.length ? Math.min(...starts) : null;
+
+        if (serviceStartMin !== null) {
+          const nowMin = now.getHours() * 60 + now.getMinutes();
+          if (nowMin >= serviceStartMin) {
+            // service du jour déjà commencé -> aucun créneau proposé
+            return [];
+          }
+        }
+      }
 
       return times;
     },
@@ -155,15 +189,6 @@ export default function ReservationPage() {
           end: strTimeToMinutes(h.heure_fin),
         }));
 
-      console.debug(
-        "[HORAIRES] day:",
-        day,
-        "selected minutes:",
-        tMin,
-        "intervals:",
-        intervals
-      );
-
       return intervals.some(({ start, end }) => tMin >= start && tMin < end);
     },
     [horaires]
@@ -192,6 +217,45 @@ export default function ReservationPage() {
       return setError("Ce créneau n’est pas dans les horaires d’ouverture.");
     }
 
+    // ====== BLOQUER LA RÉSA POUR LE SERVICE D'AUJOURD'HUI DÈS QU'IL A COMMENCÉ ======
+    const service = date.getHours() < 17 ? "midi" : "soir";
+    const selectedDayName = weekdayFr(date);
+
+    const serviceStartForDay = (serviceToCheck: "midi" | "soir") => {
+      const starts: number[] = [];
+      horaires
+        .filter((h) => h.jour === selectedDayName)
+        .forEach((h) => {
+          const startM = strTimeToMinutes(h.heure_debut);
+          const isMidi = isMidiByMinutes(startM);
+          if (
+            (serviceToCheck === "midi" && isMidi) ||
+            (serviceToCheck === "soir" && !isMidi)
+          ) {
+            starts.push(startM);
+          }
+        });
+      if (!starts.length) return null;
+      return Math.min(...starts);
+    };
+
+    const now = new Date();
+    const sameDay = now.toDateString() === date.toDateString();
+    if (sameDay) {
+      const startMin = serviceStartForDay(service as "midi" | "soir");
+      if (startMin !== null) {
+        const nowMin = now.getHours() * 60 + now.getMinutes();
+        if (nowMin >= startMin) {
+          return setError(
+            service === "midi"
+              ? "Les réservations pour le service du midi ont fermé pour aujourd’hui."
+              : "Les réservations pour le service du soir ont fermé pour aujourd’hui."
+          );
+        }
+      }
+    }
+    // ================================================================================
+
     // Paramètres globaux
     const { data: paramsData, error: paramsErr } = await supabase
       .from("parametres_reservation")
@@ -213,11 +277,8 @@ export default function ReservationPage() {
       );
     if (personnesVal > personnes_max_par_resa)
       return setError(
-        `La limite de réservation pour une table est de ${personnes_max_par_resa} personnes.`
+        `Pour réserver une table de plus de ${personnes_max_par_resa} personnes, veuillez nous contacter au 02 33 87 31 64.`
       );
-
-    // Détection service pour la capacité
-    const service = date.getHours() < 17 ? "midi" : "soir";
 
     // Fenêtre UTC "même heure murale" pour cohérence avec l'insert
     const slotStartUTC = sameWallTimeUTC(date);
@@ -242,7 +303,7 @@ export default function ReservationPage() {
     if (totalSurCreneau + personnesVal > capacite_max_par_creneau)
       return setError("Ce créneau est déjà complet.");
 
-    // Capacité par service
+    // Capacité par service (midi/soir)
     const debutServiceLocal = new Date(date);
     const finServiceLocal = new Date(date);
     if (service === "midi") {
@@ -290,6 +351,39 @@ export default function ReservationPage() {
       setError("Une erreur est survenue. Veuillez réessayer.");
       return;
     }
+
+    // ========= EMAIL DE CONFIRMATION =========
+    try {
+      // Formattage "beau" pour l’email
+      const displayDate = date.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+      const displayTime = date.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      await fetch("/api/send-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          name: nom,
+          date: displayDate, // ex: "dimanche 24 août 2025"
+          time: displayTime, // ex: "19:30"
+          people: personnesVal,
+          phone: telTrimmed,
+          note: notes ?? "",
+        }),
+      });
+    } catch (mailErr) {
+      console.error("Erreur envoi email de confirmation:", mailErr);
+      // on n'empêche pas la réussite de la résa si l'email échoue
+    }
+    // =========================================
 
     setSuccess(true);
     setNom("");
