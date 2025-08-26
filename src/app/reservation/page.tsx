@@ -146,7 +146,8 @@ export default function ReservationPage() {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [personnes, setPersonnes] = useState(1);
+  // ⬇️ autorise le champ vide pour afficher le placeholder
+  const [personnes, setPersonnes] = useState<number | "">("");
   const [date, setDate] = useState<Date | null>(null);
   const [notes, setNotes] = useState("");
   const [success, setSuccess] = useState(false);
@@ -201,8 +202,14 @@ export default function ReservationPage() {
 
     if (!date) return setError("Veuillez choisir un créneau valide.");
 
+    // ⬇️ vérifie la saisie du nombre de personnes
+    if (personnes === "") {
+      return setError("Veuillez indiquer le nombre de personnes.");
+    }
     const personnesVal = Number(personnes);
-    if (isNaN(personnesVal)) return setError("Nombre de personnes invalide.");
+    if (isNaN(personnesVal) || personnesVal < 1) {
+      return setError("Nombre de personnes invalide.");
+    }
 
     const telTrimmed = telephone.trim();
     if (!telTrimmed)
@@ -334,17 +341,21 @@ export default function ReservationPage() {
     if (totalService + personnesVal > capacite_max_par_service)
       return setError("Le service est complet.");
 
-    // Insert (UTC "même heure murale")
-    const { error: insertErr } = await supabase.from("reservation").insert([
-      {
-        nom,
-        email,
-        telephone: telTrimmed,
-        personnes: personnesVal,
-        date: sameWallTimeUTC(date),
-        notes,
-      },
-    ]);
+    // ===== Insert (UTC "même heure murale") + récup ID pour l'email =====
+    const { data: insertData, error: insertErr } = await supabase
+      .from("reservation")
+      .insert([
+        {
+          nom,
+          email: email.trim(),
+          telephone: telTrimmed,
+          personnes: personnesVal,
+          date: sameWallTimeUTC(date),
+          notes,
+        },
+      ])
+      .select("id")
+      .single();
 
     if (insertErr) {
       console.error(insertErr);
@@ -352,31 +363,30 @@ export default function ReservationPage() {
       return;
     }
 
-    // ========= EMAIL DE CONFIRMATION =========
+    // ========= EMAIL DE CONFIRMATION (Resend) =========
     try {
-      // Formattage "beau" pour l’email
-      const displayDate = date.toLocaleDateString("fr-FR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      });
-      const displayTime = date.toLocaleTimeString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      // Champs attendus par /api/send_confirmation :
+      // to, nomClient, dateISO (YYYY-MM-DD), heure (HH:MM), couverts, telephone, commentaire, numeroReservation, bcc?, fromLabel?
+      const dateISO = date.toISOString().slice(0, 10);
+      const heure = `${String(date.getHours()).padStart(2, "0")}:${String(
+        date.getMinutes()
+      ).padStart(2, "0")}`;
 
-      await fetch("/api/send-confirmation", {
+      await fetch("/api/send_confirmation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
-          name: nom,
-          date: displayDate, // ex: "dimanche 24 août 2025"
-          time: displayTime, // ex: "19:30"
-          people: personnesVal,
-          phone: telTrimmed,
-          note: notes ?? "",
+          to: email.trim(),
+          nomClient: nom,
+          dateISO,
+          heure,
+          couverts: personnesVal,
+          telephone: telTrimmed,
+          commentaire: notes ?? "",
+          numeroReservation: insertData?.id ? String(insertData.id) : undefined,
+          // Optionnel: envoie une copie cachée au resto
+          // bcc: "contact@resto-josephine.fr",
+          fromLabel: "Joséphine",
         }),
       });
     } catch (mailErr) {
@@ -389,7 +399,8 @@ export default function ReservationPage() {
     setNom("");
     setEmail("");
     setTelephone("");
-    setPersonnes(1);
+    // ⬇️ remet le champ vide pour réafficher le placeholder
+    setPersonnes("");
     setDate(null);
     setNotes("");
 
@@ -433,11 +444,18 @@ export default function ReservationPage() {
           required
         />
 
+        {/* ⬇️ Nombre de personnes avec placeholder réel */}
         <input
           type="number"
           placeholder="Nombre de personnes"
-          value={personnes.toString()}
-          onChange={(e) => setPersonnes(parseInt(e.target.value) || 1)}
+          value={personnes}
+          onChange={(e) => {
+            const val = e.target.value;
+            // autorise la chaîne vide pour laisser le placeholder
+            if (val === "") return setPersonnes("");
+            const n = parseInt(val, 10);
+            setPersonnes(isNaN(n) ? "" : Math.max(1, n));
+          }}
           min={1}
           className="w-full border p-2 rounded"
           required
