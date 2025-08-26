@@ -342,7 +342,7 @@ export default function ReservationPage() {
 			return setError("Le service est complet.");
 
 		// ===== Insert (UTC "même heure murale") + récup ID pour l'email =====
-		const { data: insertData, error: insertErr } = await supabase
+		const { error: insertErr } = await supabase
 			.from("reservation")
 			.insert([
 				{
