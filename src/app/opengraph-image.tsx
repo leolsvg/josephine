@@ -1,11 +1,25 @@
 // src/app/opengraph-image.tsx
 import { ImageResponse } from "next/og";
+import fs from "fs";
+import path from "path";
 
-export const runtime = "nodejs"; // plus simple en dev local
-export const size = { width: 1200, height: 630 } as const;
+export const runtime = "nodejs"; // pour pouvoir lire le disque
+export const dynamic = "force-dynamic"; // évite le prerender de la route
 export const contentType = "image/png";
+export const size = { width: 1200, height: 630 } as const;
 
 export default function OGImage() {
+  // Lis directement le fichier dans /public/img/index-bg.jpeg
+  const filePath = path.join(process.cwd(), "public", "img", "index-bg.jpeg");
+  let bgDataUrl: string | null = null;
+  try {
+    const buf = fs.readFileSync(filePath);
+    bgDataUrl = `data:image/jpeg;base64,${buf.toString("base64")}`;
+  } catch {
+    // fallback si le fichier manque
+    bgDataUrl = null;
+  }
+
   return new ImageResponse(
     (
       <div
@@ -19,21 +33,23 @@ export default function OGImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {/* Image de fond (direct depuis /public) */}
-        <img
-          src="/img/index-bg.jpeg"
-          alt=""
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            filter: "brightness(0.55)",
-          }}
-        />
+        {bgDataUrl ? (
+          <img
+            src={bgDataUrl}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              filter: "brightness(0.55)",
+            }}
+          />
+        ) : (
+          <div style={{ position: "absolute", inset: 0, background: "#111" }} />
+        )}
 
-        {/* Texte centré */}
         <div
           style={{
             position: "relative",
