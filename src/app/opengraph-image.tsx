@@ -2,6 +2,7 @@
 import { ImageResponse } from "next/og";
 import fs from "fs";
 import path from "path";
+import Image from "next/image";
 
 export const runtime = "nodejs"; // pour pouvoir lire le disque
 export const dynamic = "force-dynamic"; // évite le prerender de la route
@@ -33,22 +34,17 @@ export default function OGImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {bgDataUrl ? (
-          <img
-            src={bgDataUrl}
-            alt=""
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              filter: "brightness(0.55)",
-            }}
-          />
-        ) : (
-          <div style={{ position: "absolute", inset: 0, background: "#111" }} />
-        )}
+        <Image
+          src={bgDataUrl ?? ""}
+          alt=""
+          fill
+          style={{
+            objectFit: "cover",
+            filter: "brightness(0.55)",
+          }}
+          priority
+          sizes="100vw"
+        />
 
         <div
           style={{
