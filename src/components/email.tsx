@@ -1,25 +1,32 @@
 interface EmailTemplateProps {
-	name: string;
-	date: string;
-	time: string;
+  name: string;
+  date: string; // ex: "2025-08-30"
+  time: string;
 }
 
 export function EmailTemplate({ name, date, time }: EmailTemplateProps) {
-	return (
-		<div>
-			<h2>Bonjour {name},</h2>
-			<p>
-				Votre réservation au <b>restaurant Joséphine</b> est confirmée :
-			</p>
-			<ul>
-				<li>Date : {date}</li>
-				<li>Heure : {time}</li>
-			</ul>
-			<p>Nous avons hâte de vous accueillir 🍷🍴</p>
-			<p>À bientôt,</p>
-			<p>
-				<b>L&apos;équipe Joséphine</b>
-			</p>
-		</div>
-	);
+  // convertir la string en Date
+  const formattedDate = new Date(date).toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
+  return (
+    <div>
+      <h2>Bonjour {name},</h2>
+      <p>
+        Votre réservation au <b>restaurant Joséphine</b> est confirmée :
+      </p>
+      <ul>
+        <li>Date : {formattedDate}</li>
+        <li>Heure : {time}</li>
+      </ul>
+      <p>Nous avons hâte de vous accueillir 🍷🍴</p>
+      <p>À bientôt,</p>
+      <p>
+        <b>L&apos;équipe Joséphine</b>
+      </p>
+    </div>
+  );
 }
