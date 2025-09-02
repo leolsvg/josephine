@@ -49,6 +49,18 @@ html {
   scroll-behavior: smooth;
 }
 
+@import "react-datepicker/dist/react-datepicker.css";
+
+/* Cache les créneaux désactivés */
+.react-datepicker__time-list-item--disabled {
+  display: none !important;
+}
+
+/* (Optionnel) cache l'entête "Heure" */
+.react-datepicker__time-container .react-datepicker-time__header {
+  display: none;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
