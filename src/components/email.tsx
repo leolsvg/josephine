@@ -2,9 +2,15 @@ interface EmailTemplateProps {
   name: string;
   date: string; // ex: "2025-08-30"
   time: string;
+  personnes: number;
 }
 
-export function EmailTemplate({ name, date, time }: EmailTemplateProps) {
+export function EmailTemplate({
+  name,
+  date,
+  time,
+  personnes,
+}: EmailTemplateProps) {
   // convertir la string en Date
   const formattedDate = new Date(date).toLocaleDateString("fr-FR", {
     day: "2-digit",
@@ -21,6 +27,7 @@ export function EmailTemplate({ name, date, time }: EmailTemplateProps) {
       <ul>
         <li>Date : {formattedDate}</li>
         <li>Heure : {time}</li>
+        <li>Nombre de personnes : {personnes}</li>
       </ul>
       <p>Nous avons hâte de vous accueillir 🍷🍴</p>
       <p>À bientôt,</p>
