@@ -8,17 +8,19 @@ interface EmailRequest {
   name: string;
   date: string;
   time: string;
+  personnes: number;
 }
 
 export async function POST(request: Request) {
-  const { email, name, date, time } = (await request.json()) as EmailRequest;
+  const { email, name, date, time, personnes } =
+    (await request.json()) as EmailRequest;
   try {
     const { data, error } = await resend.emails.send({
       from: "Restaurant Josephine <no-reply@josephine-cherbourg.fr>",
       to: [email],
       bcc: ["leorenouf2@icloud.com", "s.scelles@gmail.com"],
       subject: "Réservation confirmée - Restaurant Josephine",
-      react: EmailTemplate({ name, date, time }),
+      react: EmailTemplate({ name, date, time, personnes }),
     });
 
     if (error) {
