@@ -178,7 +178,7 @@ export default function CartePage() {
           price: "4€",
         },
         {
-          name: "Picon Bière 25cl",
+          name: "Picon Bière 50cl",
           price: "8€",
         },
       ],

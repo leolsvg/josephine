@@ -6,14 +6,14 @@ import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
 const menus: NavItem<Route>[] = [
-  { title: "Menu déjeuner", href: `/les_cartes/menu_dejeuner` as Route },
+  { title: "Menu déjeuner", href: `/menus/lunch` },
   {
     title: "Carte soir et week-end",
-    href: "/les_cartes/soir_weekend" as Route,
+    href: "/menus/dinner",
   },
-  { title: "Nos vins", href: "/les_cartes/les_vins" as Route },
-  { title: "Nos boissons", href: "/les_cartes/les_boissons" as Route },
-  { title: "Nos spiritueux", href: "/les_cartes/les_spiritueux" as Route },
+  { title: "Nos vins", href: "/menus/wines" },
+  { title: "Nos boissons", href: "/menus/drinks" },
+  { title: "Nos spiritueux", href: "/menus/spirits" },
 ];
 
 export function MenusSection() {
