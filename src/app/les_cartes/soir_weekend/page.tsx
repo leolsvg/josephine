@@ -1,27 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 interface Plat {
-  id: string;
-  titre: string;
+  id: number;
   description: string;
-  categorie: string;
-  cartes: string;
-  prix: string;
+  category: string;
+  service: string;
+  price: string;
 }
 
 export default function CartePage() {
   const [plats, setPlats] = useState<Plat[]>([]);
 
   useEffect(() => {
+    const supabase = createClient();
     const fetchPlats = async () => {
       const { data, error } = await supabase
         .from("menus")
         .select("*")
-        .eq("cartes", "soir"); // ✅ NE GARDER QUE LES PLATS DU SOIR
+        .eq("service", "soir"); // ✅ NE GARDER QUE LES PLATS DU SOIR
 
       if (error) {
         console.error("Erreur chargement menu :", error);
@@ -29,7 +30,6 @@ export default function CartePage() {
       }
 
       if (data) {
-        console.log("Données reçues de Supabase :", data);
         setPlats(data);
       }
     };
@@ -55,26 +55,13 @@ export default function CartePage() {
         className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition"
         aria-label="Retour à l'accueil"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-[#000150]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        <ChevronLeft />
       </Link>
 
       {/* Image fixe à droite (desktop) ou bloc au-dessus (mobile) */}
       <div
         className="hidden lg:block w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
-        style={{ backgroundImage: "url('/img/table2.jpeg')" }}
+        style={{ backgroundImage: "url('/restaurant/table-window.jpeg')" }}
       />
 
       {/* Contenu scrollable à gauche */}
@@ -84,7 +71,7 @@ export default function CartePage() {
         </h1>
 
         {categoriesOrdre.map((catKey) => {
-          const platsCat = plats.filter((p) => p.categorie === catKey);
+          const platsCat = plats.filter((p) => p.category === catKey);
           if (platsCat.length === 0) return null;
 
           return (
@@ -100,8 +87,8 @@ export default function CartePage() {
                   >
                     <p>{plat.description}</p>
                     <span className="font-semibold">
-                      {plat.prix ? (
-                        `${plat.prix}€`
+                      {plat.price ? (
+                        `${plat.price}€`
                       ) : (
                         <span className="text-gray-400 italic">—</span>
                       )}
@@ -114,7 +101,6 @@ export default function CartePage() {
         })}
       </div>
 
-      {/* Bouton Réserver */}
       <Link
         href="/reservation"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"

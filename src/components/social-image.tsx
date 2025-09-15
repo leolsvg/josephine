@@ -18,7 +18,7 @@ const logoData = await readFile(
 const logoSrc = `data:image/png;base64,${logoData}`;
 
 const barData = await readFile(
-  join(process.cwd(), "./public/bar.jpeg"),
+  join(process.cwd(), "./public/restaurant/bar.jpeg"),
   "base64",
 );
 const barSrc = `data:image/jpeg;base64,${barData}`;

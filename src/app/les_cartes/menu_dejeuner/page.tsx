@@ -1,26 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 interface Plat {
-  id: string;
-  titre: string;
+  id: number;
   description: string;
-  categorie: string;
-  cartes: string;
+  category: string;
+  service: string;
 }
 
 export default function CartePage() {
   const [plats, setPlats] = useState<Plat[]>([]);
-
   useEffect(() => {
     const fetchPlats = async () => {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("menus")
         .select("*")
-        .eq("cartes", "midi"); // ✅ NE GARDER QUE LES PLATS DU MIDI
+        .eq("service", "midi"); // ✅ NE GARDER QUE LES PLATS DU MIDI
 
       if (error) {
         console.error("Erreur chargement menu :", error);
@@ -28,7 +28,6 @@ export default function CartePage() {
       }
 
       if (data) {
-        console.log("Données reçues de Supabase :", data);
         setPlats(data);
       }
     };
@@ -54,26 +53,13 @@ export default function CartePage() {
         className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition"
         aria-label="Retour à l'accueil"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-[#000150]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        <ChevronLeft />
       </Link>
 
       {/* Image : fixe à droite sur grand écran, en haut sinon */}
       <div
         className="hidden lg:block w-full lg:w-1/2 h-64 lg:h-screen bg-cover bg-center lg:fixed lg:right-0 lg:top-0"
-        style={{ backgroundImage: "url('/img/table.jpeg')" }}
+        style={{ backgroundImage: "url('/restaurant/table.jpeg')" }}
       />
 
       {/* Contenu scrollable */}
@@ -88,7 +74,7 @@ export default function CartePage() {
         </h2>
 
         {categoriesOrdre.map((catKey) => {
-          const platsCat = plats.filter((p) => p.categorie === catKey);
+          const platsCat = plats.filter((p) => p.category === catKey);
           if (platsCat.length === 0) return null;
 
           return (
@@ -111,7 +97,6 @@ export default function CartePage() {
         })}
       </div>
 
-      {/* Bouton Réserver */}
       <Link
         href="/reservation"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
