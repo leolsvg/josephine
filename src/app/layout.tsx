@@ -5,7 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Joséphine",
-  description: "Restaurant bistronomique",
+  description:
+    "Découvrez Joséphine, restaurant de bistronomie au cœur de Cherbourg. Cuisine raffinée, produits frais et ambiance conviviale. Réservez en ligne dès maintenant.",
 };
 
 export default function RootLayout({
