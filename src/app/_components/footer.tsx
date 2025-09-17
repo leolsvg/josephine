@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Josephine } from "@/lib/josephine";
 
 export function Footer() {
   return (
@@ -9,19 +10,19 @@ export function Footer() {
         <section>
           <FooterSectionTitle>Contact</FooterSectionTitle>
           <FooterSectionContent>
-            <a href="mailto:contact@josephine.fr" className="hover:underline">
-              contact@josephine-cherbourg.fr
+            <a href={`mailto:${Josephine.email}`} className="hover:underline">
+              {Josephine.email}
             </a>
-            <a href="tel:+33233873164" className="hover:underline">
-              +33 2 33 87 31 64
+            <a href={`tel:${Josephine.phone}`} className="hover:underline">
+              {Josephine.phone}
             </a>
             <a
-              href="https://maps.app.goo.gl/nUairufUmvsgi8mT6"
+              href={Josephine.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
             >
-              12 Place de la République, 50100 Cherbourg
+              {Josephine.address}
             </a>
           </FooterSectionContent>
         </section>

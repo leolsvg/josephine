@@ -1,4 +1,5 @@
 import { BackToHomeButton } from "@/components/back-to-home-button";
+import { Josephine } from "@/lib/josephine";
 
 export default function PrivacyPage() {
   return (
@@ -67,10 +68,10 @@ export default function PrivacyPage() {
         <p>
           Pour exercer vos droits, contactez-nous à :{" "}
           <a
-            href="mailto:contact@josephine-cherbourg.fr"
+            href={`mailto:${Josephine.email}`}
             className="text-primary hover:underline"
           >
-            contact@josephine-cherbourg.fr
+            {Josephine.email}
           </a>
         </p>
       </section>

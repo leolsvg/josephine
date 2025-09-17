@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BackToHomeButton } from "@/components/back-to-home-button";
+import { Josephine } from "@/lib/josephine";
 
 export default function LegalNoticesPage() {
   return (
@@ -21,10 +22,10 @@ export default function LegalNoticesPage() {
           <p>
             Email :{" "}
             <Link
-              href="mailto:contact@josephine-cherbourg.fr"
+              href={`mailto:${Josephine.email}`}
               className="text-primary hover:underline"
             >
-              contact@josephine-cherbourg.fr
+              {Josephine.email}
             </Link>
           </p>
           <p>Numéro SIRET : 941 644 270 00014</p>
@@ -78,10 +79,10 @@ export default function LegalNoticesPage() {
         <p>
           Pour exercer vos droits :{" "}
           <Link
-            href="mailto:contact@josephine-cherbourg.fr"
+            href={`mailto:${Josephine.email}`}
             className="text-primary hover:underline"
           >
-            contact@josephine-cherbourg.fr
+            {Josephine.email}
           </Link>
         </p>
       </section>

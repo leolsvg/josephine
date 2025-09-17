@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { Josephine } from "@/lib/josephine";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://www.josephine-cherbourg.fr",
+      url: Josephine.website,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
