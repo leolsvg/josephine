@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
+import { TRPCReactProvider } from "@/lib/trpc/react";
 import { geistMono, geistSans } from "@/styles/fonts";
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <TRPCReactProvider>{children}</TRPCReactProvider>
         <Analytics />
       </body>
     </html>

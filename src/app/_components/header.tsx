@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { NavItem } from "@/lib/utils";
-import { BookingDialog } from "./booking/dialog/booking-dialog";
+import { BookingDialog } from "./booking/booking-dialog";
 
 export const navigationItems: NavItem<Route>[] = [
   {
@@ -53,10 +53,7 @@ export function Header() {
             </Button>
           ))}
         </nav>
-        {/* <BookingDialog /> */}
-        <Button asChild>
-          <Link href="/reservation">Réserver</Link>
-        </Button>
+        <BookingDialog />
       </header>
     </div>
   );
