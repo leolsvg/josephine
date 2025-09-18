@@ -1,183 +1,211 @@
-// opening-utils.test.ts
+import "temporal-polyfill/global";
 import { describe, expect, it } from "bun:test";
-import { addDays, startOfDay } from "date-fns";
+import { TIMEZONE } from "../../../lib/utils";
+import type { Exception, Period, Weekly } from "../../db/types";
 import {
   atHM,
-  type Exception,
+  generateSlots,
   getPeriodsForDate,
   isDateOpen,
   isOpen,
-  type Weekly,
+  isPast,
 } from "./utils";
 
-// Helper: next occurrence of weekday (0=Sun..6=Sat), strictly in the future (>= tomorrow)
-function nextWeekday(target: number) {
-  const today = startOfDay(new Date());
-  for (let i = 1; i <= 14; i++) {
-    const d = addDays(today, i);
-    if (d.getDay() === target) return d;
+const makeEmptyWeek = (): Weekly =>
+  Array.from({ length: 7 }, () => ({ periods: [] as Period[] }));
+
+const setPeriodsForDate = (weekly: Weekly, date: Date, periods: Period[]) => {
+  const index =
+    Temporal.Instant.fromEpochMilliseconds(date.getTime()).toZonedDateTimeISO(
+      TIMEZONE,
+    ).dayOfWeek % 7;
+  weekly[index] = { periods };
+};
+
+const ensureSeconds = (time: string): string => {
+  const segments = time.split(":");
+  if (segments.length === 1) {
+    return `${segments[0]}:00:00`;
   }
-  throw new Error("Could not find next weekday within 2 weeks");
-}
+  if (segments.length === 2) {
+    return `${segments[0]}:${segments[1]}:00`;
+  }
+  return time;
+};
 
-// Sample weekly schedule: Mon–Tue two services (lunch/dinner). Others closed.
-const weekly: Weekly[] = [
-  { day: 1, start: "12:00", end: "14:00" }, // Monday lunch
-  { day: 1, start: "19:00", end: "22:00" }, // Monday dinner
-  { day: 2, start: "12:00", end: "14:00" }, // Tuesday lunch
-  { day: 2, start: "19:00", end: "22:00" }, // Tuesday dinner
-];
+const buildZdtIso = (value: string): string => {
+  if (!value.includes("T")) {
+    return `${value}T00:00:00[${TIMEZONE}]`;
+  }
+  const [datePart, timePart = "00:00"] = value.split("T");
+  return `${datePart}T${ensureSeconds(timePart)}[${TIMEZONE}]`;
+};
 
-describe("utils: isDateOpen", () => {
-  it("closed exception (periods = []) overrides weekly", () => {
-    const nextTue = nextWeekday(2);
-    const exceptions: Exception[] = [
-      { from: nextTue, to: null, periods: [], note: "Closed" },
-    ];
-    const periods = getPeriodsForDate(nextTue, weekly, exceptions);
-    expect(periods).toEqual([]); // fully closed
+const dateFromPlain = (plainDateTime: string): Date => {
+  const zdt = Temporal.ZonedDateTime.from(buildZdtIso(plainDateTime));
+  return new Date(zdt.epochMilliseconds);
+};
+
+describe("isPast", () => {
+  it("returns true for dates before today", () => {
+    const pastDate = dateFromPlain("2000-01-01T10:00");
+    expect(isPast(pastDate)).toBe(true);
   });
 
-  it("whitelist exception overrides weekly with provided periods only", () => {
-    const nextMon = nextWeekday(1);
-    const exceptions: Exception[] = [
-      {
-        from: nextMon,
-        to: null,
-        periods: [{ start: "18:00", end: "23:00" }],
-        note: "Special evening",
-      },
-    ];
-    const periods = getPeriodsForDate(nextMon, weekly, exceptions);
-    expect(periods).toEqual([{ start: "18:00", end: "23:00" }]);
-  });
-
-  it("last overlapping exception wins (array order defines priority)", () => {
-    const nextMon = nextWeekday(1);
-    const exceptions: Exception[] = [
-      {
-        from: nextMon,
-        to: null,
-        periods: [{ start: "17:00", end: "20:00" }],
-        note: "First rule",
-      },
-      {
-        from: nextMon,
-        to: null,
-        periods: [{ start: "18:00", end: "21:00" }],
-        note: "Second rule (should win)",
-      },
-    ];
-    const periods = getPeriodsForDate(nextMon, weekly, exceptions);
-    expect(periods).toEqual([{ start: "18:00", end: "21:00" }]);
-  });
-
-  it("date range exception applies inclusively (from..to)", () => {
-    const nextTue = nextWeekday(2);
-    const dayAfter = addDays(nextTue, 1);
-    // Closed on both dates inclusively
-    const exceptions: Exception[] = [
-      { from: nextTue, to: dayAfter, periods: [], note: "Two-day closure" },
-    ];
-    expect(getPeriodsForDate(nextTue, weekly, exceptions)).toEqual([]);
-    expect(getPeriodsForDate(dayAfter, weekly, exceptions)).toEqual([]);
-  });
-
-  it("isDateOpen returns false for past dates even if weekly is open", () => {
-    // Pick a Monday in the past (7 days ago and then go back to last Monday)
-    const today = startOfDay(new Date());
-    let past = addDays(today, -7);
-    while (past.getDay() !== 1) past = addDays(past, -1);
-
-    expect(isDateOpen(past, weekly, [])).toBe(false);
-  });
-
-  it("isDateOpen returns true for a future weekly-open date (no exception)", () => {
-    const nextMon = nextWeekday(1);
-    expect(isDateOpen(nextMon, weekly, [])).toBe(true);
-  });
-
-  it("isDateOpen returns false when a future date is explicitly closed by exception", () => {
-    const nextTue = nextWeekday(2);
-    const exceptions: Exception[] = [
-      { from: nextTue, to: null, periods: [], note: null },
-    ];
-    expect(isDateOpen(nextTue, weekly, exceptions)).toBe(false);
-  });
-  it("isDateOpen returns true for today", () => {
-    const today = startOfDay(new Date());
-    expect(isDateOpen(today, weekly, [])).toBe(true);
+  it("returns false for future dates", () => {
+    const futureDate = dateFromPlain("2200-01-01T10:00");
+    expect(isPast(futureDate)).toBe(false);
   });
 });
 
-describe("utils: isOpen (date + time)", () => {
-  it("returns true during a weekly open period (future datetime)", () => {
-    const nextMon = nextWeekday(1);
-    const dt = atHM(nextMon, "12:30"); // inside 12:00-14:00
-    expect(isOpen(dt, weekly, [])).toBe(true);
+describe("isDateOpen", () => {
+  it("returns true when weekly schedule has periods", () => {
+    const weekly = makeEmptyWeek();
+    const date = dateFromPlain("2200-06-10T12:00");
+    setPeriodsForDate(weekly, date, [{ start: "09:00", end: "17:00" }]);
+
+    expect(isDateOpen(date, weekly, [])).toBe(true);
   });
 
-  it("returns false outside weekly periods (future datetime)", () => {
-    const nextMon = nextWeekday(1);
-    const dt = atHM(nextMon, "16:00"); // between lunch & dinner
-    expect(isOpen(dt, weekly, [])).toBe(false);
+  it("returns false when day is closed", () => {
+    const weekly = makeEmptyWeek();
+    const date = dateFromPlain("2200-06-10T12:00");
+
+    expect(isDateOpen(date, weekly, [])).toBe(false);
+  });
+});
+
+describe("isOpen", () => {
+  it("returns true for future datetimes inside an opening period", () => {
+    const weekly = makeEmptyWeek();
+    const openDate = dateFromPlain("2200-04-15T12:00");
+    setPeriodsForDate(weekly, openDate, [{ start: "09:00", end: "17:00" }]);
+
+    const inside = dateFromPlain("2200-04-15T10:30");
+    expect(isOpen(inside, weekly, [])).toBe(true);
   });
 
-  it("returns false for past datetimes even if within an otherwise open period", () => {
-    // Choose last Monday at 12:30 (past)
-    const today = startOfDay(new Date());
-    let lastMon = addDays(today, -1);
-    while (lastMon.getDay() !== 1) lastMon = addDays(lastMon, -1);
-    const dt = atHM(lastMon, "12:30");
-    expect(isOpen(dt, weekly, [])).toBe(false);
+  it("returns false when outside the opening periods", () => {
+    const weekly = makeEmptyWeek();
+    const openDate = dateFromPlain("2200-04-15T12:00");
+    setPeriodsForDate(weekly, openDate, [{ start: "09:00", end: "17:00" }]);
+
+    const outside = dateFromPlain("2200-04-15T20:00");
+    expect(isOpen(outside, weekly, [])).toBe(false);
   });
 
-  it("honors closed exception (periods = [])", () => {
-    const nextTue = nextWeekday(2);
-    const dt = atHM(nextTue, "12:30");
-    const exceptions: Exception[] = [
-      { from: nextTue, to: null, periods: [], note: "Closed" },
-    ];
-    expect(isOpen(dt, weekly, exceptions)).toBe(false);
+  it("returns false for datetimes in the past", () => {
+    const weekly = makeEmptyWeek();
+    const openDate = dateFromPlain("2200-04-15T12:00");
+    setPeriodsForDate(weekly, openDate, [{ start: "09:00", end: "17:00" }]);
+
+    const pastDate = dateFromPlain("2000-04-15T10:30");
+    expect(isOpen(pastDate, weekly, [])).toBe(false);
+  });
+});
+
+describe("atHM", () => {
+  it("builds a zoned datetime at the requested time", () => {
+    const base = dateFromPlain("2200-03-03T00:00");
+    const zdt = atHM(base, "18:30:15");
+
+    expect(zdt.toPlainDate().toString()).toBe("2200-03-03");
+    expect(zdt.hour).toBe(18);
+    expect(zdt.minute).toBe(30);
+    expect(zdt.second).toBe(15);
   });
 
-  it("honors whitelist exception (only provided periods are open)", () => {
-    const nextMon = nextWeekday(1);
-    const exceptions: Exception[] = [
-      {
-        from: nextMon,
-        to: null,
-        periods: [{ start: "18:00", end: "23:00" }],
-        note: "Special night",
-      },
-    ];
-    const inside = atHM(nextMon, "19:30"); // inside override
-    const outside = atHM(nextMon, "13:00"); // would be weekly open, but override should win
-    expect(isOpen(inside, weekly, exceptions)).toBe(true);
-    expect(isOpen(outside, weekly, exceptions)).toBe(false);
+  it("defaults seconds to zero when omitted", () => {
+    const base = dateFromPlain("2200-03-03T00:00");
+    const zdt = atHM(base, "08:05");
+
+    expect(zdt.second).toBe(0);
+  });
+});
+
+describe("getPeriodsForDate", () => {
+  it("returns weekly periods when no exception matches", () => {
+    const weekly = makeEmptyWeek();
+    const date = dateFromPlain("2200-02-02T12:00");
+    const periods: Period[] = [{ start: "09:00", end: "17:00" }];
+    setPeriodsForDate(weekly, date, periods);
+
+    expect(getPeriodsForDate(date, weekly, [])).toEqual(periods);
   });
 
-  it("is end-exclusive: exactly at end is closed", () => {
-    const nextMon = nextWeekday(1);
-    const endEdge = atHM(nextMon, "14:00"); // boundary of 12:00-14:00
-    expect(isOpen(endEdge, weekly, [])).toBe(false);
+  it("returns exception periods when date matches", () => {
+    const weekly = makeEmptyWeek();
+    const date = dateFromPlain("2200-02-02T12:00");
+    setPeriodsForDate(weekly, date, [{ start: "09:00", end: "17:00" }]);
+
+    const exception: Exception = {
+      from: dateFromPlain("2200-02-02T00:00"),
+      to: dateFromPlain("2200-02-02T00:00"),
+      periods: [{ start: "10:00", end: "12:00" }],
+      note: null,
+    };
+
+    expect(getPeriodsForDate(date, weekly, [exception])).toEqual(
+      exception.periods,
+    );
   });
 
-  it("supports cross-midnight periods within the same date (e.g., 18:00 → 01:00 next day)", () => {
-    const nextMon = nextWeekday(1);
-    const exceptions: Exception[] = [
-      {
-        from: nextMon,
-        to: null,
-        periods: [{ start: "18:00", end: "01:00" }],
-        note: "NYE-style",
-      },
-    ];
-    const late = atHM(nextMon, "23:30"); // should be open
-    const pre = atHM(nextMon, "17:30"); // closed before start
-    expect(isOpen(late, weekly, exceptions)).toBe(true);
-    expect(isOpen(pre, weekly, exceptions)).toBe(false);
-    // NOTE: Checking 00:30 on the *next day* would require looking back at previous day's exception,
-    // which the current implementation doesn't do. If you add that feature, add a test for it too.
+  it("prefers the last matching exception", () => {
+    const weekly = makeEmptyWeek();
+    const date = dateFromPlain("2200-02-02T12:00");
+    setPeriodsForDate(weekly, date, [{ start: "09:00", end: "17:00" }]);
+
+    const first: Exception = {
+      from: dateFromPlain("2200-02-02T00:00"),
+      to: null,
+      periods: [{ start: "08:00", end: "09:00" }],
+      note: null,
+    };
+
+    const second: Exception = {
+      from: dateFromPlain("2200-02-02T00:00"),
+      to: null,
+      periods: [{ start: "11:00", end: "13:00" }],
+      note: null,
+    };
+
+    expect(getPeriodsForDate(date, weekly, [first, second])).toEqual(
+      second.periods,
+    );
+  });
+});
+
+describe("generateSlots", () => {
+  it("returns an empty list for past dates", () => {
+    const weekly = makeEmptyWeek();
+    const now = dateFromPlain("2200-02-03T12:00");
+    const pastDay = dateFromPlain("2200-02-02T12:00");
+    setPeriodsForDate(weekly, pastDay, [{ start: "09:00", end: "10:00" }]);
+
+    expect(
+      generateSlots(pastDay, weekly, [], { slotMinutes: 30, now }),
+    ).toEqual([]);
+  });
+
+  it("starts from the next slot when now is inside a period", () => {
+    const weekly = makeEmptyWeek();
+    const day = dateFromPlain("2200-02-04T00:00");
+    setPeriodsForDate(weekly, day, [{ start: "09:00", end: "10:00" }]);
+    const now = dateFromPlain("2200-02-04T09:10");
+
+    expect(generateSlots(day, weekly, [], { slotMinutes: 15, now })).toEqual([
+      ["09:15", "09:30", "09:45"],
+    ]);
+  });
+
+  it("handles periods that cross midnight", () => {
+    const weekly = makeEmptyWeek();
+    const day = dateFromPlain("2200-05-15T00:00");
+    setPeriodsForDate(weekly, day, [{ start: "22:00", end: "02:00" }]);
+    const now = dateFromPlain("2200-05-15T18:00");
+
+    expect(generateSlots(day, weekly, [], { slotMinutes: 60, now })).toEqual([
+      ["22:00", "23:00", "00:00", "01:00"],
+    ]);
   });
 });

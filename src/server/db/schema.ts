@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  customType,
   date,
   integer,
   jsonb,
@@ -11,7 +12,29 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { authenticatedRole } from "drizzle-orm/supabase";
-import type { Period } from "./types";
+import { TIMEZONE } from "@/lib/utils";
+import type { HM, Period } from "./types";
+
+const customDate = customType<{
+  data: Date;
+  driverData: string;
+}>({
+  dataType() {
+    return "date";
+  },
+  fromDriver(dbValue: string): Date {
+    return new Date(
+      Temporal.PlainDate.from(dbValue).toZonedDateTime(TIMEZONE)
+        .epochMilliseconds,
+    );
+  },
+  toDriver(appValue: Date): string {
+    return Temporal.Instant.fromEpochMilliseconds(appValue.getTime())
+      .toZonedDateTimeISO(TIMEZONE)
+      .toPlainDate()
+      .toString();
+  },
+});
 
 export const menuCategory = pgEnum("menu-category", [
   "fromage",
@@ -95,14 +118,14 @@ export const bookingsTable = pgTable(
 export const weeklyTable = pgTable("weekly", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   day: dayEnum().notNull(),
-  start: time().notNull(),
-  end: time().notNull(),
+  start: time().notNull().$type<HM>(),
+  end: time().notNull().$type<HM>(),
 }).enableRLS();
 
 export const exceptionsTable = pgTable("exceptions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  from: date().notNull(),
-  to: date(), // Nullable for a single day
-  periods: jsonb().$type<Period[]>().default([]), // Closed if empty
+  from: customDate().notNull(),
+  to: customDate(), // Nullable for a single day
+  periods: jsonb().$type<Period[]>().default([]).notNull(), // Closed if empty
   note: text(),
 }).enableRLS();

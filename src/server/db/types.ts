@@ -10,10 +10,11 @@ export type TBooking = InferSelectModel<typeof bookingsTable>;
 export type TDay = InferEnum<typeof dayEnum>;
 export const SPutBooking = createInsertSchema(bookingsTable);
 export type TPutBooking = InferInsertModel<typeof bookingsTable>;
+
 export type HM = `${number}:${number}` | `${number}:${number}:${number}`;
 export type Period = { start: HM; end: HM };
 export type Dayly = { periods: Period[] };
-export type Weekly = Dayly[];
+export type Weekly = Dayly[]; // 0..6 => Sunday..Saturday;
 export type Exception = {
   from: Date;
   to: Date | null;

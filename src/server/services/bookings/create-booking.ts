@@ -1,4 +1,3 @@
-import { fromZonedTime } from "date-fns-tz";
 import { fromPromise } from "neverthrow";
 import { TIMEZONE } from "@/lib/utils";
 import type { DB } from "@/server/db";
@@ -21,7 +20,12 @@ export async function createBooking(db: DB, input: TPutBooking) {
     const [booking] = result.value;
     const { error } = await sendBooking({
       name: booking.name,
-      date: fromZonedTime(`${booking.date}T${booking.time}`, TIMEZONE),
+      date: new Date(
+        Temporal.PlainDate.from(input.date).toZonedDateTime({
+          timeZone: TIMEZONE,
+          plainTime: Temporal.PlainTime.from(input.time),
+        }).epochMilliseconds,
+      ),
       guests: booking.guests,
       reservationId: booking.id,
       email: booking.email,
