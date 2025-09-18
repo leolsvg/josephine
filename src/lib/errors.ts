@@ -1,4 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import {
+  DrizzleError,
+  DrizzleQueryError,
+  DrizzleTypeError,
+  ImportTypeError,
+  TransactionRollbackError,
+} from "drizzle-orm";
 
 export const DUPLICATE_BOOKING_ERROR = new TRPCError({
   code: "CONFLICT",
@@ -26,9 +33,17 @@ export const SEND_EMAIL_ERROR = (error: string) =>
     cause: error,
   });
 
-export const CLOSED_ERROR = (date: string, time: string, error?: unknown) =>
+export const DRIZZLE_ERROR = (date: string, time: string, error?: unknown) =>
   new TRPCError({
     code: "FORBIDDEN",
     message: `Le restaurant est fermé le ${date} à ${time}`,
     cause: error,
   });
+
+export type DRIZZLE_ERROR = {
+  error: "drizzle_record_not_found_error";
+  message: string;
+  cause: unknown;
+};
+
+export class DrizzleRecordNotFoundErrorCause extends Error {}
