@@ -21,14 +21,15 @@ export function DateTimeField({
   onDateChange,
   onTimeChange,
   time,
+  id,
 }: DateTimeFieldProps) {
   return (
     <FormField>
-      <Label className="mb-3" htmlFor={label}>
+      <Label className="mb-3" htmlFor={id}>
         {label}
       </Label>
       <DateTimeInput
-        id={label}
+        id={id}
         disabled={disabled}
         timeSlots={timeSlots}
         date={date}

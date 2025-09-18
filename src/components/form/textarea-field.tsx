@@ -9,17 +9,17 @@ import { type FieldProps, useFieldContext } from "./types";
 
 type TextareaProps = ComponentProps<"textarea"> & FieldProps;
 
-export function TextAreaField({ label, ...props }: TextareaProps) {
+export function TextAreaField({ label, id, ...props }: TextareaProps) {
   const field = useFieldContext<string | undefined>();
   return (
     <FormField>
-      <Label className="mb-3" htmlFor={label}>
+      <Label className="mb-3" htmlFor={id}>
         {label}
       </Label>
       <Textarea
         className="shadow-sm"
         {...props}
-        id={label}
+        id={id}
         value={field.state.value ?? ""}
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}

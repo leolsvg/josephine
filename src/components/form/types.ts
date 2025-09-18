@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 
 export interface FieldProps {
   label: string;
+  id: string;
 }
 
 export type InputProps = ComponentProps<"input"> & FieldProps;

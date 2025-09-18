@@ -8,18 +8,23 @@ import { PhoneInput } from "./phone-input";
 
 type PhoneFieldProps = ComponentProps<typeof PhoneInput> & FieldProps;
 
-export function PhoneField({ label, className, ...props }: PhoneFieldProps) {
+export function PhoneField({
+  label,
+  id,
+  className,
+  ...props
+}: PhoneFieldProps) {
   const field = useFieldContext<string>();
   return (
     <FormField>
-      <Label className="mb-3" htmlFor={label}>
+      <Label className="mb-3" htmlFor={id}>
         {label}
       </Label>
       <PhoneInput
         {...props}
         className={cn("shadow-sm", className)}
         defaultCountry="FR"
-        id={label}
+        id={id}
         value={field.state.value}
         onChange={(v) => field.handleChange(v)}
         onBlur={field.handleBlur}

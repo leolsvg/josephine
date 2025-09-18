@@ -1,6 +1,3 @@
-import { addDays, format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { formatInTimeZone } from "date-fns-tz";
 import { DateTimeField } from "@/components/form/date-time-field";
 import {
   bookingFormOptions,
@@ -29,6 +26,7 @@ export const FormState = withBookingForm({
           </DialogDescription>
         </DialogHeader>
         <form
+          autoComplete="on"
           noValidate
           onSubmit={(e) => {
             e.preventDefault();
@@ -36,18 +34,39 @@ export const FormState = withBookingForm({
         >
           <div className="flex flex-col gap-3">
             <form.AppField name="name">
-              {(field) => <field.TextField label="Nom" type="text" />}
+              {(field) => (
+                <field.TextField
+                  label="Nom"
+                  id="name"
+                  type="text"
+                  autoComplete="name"
+                />
+              )}
             </form.AppField>
             <form.AppField name="email">
-              {(field) => <field.TextField label="Email" type="email" />}
+              {(field) => (
+                <field.TextField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
+                />
+              )}
             </form.AppField>
             <form.AppField name="phone">
-              {(field) => <field.PhoneField label="Téléphone" />}
+              {(field) => (
+                <field.PhoneField
+                  label="Téléphone"
+                  id="phone"
+                  autoComplete="phone"
+                />
+              )}
             </form.AppField>
 
             <form.AppField name="guests">
               {(field) => (
                 <field.NumberField
+                  id="guests"
                   label="Nombre de personnes"
                   type="number"
                   min={MIN_GUESTS}
@@ -61,6 +80,7 @@ export const FormState = withBookingForm({
                 <form.AppField name="time">
                   {(timeField) => (
                     <DateTimeField
+                      id="date"
                       label="Date"
                       date={dateField.state.value}
                       time={timeField.state.value}
@@ -70,7 +90,7 @@ export const FormState = withBookingForm({
                         return !isDateOpen(date, weekly, exceptions);
                       }}
                       timeSlots={(date) => {
-                        return generateSlots(weekly, date, exceptions);
+                        return generateSlots(date, weekly, exceptions);
                       }}
                     />
                   )}
@@ -78,7 +98,7 @@ export const FormState = withBookingForm({
               )}
             </form.AppField>
             <form.AppField name="notes">
-              {(field) => <field.TextAreaField label="Notes" />}
+              {(field) => <field.TextAreaField label="Notes" id="notes" />}
             </form.AppField>
             <form.AppForm>
               <form.SubmitButton>Réserver</form.SubmitButton>
