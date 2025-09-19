@@ -1,6 +1,8 @@
 import { addHours } from "date-fns";
 import ical, { ICalCalendarMethod } from "ical-generator";
+import { err, fromPromise, ok } from "neverthrow";
 import { BookingConfirmationEmail } from "@/components/booking-confirmation-email";
+import { ResendSendError, ResendUnknownError } from "@/lib/errors/resend";
 import { Josephine } from "@/lib/josephine";
 import { resend } from "@/lib/resend";
 
@@ -37,7 +39,7 @@ interface Test {
   notes?: string;
 }
 
-export async function sendBooking({
+export function sendBooking({
   name,
   reservationId,
   guests,
@@ -46,27 +48,32 @@ export async function sendBooking({
   phone,
   notes,
 }: Test) {
-  return await resend.emails.send({
-    from: `Restaurant Joséphine <${Josephine.noreply}>`,
-    to: email,
-    subject: `Restaurant Joséphine — Réservation`,
-    react: (
-      <BookingConfirmationEmail
-        name={name}
-        reservationId={reservationId}
-        date={date}
-        guests={guests}
-        email={email}
-        phone={phone}
-        notes={notes}
-      />
-    ),
-    attachments: [
-      {
-        content: createIcsAttachment(date, reservationId, guests).toString(),
-        filename: "invite.ics",
-        contentType: 'text/calendar; charset="UTF-8"; method=REQUEST',
-      },
-    ],
-  });
+  return fromPromise(
+    resend.emails.send({
+      from: `Restaurant Joséphine <${Josephine.noreply}>`,
+      to: email,
+      subject: `Restaurant Joséphine — Réservation`,
+      react: (
+        <BookingConfirmationEmail
+          name={name}
+          reservationId={reservationId}
+          date={date}
+          guests={guests}
+          email={email}
+          phone={phone}
+          notes={notes}
+        />
+      ),
+      attachments: [
+        {
+          content: createIcsAttachment(date, reservationId, guests).toString(),
+          filename: "invite.ics",
+          contentType: 'text/calendar; charset="UTF-8"; method=REQUEST',
+        },
+      ],
+    }),
+    (e) => new ResendUnknownError(e),
+  ).andThen((r) =>
+    r.data === null ? err(new ResendSendError(r.error)) : ok(r.data),
+  );
 }

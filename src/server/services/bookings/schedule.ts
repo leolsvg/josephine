@@ -1,6 +1,6 @@
 import { asc } from "drizzle-orm";
-import { fromPromise, ok } from "neverthrow";
-import { DrizzleQueryError, safeDrizzleQuery } from "@/lib/errors/drizzle";
+import { ok } from "neverthrow";
+import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import { dayToIndex } from "@/lib/utils";
 import type { DB } from "@/server/db";
 import { exceptionsTable, weeklyTable } from "@/server/db/schema";
