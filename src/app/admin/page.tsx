@@ -1,14 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function AdminPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [, setSession] = useState<unknown>(null); // session supprimée de la lecture
-
+  const supabase = createClient();
   useEffect(() => {
     const checkSession = async () => {
       const {
@@ -24,7 +24,7 @@ export default function AdminPage() {
     };
 
     checkSession();
-  }, [router]); // on ajoute router dans les dépendances
+  }, [router, supabase]); // on ajoute router dans les dépendances
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

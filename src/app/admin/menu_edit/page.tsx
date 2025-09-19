@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const categoriesOrdre = [
   "partager",
@@ -29,7 +29,7 @@ export default function ModifierCartePage() {
   const [, setSession] = useState<unknown>(null); // on n'utilise pas session → on ignore la 1ère valeur
   const [plats, setPlats] = useState<MenuItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
-
+  const supabase = createClient();
   useEffect(() => {
     const checkSession = async () => {
       const {
@@ -47,7 +47,7 @@ export default function ModifierCartePage() {
     };
 
     checkSession();
-  }, [router]); // ajoute router pour éviter le warning react-hooks/exhaustive-deps
+  }, [router, supabase]); // ajoute router pour éviter le warning react-hooks/exhaustive-deps
 
   const fetchPlats = async () => {
     const { data, error } = await supabase.from("menus").select("*");
@@ -61,7 +61,7 @@ export default function ModifierCartePage() {
   const updatePlat = async (
     id: string,
     field: keyof MenuItem,
-    value: string
+    value: string,
   ) => {
     const { error } = await supabase
       .from("menus")
@@ -74,8 +74,8 @@ export default function ModifierCartePage() {
     // Optionnel: mettre à jour localement pour une sensation instantanée
     setPlats((prev) =>
       prev.map((p) =>
-        p.id === id ? ({ ...p, [field]: value } as MenuItem) : p
-      )
+        p.id === id ? ({ ...p, [field]: value } as MenuItem) : p,
+      ),
     );
   };
 
@@ -115,12 +115,12 @@ export default function ModifierCartePage() {
   const renderTable = (
     data: MenuItem[],
     updatePlatFn: (id: string, field: keyof MenuItem, value: string) => void,
-    deletePlatFn: (id: string) => void
+    deletePlatFn: (id: string) => void,
   ) => {
     const platsTries = [...data].sort(
       (a, b) =>
         categoriesOrdre.indexOf(a.categorie) -
-        categoriesOrdre.indexOf(b.categorie)
+        categoriesOrdre.indexOf(b.categorie),
     );
 
     return (
@@ -163,7 +163,7 @@ export default function ModifierCartePage() {
                       updatePlatFn(
                         plat.id,
                         "categorie",
-                        e.target.value as Categorie
+                        e.target.value as Categorie,
                       )
                     }
                     className="w-full border px-2 py-1 rounded"
@@ -226,7 +226,7 @@ export default function ModifierCartePage() {
         {renderTable(
           plats.filter((p) => p.cartes === "midi"),
           updatePlat,
-          deletePlat
+          deletePlat,
         )}
       </div>
 
@@ -245,7 +245,7 @@ export default function ModifierCartePage() {
         {renderTable(
           plats.filter((p) => p.cartes === "soir"),
           updatePlat,
-          deletePlat
+          deletePlat,
         )}
       </div>
     </div>

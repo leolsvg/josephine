@@ -157,8 +157,10 @@ export default function CartePage() {
       </div>
 
       {/* Bouton réserver */}
+      {/* TODO */}
+
       <Link
-        href="/reservation"
+        href="/"
         className="fixed bottom-4 right-4 z-50 bg-[#000150] text-white px-5 py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-[#1a1a80] transition"
       >
         Réserver

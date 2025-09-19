@@ -1,6 +1,7 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ParametresReservation() {
   const [params, setParams] = useState<{
@@ -15,6 +16,7 @@ export default function ParametresReservation() {
     capacite_max_par_creneau: 20,
     capacite_max_par_service: 50,
   });
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchParams = async () => {
@@ -32,7 +34,7 @@ export default function ParametresReservation() {
     };
 
     fetchParams();
-  }, []);
+  }, [supabase]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setParams((prev) => ({

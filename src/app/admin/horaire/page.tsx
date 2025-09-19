@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 interface Horaire {
   id: string;
@@ -15,7 +15,7 @@ export default function AdminHoraires() {
   const [jour, setJour] = useState("lundi");
   const [heureDebut, setHeureDebut] = useState("12:00");
   const [heureFin, setHeureFin] = useState("14:00");
-
+  const supabase = createClient();
   useEffect(() => {
     fetchHoraires();
   }, []);

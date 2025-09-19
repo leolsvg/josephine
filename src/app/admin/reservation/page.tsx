@@ -1,7 +1,7 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 interface Reservation {
   id: string;
@@ -32,6 +32,7 @@ export default function AdminReservations() {
     notes: "",
   });
 
+  const supabase = createClient();
   const [q, setQ] = useState(""); // recherche rapide
   const router = useRouter();
 
@@ -58,7 +59,7 @@ export default function AdminReservations() {
     }
 
     setLoading(false);
-  }, [router]);
+  }, [router, supabase]);
 
   useEffect(() => {
     fetchData();
@@ -73,7 +74,7 @@ export default function AdminReservations() {
 
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
-      "Êtes-vous sûr de vouloir supprimer cette réservation ?"
+      "Êtes-vous sûr de vouloir supprimer cette réservation ?",
     );
     if (!confirmDelete) return;
 
@@ -96,7 +97,9 @@ export default function AdminReservations() {
       console.error("Erreur maj arrivée:", error.message);
     } else {
       setReservations((prev) =>
-        prev.map((r) => (r.id === res.id ? { ...r, arrivee: !res.arrivee } : r))
+        prev.map((r) =>
+          r.id === res.id ? { ...r, arrivee: !res.arrivee } : r,
+        ),
       );
     }
     setSaving((s) => ({ ...s, [res.id]: false }));
@@ -109,7 +112,7 @@ export default function AdminReservations() {
 
     // UI optimiste
     setReservations((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, ...patch } : r))
+      prev.map((r) => (r.id === id ? { ...r, ...patch } : r)),
     );
 
     const { error } = await supabase
@@ -145,7 +148,7 @@ export default function AdminReservations() {
     };
 
   const handleEditableKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (e.key === "Enter") {
       (e.target as HTMLInputElement).blur();
@@ -187,7 +190,7 @@ export default function AdminReservations() {
     return reservations.filter((r) =>
       [r.nom, r.email, r.telephone, r.notes]
         .filter(Boolean)
-        .some((v) => String(v).toLowerCase().includes(s))
+        .some((v) => String(v).toLowerCase().includes(s)),
     );
   }, [reservations, q]);
 
