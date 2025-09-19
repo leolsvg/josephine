@@ -207,7 +207,7 @@ export function BookingConfirmationEmail({
                   <Text>
                     Site web :{" "}
                     <Link href={Josephine.website} className="underline">
-                      {env.DOMAIN}
+                      {env.NEXT_PUBLIC_DOMAIN}
                     </Link>
                   </Text>
                 </CardContent>
