@@ -19,7 +19,7 @@ export function InnerTable({ table }: { table: TanStackTable<TBooking> }) {
   const isEmpty = rows.length === 0;
   const bookingIds = useRealtimeBookingIds();
   return (
-    <Table noWrapper>
+    <Table>
       <TableHeader className="sticky top-0 z-10 ">
         {table.getHeaderGroups().map((g) => (
           <TableRow key={g.id} className="bg-accent hover:bg-accent">

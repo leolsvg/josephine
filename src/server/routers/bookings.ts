@@ -8,7 +8,7 @@ import {
 } from "@/lib/trpc/init";
 import { SId } from "@/lib/utils";
 import { bookingsTable } from "../db/schema";
-import { SPutBooking } from "../db/types";
+import { SPatchBooking, SPutBooking } from "../db/types";
 import { createBooking } from "../services/bookings/create-booking";
 
 export const bookings = createTRPCRouter({
@@ -49,4 +49,16 @@ export const bookings = createTRPCRouter({
     }
     return result.value;
   }),
+  patch: publicProcedure
+    .input(
+      SId.extend({
+        value: SPatchBooking,
+      }),
+    )
+    .mutation(({ ctx, input: { id, value } }) => {
+      return ctx.db
+        .update(bookingsTable)
+        .set(value)
+        .where(eq(bookingsTable.id, id));
+    }),
 });

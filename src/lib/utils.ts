@@ -43,3 +43,7 @@ export const dayArray = [
   "friday",
   "saturday",
 ] as const satisfies TDay[];
+
+export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "full",
+});

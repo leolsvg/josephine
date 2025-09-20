@@ -1,61 +1,66 @@
 "use client";
 
-import { parseAsIsoDateTime, useQueryState } from "nuqs";
-import { useMemo } from "react";
+import { parseAsString, useQueryState } from "nuqs";
+import { useEffect, useMemo } from "react";
+import z from "zod";
+import { TIMEZONE } from "@/lib/utils";
+
+const SDate = z.iso.date();
 
 export function useBookingsDate() {
-  const todayDate = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
+  const todayTemporal = useMemo(() => {
+    return Temporal.Now.zonedDateTimeISO(TIMEZONE).toPlainDate();
   }, []);
 
-  const tomorrowDate = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, []);
-  const [date, setDate] = useQueryState("date", parseAsIsoDateTime);
+  const tomorrowTemporal = useMemo(() => {
+    return todayTemporal.add({ days: 1 });
+  }, [todayTemporal]);
+
+  const [date, setDate] = useQueryState(
+    "date",
+    parseAsString.withDefault(todayTemporal.toString()),
+  );
+
+  const safeDate = useMemo(() => SDate.safeParse(date).data, [date]);
+
+  useEffect(() => console.log(safeDate, date), [safeDate, date]);
 
   function prevDay() {
-    if (date) {
-      const prev = new Date(date);
-      prev.setDate(prev.getDate() - 1);
-      setDate(prev);
+    if (safeDate) {
+      const prev = Temporal.PlainDate.from(safeDate).subtract({ days: 1 });
+      setDate(prev.toString());
     }
   }
 
   function nextDay() {
-    if (date) {
-      const prev = new Date(date);
-      prev.setDate(prev.getDate() + 1);
-      setDate(prev);
+    if (safeDate) {
+      const next = Temporal.PlainDate.from(date).add({ days: 1 });
+      setDate(next.toString());
     }
   }
 
-  function reset() {
-    setDate(null);
+  function all() {
+    setDate("ALL");
   }
 
   function today() {
-    setDate(todayDate);
+    setDate(todayTemporal.toString());
   }
 
   function tomorrow() {
-    setDate(tomorrowDate);
+    setDate(tomorrowTemporal.toString());
   }
 
-  const isToday = date && date.getTime() === todayDate.getTime();
-  const isTomorrow = date && date.getTime() === tomorrowDate.getTime();
+  const isToday = safeDate && safeDate === todayTemporal.toString();
+  const isTomorrow = safeDate && safeDate === tomorrowTemporal.toString();
 
   return {
     today,
     tomorrow,
-    date,
+    date: safeDate,
     prevDay,
     nextDay,
-    reset,
+    all,
     isToday,
     isTomorrow,
     setDate,

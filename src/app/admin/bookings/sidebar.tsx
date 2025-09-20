@@ -1,9 +1,11 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { MetricCard } from "./metrics-card";
+import { TIMEZONE } from "@/lib/utils";
 import { useBookingsDate } from "./realtime/use-booking-date";
 
 export function Sidebar() {
@@ -11,14 +13,23 @@ export function Sidebar() {
     date,
     nextDay,
     prevDay,
-    reset,
+    all,
     today,
     tomorrow,
     isToday,
     isTomorrow,
     setDate,
   } = useBookingsDate();
-
+  const [month, setMonth] = useState<Date>();
+  useEffect(() => {
+    if (date)
+      setMonth(
+        new Date(
+          Temporal.PlainDate.from(date).toZonedDateTime(TIMEZONE)
+            .epochMilliseconds,
+        ),
+      );
+  }, [date]);
   return (
     <div className="flex flex-col gap-2 w-100">
       <div className="grid grid-cols-3 gap-2">
@@ -38,8 +49,8 @@ export function Sidebar() {
         </Button>
         <Button
           type="button"
-          variant={date === null ? "default" : "outline"}
-          onClick={reset}
+          variant={!date ? "default" : "outline"}
+          onClick={all}
         >
           Afficher tout
         </Button>
@@ -71,9 +82,30 @@ export function Sidebar() {
       <div className="flex justify-center">
         <Calendar
           fixedWeeks
+          locale={fr}
+          timeZone={TIMEZONE}
+          month={month}
+          onMonthChange={setMonth}
           mode="single"
-          selected={date ?? undefined}
-          onSelect={(date) => setDate(date ?? null)}
+          showOutsideDays={false}
+          selected={
+            date
+              ? new Date(
+                  Temporal.PlainDate.from(date).toZonedDateTime(TIMEZONE)
+                    .epochMilliseconds,
+                )
+              : undefined
+          }
+          onSelect={(date) =>
+            setDate(
+              date
+                ? Temporal.Instant.fromEpochMilliseconds(date.getTime())
+                    .toZonedDateTimeISO(TIMEZONE)
+                    .toPlainDate()
+                    .toString()
+                : null,
+            )
+          }
           className="md:[--cell-size:--spacing(12)]"
         />
       </div>

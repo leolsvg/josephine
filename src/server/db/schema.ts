@@ -11,9 +11,19 @@ import {
   time,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { authenticatedRole } from "drizzle-orm/supabase";
+import { authenticatedRole, realtimeMessages } from "drizzle-orm/supabase";
 import { TIMEZONE } from "@/lib/utils";
 import type { HM, Period } from "./types";
+
+export const realtimePolicy = pgPolicy(
+  "Allow listening for broadcasts for authenticated users only",
+  {
+    as: "permissive",
+    for: "select",
+    to: authenticatedRole,
+    using: sql`true`,
+  },
+).link(realtimeMessages);
 
 const customDate = customType<{
   data: Date;

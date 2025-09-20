@@ -27,18 +27,16 @@ export function DataTableFooter<TData>({ table }: { table: Table<TData> }) {
   const pageIndex = table.getState().pagination.pageIndex;
   const rows = table.getFilteredRowModel().rows.length;
   const hasReservations = rows !== 0;
+  const guests = table
+    .getPrePaginationRowModel()
+    .rows.reduce((p, c) => p + (c.getValue("guests") as number), 0);
   return (
     <div className="flex items-center justify-between bg-background pt-3 pl-3">
       <div className="text-muted-foreground">
         {hasReservations ? (
           <>
-            <strong>{rows}</strong> réservations pour{" "}
-            <strong>
-              {table
-                .getPrePaginationRowModel()
-                .rows.reduce((p, c) => p + (c.getValue("guests") as number), 0)}
-            </strong>{" "}
-            personnes
+            <strong>{rows}</strong> réservation{rows > 1 && "s"} pour{" "}
+            <strong>{guests}</strong> personne{guests > 1 && "s"}
           </>
         ) : (
           "Pas de réservations"

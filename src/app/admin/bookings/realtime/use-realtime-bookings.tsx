@@ -7,9 +7,13 @@ import type { TBooking } from "@/server/db/types";
 export function useRealtimeBookings(initialBookings: TBooking[]) {
   const [bookings, setBookings] = useState(initialBookings);
   useEffect(() => {
-    const client = createClient();
-    const bookingsChannel = client
-      .channel("bookings")
+    const supabase = createClient();
+    const bookingsChannel = supabase
+      .channel("bookings", {
+        config: {
+          private: true,
+        },
+      })
       .on(
         "postgres_changes",
         {
@@ -39,7 +43,7 @@ export function useRealtimeBookings(initialBookings: TBooking[]) {
       )
       .subscribe();
     return () => {
-      client.removeChannel(bookingsChannel);
+      supabase.removeChannel(bookingsChannel);
     };
   }, []);
   return bookings;
