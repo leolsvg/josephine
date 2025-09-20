@@ -134,11 +134,10 @@ export default function ModifierCartePage() {
     updatePlatFn: (id: string, field: keyof MenuItem, value: string) => void,
     deletePlatFn: (id: string) => void,
   ) => {
-    const platsTries = [...data].sort(
+    const orderedItems = data.toSorted(
       (a, b) =>
         menuCategories.indexOf(a.category) - menuCategories.indexOf(b.category),
     );
-    console.log(data);
     return (
       <Card className="py-0 overflow-hidden overflow-x-scroll">
         <Table>
@@ -152,7 +151,7 @@ export default function ModifierCartePage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {platsTries.map((plat) => (
+            {orderedItems.map((plat) => (
               <TableRow key={plat.id}>
                 <TableCell>
                   <Input
