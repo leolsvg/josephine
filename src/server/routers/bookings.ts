@@ -1,9 +1,43 @@
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, publicProcedure } from "../../lib/trpc/init";
+import { eq } from "drizzle-orm";
+import { safeDrizzleQuery } from "@/lib/errors/drizzle";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/lib/trpc/init";
+import { SId } from "@/lib/utils";
+import { bookingsTable } from "../db/schema";
 import { SPutBooking } from "../db/types";
 import { createBooking } from "../services/bookings/create-booking";
 
 export const bookings = createTRPCRouter({
+  get: protectedProcedure.query(async ({ ctx }) => {
+    const result = await safeDrizzleQuery(ctx.db.select().from(bookingsTable));
+    if (result.isErr()) {
+      throw new TRPCError({
+        message: result.error.message,
+        code: "INTERNAL_SERVER_ERROR",
+        cause: result.error.cause,
+      });
+    }
+    return result.value;
+  }),
+  delete: publicProcedure
+    .input(SId)
+    .mutation(async ({ ctx, input: { id } }) => {
+      const result = await safeDrizzleQuery(
+        ctx.db.delete(bookingsTable).where(eq(bookingsTable.id, id)),
+      );
+      if (result.isErr()) {
+        throw new TRPCError({
+          message: result.error.message,
+          code: "INTERNAL_SERVER_ERROR",
+          cause: result.error.cause,
+        });
+      }
+      return result.value;
+    }),
   put: publicProcedure.input(SPutBooking).mutation(async ({ ctx, input }) => {
     const result = await createBooking(ctx.db, input);
     if (result.isErr()) {
