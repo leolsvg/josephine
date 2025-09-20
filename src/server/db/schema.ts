@@ -36,7 +36,7 @@ const customDate = customType<{
   },
 });
 
-export const menuCategory = pgEnum("menu-category", [
+export const menuCategoryEnum = pgEnum("menu-category", [
   "fromage",
   "entree",
   "plat",
@@ -44,7 +44,7 @@ export const menuCategory = pgEnum("menu-category", [
   "partager",
 ]);
 
-export const menuService = pgEnum("menu-service", ["soir", "midi"]);
+export const menuServiceEnum = pgEnum("menu-service", ["soir", "midi"]);
 
 export const statusEnum = pgEnum("status", [
   "pending",
@@ -68,9 +68,9 @@ export const menusTable = pgTable(
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     description: text().notNull(),
-    category: menuCategory().notNull(),
+    category: menuCategoryEnum().notNull(),
     price: integer().notNull(),
-    service: menuService().notNull(),
+    service: menuServiceEnum().notNull(),
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp()
       .notNull()
@@ -82,6 +82,13 @@ export const menusTable = pgTable(
       as: "permissive",
       for: "select",
       using: sql`true`,
+    }),
+    pgPolicy("Enable all operations to authenticated users", {
+      as: "permissive",
+      to: authenticatedRole,
+      for: "all",
+      using: sql`true`,
+      withCheck: sql`true`,
     }),
   ],
 ).enableRLS();

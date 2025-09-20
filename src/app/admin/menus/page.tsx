@@ -1,26 +1,43 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { createClient } from "@/lib/supabase/client";
+import type { TMenuCategory, TMenuService } from "@/server/db/types";
 
-const categoriesOrdre = [
+const menuCategories = [
   "partager",
   "entree",
   "plat",
   "fromage",
   "dessert",
-] as const;
-
-type Categorie = (typeof categoriesOrdre)[number];
-type Carte = "midi" | "soir";
+] as const satisfies TMenuCategory[];
 
 interface MenuItem {
   id: string;
   description: string;
-  prix: string | number;
-  categorie: Categorie;
-  cartes: Carte;
+  price: number;
+  category: TMenuCategory;
+  service: TMenuService;
 }
 
 export default function ModifierCartePage() {
@@ -88,15 +105,15 @@ export default function ModifierCartePage() {
     setPlats((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const ajouterPlat = async (type: Carte) => {
+  const ajouterPlat = async (type: TMenuService) => {
     setIsAdding(true);
     const { data, error } = await supabase
       .from("menus")
       .insert({
         description: "Nouveau plat",
-        prix: "0",
-        categorie: "plat",
-        cartes: type,
+        price: 0,
+        category: "plat",
+        service: type,
       })
       .select();
 
@@ -119,94 +136,96 @@ export default function ModifierCartePage() {
   ) => {
     const platsTries = [...data].sort(
       (a, b) =>
-        categoriesOrdre.indexOf(a.categorie) -
-        categoriesOrdre.indexOf(b.categorie),
+        menuCategories.indexOf(a.category) - menuCategories.indexOf(b.category),
     );
-
+    console.log(data);
     return (
-      <div className="overflow-x-auto border rounded">
-        <table className="min-w-full bg-white text-sm">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-2">Description</th>
-              <th className="p-2">Prix</th>
-              <th className="p-2">Catégorie</th>
-              <th className="p-2">Carte</th>
-              <th className="p-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
+      <Card className="py-0 overflow-hidden overflow-x-scroll">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-100">
+              <TableHead>Description</TableHead>
+              <TableHead>Prix</TableHead>
+              <TableHead>Catégorie</TableHead>
+              <TableHead>Service</TableHead>
+              <TableHead className="w-0" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {platsTries.map((plat) => (
-              <tr key={plat.id} className="border-t">
-                <td className="p-2 min-w-[200px]">
-                  <input
+              <TableRow key={plat.id}>
+                <TableCell>
+                  <Input
                     defaultValue={plat.description}
                     onBlur={(e) =>
                       updatePlatFn(plat.id, "description", e.target.value)
                     }
-                    className="w-full border px-2 py-1 rounded"
                   />
-                </td>
-                <td className="p-2 min-w-[80px]">
-                  <input
-                    defaultValue={String(plat.prix)}
+                </TableCell>
+                <TableCell>
+                  <Input
+                    defaultValue={String(plat.price)}
                     onBlur={(e) =>
-                      updatePlatFn(plat.id, "prix", e.target.value)
+                      updatePlatFn(plat.id, "price", e.target.value)
                     }
-                    className="w-full border px-2 py-1 rounded"
                   />
-                </td>
-                <td className="p-2 min-w-[120px]">
-                  <select
-                    defaultValue={plat.categorie}
-                    onBlur={(e) =>
-                      updatePlatFn(
-                        plat.id,
-                        "categorie",
-                        e.target.value as Categorie,
-                      )
+                </TableCell>
+                <TableCell>
+                  <Select
+                    defaultValue={plat.category}
+                    onValueChange={(v) =>
+                      updatePlatFn(plat.id, "category", v as TMenuCategory)
                     }
-                    className="w-full border px-2 py-1 rounded"
                   >
-                    <option value="partager">À partager</option>
-                    <option value="entree">Entrée</option>
-                    <option value="plat">Plat</option>
-                    <option value="fromage">Fromage</option>
-                    <option value="dessert">Dessert</option>
-                  </select>
-                </td>
-                <td className="p-2 min-w-[100px]">
-                  <select
-                    defaultValue={plat.cartes}
-                    onBlur={(e) =>
-                      updatePlatFn(plat.id, "cartes", e.target.value as Carte)
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="partager">À partager</SelectItem>
+                      <SelectItem value="entree">Entrée</SelectItem>
+                      <SelectItem value="plat">Plat</SelectItem>
+                      <SelectItem value="fromage">Fromage</SelectItem>
+                      <SelectItem value="dessert">Dessert</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+                <TableCell className="p-2 min-w-[100px]">
+                  <Select
+                    defaultValue={plat.service}
+                    onValueChange={(v) =>
+                      updatePlatFn(plat.id, "service", v as TMenuService)
                     }
-                    className="w-full border px-2 py-1 rounded"
                   >
-                    <option value="midi">Midi</option>
-                    <option value="soir">Soir</option>
-                  </select>
-                </td>
-                <td className="p-2 min-w-[90px]">
-                  <button
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="midi">Midi</SelectItem>
+                      <SelectItem value="soir">Soir</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+                <TableCell className="p-2 min-w-[90px]">
+                  <Button
                     onClick={() => deletePlatFn(plat.id)}
-                    className="text-red-600 hover:underline"
+                    variant="ghost"
+                    className="text-destructive"
                   >
                     Supprimer
-                  </button>
-                </td>
-              </tr>
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Card>
     );
   };
 
   if (loading) return <div className="p-8">Chargement...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <div className="min-h-screen p-4 sm:p-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Modifier la carte</h1>
       </div>
@@ -215,16 +234,19 @@ export default function ModifierCartePage() {
       <div className="mb-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
           <h2 className="text-xl font-semibold">Menu du midi</h2>
-          <button
-            onClick={() => ajouterPlat("midi")}
-            disabled={isAdding}
-            className="bg-[#000150] text-white px-4 py-2 rounded hover:bg-[#1a1a80] disabled:opacity-50"
-          >
-            {isAdding ? "Ajout..." : "➕ Ajouter un plat (midi)"}
-          </button>
+          <Button onClick={() => ajouterPlat("midi")} disabled={isAdding}>
+            {isAdding ? (
+              "Ajout..."
+            ) : (
+              <>
+                <Plus />
+                Ajouter un plat (midi)
+              </>
+            )}
+          </Button>
         </div>
         {renderTable(
-          plats.filter((p) => p.cartes === "midi"),
+          plats.filter((p) => p.service === "midi"),
           updatePlat,
           deletePlat,
         )}
@@ -234,16 +256,19 @@ export default function ModifierCartePage() {
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
           <h2 className="text-xl font-semibold">Menu du soir</h2>
-          <button
-            onClick={() => ajouterPlat("soir")}
-            disabled={isAdding}
-            className="bg-[#000150] text-white px-4 py-2 rounded hover:bg-[#1a1a80] disabled:opacity-50"
-          >
-            {isAdding ? "Ajout..." : "➕ Ajouter un plat (soir)"}
-          </button>
+          <Button onClick={() => ajouterPlat("soir")} disabled={isAdding}>
+            {isAdding ? (
+              "Ajout..."
+            ) : (
+              <>
+                <Plus />
+                Ajouter un plat (soir)
+              </>
+            )}
+          </Button>
         </div>
         {renderTable(
-          plats.filter((p) => p.cartes === "soir"),
+          plats.filter((p) => p.service === "soir"),
           updatePlat,
           deletePlat,
         )}
