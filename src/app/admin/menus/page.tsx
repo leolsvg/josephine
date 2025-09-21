@@ -40,7 +40,7 @@ interface MenuItem {
   service: TMenuService;
 }
 
-export default function ModifierCartePage() {
+export default function MenusPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [, setSession] = useState<unknown>(null); // on n'utilise pas session → on ignore la 1ère valeur
@@ -54,7 +54,7 @@ export default function ModifierCartePage() {
       } = await supabase.auth.getSession();
 
       if (!session) {
-        router.push("/login");
+        router.push("/auth/login");
         return;
       }
 
@@ -142,7 +142,7 @@ export default function ModifierCartePage() {
       <Card className="py-0 overflow-hidden overflow-x-scroll">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-accent hover:bg-accent">
               <TableHead>Description</TableHead>
               <TableHead>Prix</TableHead>
               <TableHead>Catégorie</TableHead>
