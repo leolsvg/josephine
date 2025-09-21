@@ -94,6 +94,7 @@ export const menusTable = pgTable(
       using: sql`true`,
     }),
     pgPolicy("Enable all operations to authenticated users", {
+      // For leo admin menus page, TODO : delete if replacing supabase client with drizzle
       as: "permissive",
       to: authenticatedRole,
       for: "all",
@@ -145,4 +146,13 @@ export const exceptionsTable = pgTable("exceptions", {
   to: customDate(), // Nullable for a single day
   periods: jsonb().$type<Period[]>().default([]).notNull(), // Closed if empty
   note: text(),
+}).enableRLS();
+
+export const settingsTable = pgTable("settings", {
+  id: integer()
+    .primaryKey()
+    .$default(() => 1),
+  maxCapacityPerSlot: integer().notNull(),
+  maxCapacityPerService: integer().notNull(),
+  maxGuestsPerBooking: integer().notNull(),
 }).enableRLS();

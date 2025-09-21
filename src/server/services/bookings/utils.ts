@@ -1,4 +1,4 @@
-import { TIMEZONE } from "@/lib/utils";
+import { startOfDay, TIMEZONE, toZdt } from "@/lib/utils";
 import type { Exception, HM, Period, Weekly } from "@/server/db/types";
 
 /**
@@ -17,23 +17,6 @@ export function isPast(date: Date, timeZone = TIMEZONE): boolean {
     .toPlainDate();
   const today = Temporal.Now.plainDateISO(timeZone);
   return Temporal.PlainDate.compare(plainDate, today) < 0;
-}
-
-/** Convert JS Date → Temporal.ZonedDateTime in TIMEZONE */
-function toZdt(date: Date, timeZone = TIMEZONE): Temporal.ZonedDateTime {
-  return Temporal.Instant.fromEpochMilliseconds(
-    date.getTime(),
-  ).toZonedDateTimeISO(timeZone);
-}
-
-/** Convert Temporal.ZonedDateTime → JS Date */
-function toDate(zdt: Temporal.ZonedDateTime): Date {
-  return new Date(zdt.epochMilliseconds);
-}
-
-/** Start of day for a given Date in TIMEZONE */
-function startOfDay(date: Date): Temporal.ZonedDateTime {
-  return toZdt(date).startOfDay();
 }
 
 /** Date-only check: true if the calendar date has at least one opening period (and isn't in the past). */

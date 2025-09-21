@@ -24,26 +24,33 @@ export function toYMD(date: DateArg<Date>) {
   return format(date, "yyyy-MM-dd");
 }
 
-export const dayToIndex = {
-  sunday: 0,
-  monday: 1,
-  tuesday: 2,
-  wednesday: 3,
-  thursday: 4,
-  friday: 5,
-  saturday: 6,
-} as const;
-
-export const dayArray = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-] as const satisfies TDay[];
+export const DayConfig: Record<TDay, { label: string; index: number }> = {
+  sunday: { label: "Dimanche", index: 0 },
+  monday: { label: "Lundi", index: 1 },
+  tuesday: { label: "Mardi", index: 2 },
+  wednesday: { label: "Mercredi", index: 3 },
+  thursday: { label: "Jeudi", index: 4 },
+  friday: { label: "Vendredi", index: 5 },
+  saturday: { label: "Samedi", index: 6 },
+};
 
 export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "full",
 });
+
+/** Convert JS Date → Temporal.ZonedDateTime in TIMEZONE */
+export function toZdt(date: Date, timeZone = TIMEZONE): Temporal.ZonedDateTime {
+  return Temporal.Instant.fromEpochMilliseconds(
+    date.getTime(),
+  ).toZonedDateTimeISO(timeZone);
+}
+
+/** Convert Temporal.ZonedDateTime → JS Date */
+export function toDate(zdt: Temporal.ZonedDateTime): Date {
+  return new Date(zdt.epochMilliseconds);
+}
+
+/** Start of day for a given Date in TIMEZONE */
+export function startOfDay(date: Date): Temporal.ZonedDateTime {
+  return toZdt(date).startOfDay();
+}
