@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function ParametresReservation() {
+export default function SettingsPage() {
   const [params, setParams] = useState<{
     id?: string;
     personnes_min_par_resa: number;

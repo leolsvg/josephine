@@ -39,6 +39,9 @@ export function Header() {
         <Button variant="link" asChild>
           <Link href="/admin/menus">Menus</Link>
         </Button>
+        <Button variant="link" asChild>
+          <Link href="/admin/settings">Paramètres</Link>
+        </Button>
       </div>
       <ThemeToggle />
     </header>
