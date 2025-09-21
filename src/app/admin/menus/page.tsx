@@ -1,8 +1,7 @@
 "use client";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,8 +20,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createClient } from "@/lib/supabase/client";
-import type { TMenuCategory, TMenuService } from "@/server/db/types";
+import { supabase } from "@/lib/supabase/client";
+import type { TMenu, TMenuCategory, TMenuService } from "@/server/db/types";
+
+const MENUS_QUERY_KEY = ["menus"];
 
 const menuCategories = [
   "partager",
@@ -32,196 +33,84 @@ const menuCategories = [
   "dessert",
 ] as const satisfies TMenuCategory[];
 
-interface MenuItem {
-  id: string;
-  description: string;
-  price: number;
-  category: TMenuCategory;
-  service: TMenuService;
-}
-
-export default function MenusPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [, setSession] = useState<unknown>(null); // on n'utilise pas session → on ignore la 1ère valeur
-  const [plats, setPlats] = useState<MenuItem[]>([]);
-  const [isAdding, setIsAdding] = useState(false);
-  const supabase = createClient();
-  useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session) {
-        router.push("/auth/login");
+function useMenus() {
+  return useQuery({
+    queryKey: MENUS_QUERY_KEY,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("menus").select("*");
+      if (error) {
+        console.error("❌ Erreur fetch menus :", error.message);
         return;
       }
+      return data as TMenu[];
+    },
+  });
+}
 
-      setSession(session);
-      await fetchPlats();
-      setLoading(false);
-    };
+function useUpdateMenu() {
+  return useMutation({
+    mutationFn: async ({
+      field,
+      id,
+      value,
+    }: {
+      id: number;
+      field: keyof TMenu;
+      value: string;
+    }) => {
+      const { error } = await supabase
+        .from("menus")
+        .update({ [field]: value })
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: (_1, _2, _3, ctx) => {
+      return ctx.client.invalidateQueries({
+        queryKey: MENUS_QUERY_KEY,
+      });
+    },
+  });
+}
 
-    checkSession();
-  }, [router, supabase]); // ajoute router pour éviter le warning react-hooks/exhaustive-deps
+function useDeleteMenu() {
+  return useMutation({
+    mutationFn: async ({ id }: { id: number }) => {
+      const { error } = await supabase.from("menus").delete().eq("id", id);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: (_1, _2, _3, ctx) => {
+      return ctx.client.invalidateQueries({
+        queryKey: MENUS_QUERY_KEY,
+      });
+    },
+  });
+}
 
-  const fetchPlats = async () => {
-    const { data, error } = await supabase.from("menus").select("*");
-    if (error) {
-      console.error("❌ Erreur fetch menus :", error.message);
-      return;
-    }
-    setPlats((data as MenuItem[]) || []);
-  };
-
-  const updatePlat = async (
-    id: string,
-    field: keyof MenuItem,
-    value: string,
-  ) => {
-    const { error } = await supabase
-      .from("menus")
-      .update({ [field]: value })
-      .eq("id", id);
-    if (error) {
-      console.error("❌ Erreur update :", error.message);
-      return;
-    }
-    // Optionnel: mettre à jour localement pour une sensation instantanée
-    setPlats((prev) =>
-      prev.map((p) =>
-        p.id === id ? ({ ...p, [field]: value } as MenuItem) : p,
-      ),
-    );
-  };
-
-  const deletePlat = async (id: string) => {
-    const { error } = await supabase.from("menus").delete().eq("id", id);
-    if (error) {
-      console.error("❌ Erreur delete :", error.message);
-      return;
-    }
-    setPlats((prev) => prev.filter((p) => p.id !== id));
-  };
-
-  const ajouterPlat = async (type: TMenuService) => {
-    setIsAdding(true);
-    const { data, error } = await supabase
-      .from("menus")
-      .insert({
+function useAddMenu() {
+  return useMutation({
+    mutationFn: async ({ type }: { type: TMenuService }) => {
+      const { error } = await supabase.from("menus").insert({
         description: "Nouveau plat",
         price: 0,
         category: "plat",
         service: type,
-      })
-      .select();
+      });
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: (_1, _2, _3, ctx) => {
+      return ctx.client.invalidateQueries({
+        queryKey: MENUS_QUERY_KEY,
+      });
+    },
+  });
+}
 
-    if (error) {
-      console.error("❌ Erreur insert :", error.message);
-      setIsAdding(false);
-      return;
-    }
+export default function MenusPage() {
+  const { data: menus, isPending } = useMenus();
+  const { mutate: addMenu, isPending: isAdding } = useAddMenu();
 
-    if (data && data.length) {
-      setPlats((prev) => [...prev, data[0] as MenuItem]);
-    }
-    setIsAdding(false);
-  };
-
-  const renderTable = (
-    data: MenuItem[],
-    updatePlatFn: (id: string, field: keyof MenuItem, value: string) => void,
-    deletePlatFn: (id: string) => void,
-  ) => {
-    const orderedItems = data.toSorted(
-      (a, b) =>
-        menuCategories.indexOf(a.category) - menuCategories.indexOf(b.category),
-    );
-    return (
-      <Card className="py-0 overflow-hidden overflow-x-scroll">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-accent hover:bg-accent">
-              <TableHead>Description</TableHead>
-              <TableHead>Prix</TableHead>
-              <TableHead>Catégorie</TableHead>
-              <TableHead>Service</TableHead>
-              <TableHead className="w-0" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orderedItems.map((plat) => (
-              <TableRow key={plat.id}>
-                <TableCell>
-                  <Input
-                    defaultValue={plat.description}
-                    onBlur={(e) =>
-                      updatePlatFn(plat.id, "description", e.target.value)
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    defaultValue={String(plat.price)}
-                    onBlur={(e) =>
-                      updatePlatFn(plat.id, "price", e.target.value)
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Select
-                    defaultValue={plat.category}
-                    onValueChange={(v) =>
-                      updatePlatFn(plat.id, "category", v as TMenuCategory)
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="partager">À partager</SelectItem>
-                      <SelectItem value="entree">Entrée</SelectItem>
-                      <SelectItem value="plat">Plat</SelectItem>
-                      <SelectItem value="fromage">Fromage</SelectItem>
-                      <SelectItem value="dessert">Dessert</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell className="p-2 min-w-[100px]">
-                  <Select
-                    defaultValue={plat.service}
-                    onValueChange={(v) =>
-                      updatePlatFn(plat.id, "service", v as TMenuService)
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="midi">Midi</SelectItem>
-                      <SelectItem value="soir">Soir</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell className="p-2 min-w-[90px]">
-                  <Button
-                    onClick={() => deletePlatFn(plat.id)}
-                    variant="ghost"
-                    className="text-destructive"
-                  >
-                    Supprimer
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
-    );
-  };
-
-  if (loading) return <div className="p-8">Chargement...</div>;
+  if (isPending) return <div className="p-8">Chargement...</div>;
+  if (!menus) return;
 
   return (
     <div>
@@ -232,7 +121,7 @@ export default function MenusPage() {
       <div className="mb-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
           <h2 className="text-xl font-semibold">Menu du midi</h2>
-          <Button onClick={() => ajouterPlat("midi")} disabled={isAdding}>
+          <Button onClick={() => addMenu({ type: "midi" })} disabled={isAdding}>
             {isAdding ? (
               "Ajout..."
             ) : (
@@ -243,17 +132,13 @@ export default function MenusPage() {
             )}
           </Button>
         </div>
-        {renderTable(
-          plats.filter((p) => p.service === "midi"),
-          updatePlat,
-          deletePlat,
-        )}
+        <MenuTable data={menus.filter((p) => p.service === "midi")} />
       </div>
 
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
           <h2 className="text-xl font-semibold">Menu du soir</h2>
-          <Button onClick={() => ajouterPlat("soir")} disabled={isAdding}>
+          <Button onClick={() => addMenu({ type: "soir" })} disabled={isAdding}>
             {isAdding ? (
               "Ajout..."
             ) : (
@@ -264,12 +149,115 @@ export default function MenusPage() {
             )}
           </Button>
         </div>
-        {renderTable(
-          plats.filter((p) => p.service === "soir"),
-          updatePlat,
-          deletePlat,
-        )}
+
+        <MenuTable data={menus.filter((p) => p.service === "soir")} />
       </div>
     </div>
+  );
+}
+
+function MenuTable({ data }: { data: TMenu[] }) {
+  const { mutate: deleteMenu } = useDeleteMenu();
+  const { mutate: updateMenu } = useUpdateMenu();
+  const orderedItems = data.toSorted(
+    (a, b) =>
+      menuCategories.indexOf(a.category) - menuCategories.indexOf(b.category),
+  );
+  return (
+    <Card className="py-0 overflow-hidden overflow-x-scroll">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-accent hover:bg-accent">
+            <TableHead>Description</TableHead>
+            <TableHead>Prix</TableHead>
+            <TableHead>Catégorie</TableHead>
+            <TableHead>Service</TableHead>
+            <TableHead className="w-0" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {orderedItems.map((plat) => (
+            <TableRow key={plat.id}>
+              <TableCell>
+                <Input
+                  defaultValue={plat.description}
+                  onBlur={(e) =>
+                    updateMenu({
+                      id: plat.id,
+                      field: "description",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </TableCell>
+              <TableCell>
+                <Input
+                  defaultValue={String(plat.price)}
+                  onBlur={(e) =>
+                    updateMenu({
+                      id: plat.id,
+                      field: "price",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </TableCell>
+              <TableCell>
+                <Select
+                  defaultValue={plat.category}
+                  onValueChange={(v) =>
+                    updateMenu({
+                      id: plat.id,
+                      field: "category",
+                      value: v as TMenuCategory,
+                    })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="partager">À partager</SelectItem>
+                    <SelectItem value="entree">Entrée</SelectItem>
+                    <SelectItem value="plat">Plat</SelectItem>
+                    <SelectItem value="fromage">Fromage</SelectItem>
+                    <SelectItem value="dessert">Dessert</SelectItem>
+                  </SelectContent>
+                </Select>
+              </TableCell>
+              <TableCell className="p-2 min-w-[100px]">
+                <Select
+                  defaultValue={plat.service}
+                  onValueChange={(v) =>
+                    updateMenu({
+                      id: plat.id,
+                      field: "service",
+                      value: v as TMenuService,
+                    })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="midi">Midi</SelectItem>
+                    <SelectItem value="soir">Soir</SelectItem>
+                  </SelectContent>
+                </Select>
+              </TableCell>
+              <TableCell className="p-2 min-w-[90px]">
+                <Button
+                  onClick={() => deleteMenu({ id: plat.id })}
+                  variant="ghost"
+                  className="text-destructive"
+                >
+                  Supprimer
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Card>
   );
 }
