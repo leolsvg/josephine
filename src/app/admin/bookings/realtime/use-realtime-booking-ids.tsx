@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 export function useRealtimeBookingIds() {
   const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    const client = createClient();
-    const channel = client
+    const channel = supabase
       .channel(`bookings-highlights`)
       .on(
         "postgres_changes",
@@ -16,7 +15,7 @@ export function useRealtimeBookingIds() {
             payload.eventType === "INSERT" ||
             payload.eventType === "UPDATE"
           ) {
-            const id = payload.new["id"];
+            const id = payload.new.id;
             setHighlightedIds((prev) => new Set(prev).add(id));
             setTimeout(() => {
               setHighlightedIds((prev) => {
@@ -27,10 +26,12 @@ export function useRealtimeBookingIds() {
             }, 2000);
           }
         },
-      )
-      .subscribe();
+      );
+    supabase.realtime.setAuth().then(() => {
+      channel.subscribe();
+    });
     return () => {
-      client.removeChannel(channel);
+      supabase.removeChannel(channel);
     };
   }, []);
 

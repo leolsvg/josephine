@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import z, { ZodError } from "zod";
+import { createClient } from "@/lib/supabase/server";
 import { db } from "@/server/db";
-import { createClient } from "../supabase/server";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const supabase = await createClient();

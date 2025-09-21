@@ -7,23 +7,14 @@ import {
   pgEnum,
   pgPolicy,
   pgTable,
+  smallint,
   text,
   time,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { authenticatedRole, realtimeMessages } from "drizzle-orm/supabase";
-import { TIMEZONE } from "@/lib/utils";
+import { authenticatedRole } from "drizzle-orm/supabase";
+import { type DayIndex, TIMEZONE } from "@/lib/utils";
 import type { HM, Period } from "./types";
-
-export const realtimePolicy = pgPolicy(
-  "Allow listening for broadcasts for authenticated users only",
-  {
-    as: "permissive",
-    for: "select",
-    to: authenticatedRole,
-    using: sql`true`,
-  },
-).link(realtimeMessages);
 
 const customDate = customType<{
   data: Date;
@@ -63,16 +54,6 @@ export const statusEnum = pgEnum("status", [
   "canceled",
 ]);
 
-export const dayEnum = pgEnum("day", [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
-]);
-
 export const menusTable = pgTable(
   "menus",
   {
@@ -93,8 +74,8 @@ export const menusTable = pgTable(
       for: "select",
       using: sql`true`,
     }),
+    // For leo admin menus page, TODO : delete if replacing supabase client with drizzle
     pgPolicy("Enable all operations to authenticated users", {
-      // For leo admin menus page, TODO : delete if replacing supabase client with drizzle
       as: "permissive",
       to: authenticatedRole,
       for: "all",
@@ -123,6 +104,7 @@ export const bookingsTable = pgTable(
       .$onUpdate(() => new Date()),
   },
   () => [
+    // There is a bug if using db:push the policy will not have check and using statements but it will work with db:generate + db:migrate
     pgPolicy("For realtime enable all operations to authenticated users", {
       as: "permissive",
       to: authenticatedRole,
@@ -135,7 +117,7 @@ export const bookingsTable = pgTable(
 
 export const weeklyTable = pgTable("weekly", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  day: dayEnum().notNull(),
+  day: smallint().notNull().$type<DayIndex>(),
   start: time().notNull().$type<HM>(),
   end: time().notNull().$type<HM>(),
 }).enableRLS();

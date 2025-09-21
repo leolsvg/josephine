@@ -19,8 +19,8 @@ import type { Period } from "@/server/db/types";
 export default function BookingPeriodsCard() {
   const trpc = useTRPC();
   const { data } = useQuery(trpc.schedule.getWeekly.queryOptions());
-  const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
-  const toggleDay = (day: string) => {
+  const [closedDays, setClosedDays] = useState<Record<number, boolean>>({});
+  const toggleDay = (day: number) => {
     setClosedDays((prev) => ({ ...prev, [day]: !prev[day] }));
   };
   if (!data) return "error";
@@ -34,30 +34,30 @@ export default function BookingPeriodsCard() {
       </CardHeader>
       <Table>
         <TableBody>
-          {Object.entries(data).map(([day, periods]) => (
+          {data.map((w, i) => (
             <>
-              <TableRow key={day} className="bg-muted/50">
+              <TableRow key={crypto.randomUUID()} className="bg-muted/50">
                 <TableCell>
                   <div className="flex justify-between items-center">
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => toggleDay(day)}
+                      onClick={() => toggleDay(i)}
                     >
-                      {closedDays[day] ? (
+                      {closedDays[i] ? (
                         <ChevronRight className="size-4" />
                       ) : (
                         <ChevronDown className="size-4" />
                       )}
                     </Button>
-                    <div className="font-bold">{DayConfig[day].label}</div>
+                    <div className="font-bold">{DayConfig[i].label}</div>
                     <Button variant="ghost" size="icon">
                       <Plus className="size-4" />
                     </Button>
                   </div>
                 </TableCell>
               </TableRow>
-              {!closedDays[day] && <SubTable periods={periods} />}
+              {!closedDays[i] && <SubTable periods={w.periods} />}
             </>
           ))}
         </TableBody>

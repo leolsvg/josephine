@@ -6,13 +6,13 @@ import type {
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import {
   bookingsTable,
-  type dayEnum,
   type menuCategoryEnum,
   type menuServiceEnum,
+  type menusTable,
 } from "./schema";
 
 export type TBooking = InferSelectModel<typeof bookingsTable>;
-export type TDay = InferEnum<typeof dayEnum>;
+export type TMenu = InferSelectModel<typeof menusTable>;
 export type TMenuCategory = InferEnum<typeof menuCategoryEnum>;
 export type TMenuService = InferEnum<typeof menuServiceEnum>;
 export const SPutBooking = createInsertSchema(bookingsTable);

@@ -1,7 +1,6 @@
 import { asc } from "drizzle-orm";
 import { ok } from "neverthrow";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
-import { DayConfig } from "@/lib/utils";
 import type { DB } from "@/server/db";
 import { exceptionsTable, weeklyTable } from "@/server/db/schema";
 import type { Exception, Weekly } from "@/server/db/types";
@@ -20,14 +19,12 @@ export function getWeekly(d: DB) {
   ).andThen((r) =>
     ok(
       r.reduce<Weekly>((acc, r) => {
-        const id = DayConfig[r.day].index;
-        if (id == null) return acc;
-        const bucket = acc[id] ?? { periods: [] };
+        const bucket = acc[r.day] ?? { periods: [] };
         bucket.periods.push({
           start: r.start,
           end: r.end,
         });
-        acc[id] = bucket;
+        acc[r.day] = bucket;
         return acc;
       }, []),
     ),

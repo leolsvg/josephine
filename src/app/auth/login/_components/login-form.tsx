@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useLoginForm } from "./use-login-form";
 
@@ -36,8 +36,6 @@ export function LoginForm({
       onSubmit: SLogin,
     },
     onSubmit: async ({ value: { email, password } }) => {
-      const supabase = createClient();
-
       try {
         const { error } = await supabase.auth.signInWithPassword({
           email,

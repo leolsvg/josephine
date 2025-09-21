@@ -3,7 +3,7 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 interface Plat {
   id: number;
@@ -17,7 +17,6 @@ export default function CartePage() {
   const [plats, setPlats] = useState<Plat[]>([]);
 
   useEffect(() => {
-    const supabase = createClient();
     const fetchPlats = async () => {
       const { data, error } = await supabase
         .from("menus")

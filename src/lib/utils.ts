@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from "clsx";
 import { type DateArg, format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
-import type { TDay } from "@/server/db/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,15 +23,17 @@ export function toYMD(date: DateArg<Date>) {
   return format(date, "yyyy-MM-dd");
 }
 
-export const DayConfig: Record<TDay, { label: string; index: number }> = {
-  sunday: { label: "Dimanche", index: 0 },
-  monday: { label: "Lundi", index: 1 },
-  tuesday: { label: "Mardi", index: 2 },
-  wednesday: { label: "Mercredi", index: 3 },
-  thursday: { label: "Jeudi", index: 4 },
-  friday: { label: "Vendredi", index: 5 },
-  saturday: { label: "Samedi", index: 6 },
-};
+export type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+export const DayConfig = [
+  { label: "Dimanche", slug: "sunday" },
+  { label: "Lundi", slug: "monday" },
+  { label: "Mardi", slug: "tuesday" },
+  { label: "Mercredi", slug: "wednesday" },
+  { label: "Jeudi", slug: "thursday" },
+  { label: "Vendredi", slug: "friday" },
+  { label: "Samedi", slug: "saturday" },
+] as const satisfies Record<DayIndex, { label: string; slug: string }>;
 
 export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "full",
