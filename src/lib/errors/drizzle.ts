@@ -1,4 +1,3 @@
-import type { Query } from "drizzle-orm";
 import { fromPromise } from "neverthrow";
 
 export class DrizzleQueryError extends Error {

@@ -1,7 +1,7 @@
 "use client";
 
 import { parseAsString, useQueryState } from "nuqs";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { TIMEZONE } from "@/lib/utils";
 

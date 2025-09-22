@@ -1,11 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import {
-  DrizzleError,
-  DrizzleQueryError,
-  DrizzleTypeError,
-  ImportTypeError,
-  TransactionRollbackError,
-} from "drizzle-orm";
 
 export const DUPLICATE_BOOKING_ERROR = new TRPCError({
   code: "CONFLICT",

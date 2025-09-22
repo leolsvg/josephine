@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { CapacityCard } from "./capacity-card";
 import { ExceptionsCard } from "./exceptions-card";
 import WeeklyCard from "./weekly-card";

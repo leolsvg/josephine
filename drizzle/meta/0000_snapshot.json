@@ -75,9 +75,7 @@
           "name": "Enable for unauthenticated pages",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon"
-          ]
+          "to": ["anon"]
         }
       },
       "checkConstraints": {},
@@ -88,21 +86,12 @@
     "public.menu-category": {
       "name": "menu-category",
       "schema": "public",
-      "values": [
-        "fromage",
-        "entree",
-        "plat",
-        "dessert",
-        "partager"
-      ]
+      "values": ["fromage", "entree", "plat", "dessert", "partager"]
     },
     "public.menu-service": {
       "name": "menu-service",
       "schema": "public",
-      "values": [
-        "soir",
-        "midi"
-      ]
+      "values": ["soir", "midi"]
     }
   },
   "schemas": {},

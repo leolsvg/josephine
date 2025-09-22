@@ -1,7 +1,6 @@
 "use client";
 
 import { Moon, Settings, Sun } from "lucide-react";
-import { Ephesis } from "next/font/google";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {

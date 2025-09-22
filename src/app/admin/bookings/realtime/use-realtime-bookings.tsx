@@ -2,7 +2,6 @@
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
 import { useTRPC } from "@/lib/trpc/react";
 import type { TBooking } from "@/server/db/types";

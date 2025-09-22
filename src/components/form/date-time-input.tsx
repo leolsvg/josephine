@@ -85,8 +85,8 @@ export function DateTimeInput({
                     {g.map((t) => (
                       <Button
                         key={g + t}
-                        variant={t + ":00" === time ? "default" : "outline"}
-                        onClick={() => onTimeChange(t + ":00")}
+                        variant={`${t}:00` === time ? "default" : "outline"}
+                        onClick={() => onTimeChange(`${t}:00`)}
                         className="w-full shadow-none"
                       >
                         {t}
