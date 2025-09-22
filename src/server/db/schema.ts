@@ -12,7 +12,7 @@ import {
   time,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { authenticatedRole } from "drizzle-orm/supabase";
+import { anonRole, authenticatedRole } from "drizzle-orm/supabase";
 import { type DayIndex, TIMEZONE } from "@/lib/utils";
 import type { HM, Period } from "./types";
 
@@ -72,6 +72,7 @@ export const menusTable = pgTable(
     pgPolicy("Enable read access for all users", {
       as: "permissive",
       for: "select",
+      to: anonRole,
       using: sql`true`,
     }),
     // For leo admin menus page, TODO : delete if replacing supabase client with drizzle
