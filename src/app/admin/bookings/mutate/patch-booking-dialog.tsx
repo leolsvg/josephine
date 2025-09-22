@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { Edit } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { BookingBaseForm } from "@/components/booking/booking-base-form";
 import { SBooking } from "@/components/booking/booking-schema";
@@ -32,10 +32,14 @@ export function PatchBookingDialog({
   id: TBooking["id"];
   booking: TDefaultBooking;
 }) {
+  const [open, setOpen] = useState(false);
   const trpc = useTRPC();
   const { mutate, isPending } = useMutation(
     trpc.bookings.patch.mutationOptions({
-      onSuccess: () => toast.success("Réservation mise à jour"),
+      onSuccess: () => {
+        setOpen(false);
+        toast.success("Réservation mise à jour");
+      },
       onError: (e) => toast.error(e.message),
     }),
   );
@@ -49,7 +53,7 @@ export function PatchBookingDialog({
     },
   });
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="icon" variant="ghost">
           <Edit />
@@ -76,11 +80,9 @@ export function PatchBookingDialog({
             </div>
             <DialogFooter>
               <form.AppForm>
-                <DialogClose asChild>
-                  <form.SubmitButton isPending={isPending}>
-                    Modifier
-                  </form.SubmitButton>
-                </DialogClose>
+                <form.SubmitButton isPending={isPending}>
+                  Modifier
+                </form.SubmitButton>
               </form.AppForm>
             </DialogFooter>
           </Suspense>

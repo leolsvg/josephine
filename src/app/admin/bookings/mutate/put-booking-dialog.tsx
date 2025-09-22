@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { BookingBaseForm } from "@/components/booking/booking-base-form";
 import { SBooking } from "@/components/booking/booking-schema";
@@ -25,10 +25,14 @@ import {
 import { useTRPC } from "@/lib/trpc/react";
 
 export function PutBookingDialog() {
+  const [open, setOpen] = useState(false);
   const trpc = useTRPC();
   const { mutate, isPending } = useMutation(
     trpc.bookings.put.mutationOptions({
-      onSuccess: () => toast.success("Réservation ajoutée"),
+      onSuccess: () => {
+        setOpen(false);
+        toast.success("Réservation ajoutée");
+      },
       onError: (e) => toast.error(e.message),
     }),
   );
@@ -44,7 +48,7 @@ export function PutBookingDialog() {
     },
   });
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="icon">
           <Plus />
@@ -63,7 +67,7 @@ export function PutBookingDialog() {
             <DialogTitle>Ajouter une réservation</DialogTitle>
             <DialogDescription>
               En tant qu'administrateur, vous pouvez créer une réservation
-              directement, sans validation automatique.
+              directement sans envoi d'un mail de confirmation.
             </DialogDescription>
           </DialogHeader>
           <Suspense fallback={<PendingFormData />}>
@@ -72,11 +76,9 @@ export function PutBookingDialog() {
             </div>
             <DialogFooter>
               <form.AppForm>
-                <DialogClose asChild>
-                  <form.SubmitButton isPending={isPending}>
-                    Ajouter
-                  </form.SubmitButton>
-                </DialogClose>
+                <form.SubmitButton isPending={isPending}>
+                  Ajouter
+                </form.SubmitButton>
               </form.AppForm>
             </DialogFooter>
           </Suspense>
