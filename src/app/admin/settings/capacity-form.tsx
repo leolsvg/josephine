@@ -2,6 +2,8 @@
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import z from "zod";
+import { MAX_GUESTS, MIN_GUESTS } from "@/components/booking/booking-schema";
 import { useSettingsForm } from "@/components/form/use-settings-form";
 import { useTRPC } from "@/lib/trpc/react";
 import { SSettings } from "@/server/db/types";
@@ -21,7 +23,23 @@ export function CapacityForm() {
       mutate(value);
     },
     validators: {
-      onSubmit: SSettings,
+      onSubmit: SSettings.omit({
+        maxGuestsPerBooking: true,
+      }).extend({
+        maxGuestsPerBooking: z
+          .number({
+            error:
+              "Merci d'indiquer le nombre maximum d'invités pour une réservation.",
+          })
+          .min(
+            MIN_GUESTS,
+            "Le nombre maximum d'invités pour une réservation doit être supérieur à 1.",
+          )
+          .max(
+            MAX_GUESTS,
+            `Le nombre maximum d'invités pour une réservation ne peux pas dépasser ${MAX_GUESTS} personnes.`,
+          ),
+      }),
     },
   });
   return (
@@ -38,6 +56,8 @@ export function CapacityForm() {
           <field.NumberField
             id="maxGuestsPerBooking"
             label="Nombre maximum d'invités pour une réservation"
+            min={MIN_GUESTS}
+            max={MAX_GUESTS}
           />
         )}
       </form.AppField>
