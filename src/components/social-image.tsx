@@ -1,10 +1,11 @@
 /** biome-ignore-all lint/performance/noImgElement: Only used at build time for og image generation */
 
+import "temporal-polyfill/global";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-export const alt = "About Acme";
+export const alt = "Josephine Cherbourg";
 export const size = {
   width: 1200,
   height: 630,
