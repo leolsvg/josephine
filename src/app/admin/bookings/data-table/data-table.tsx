@@ -62,7 +62,11 @@ export function DataTable({ columns, data, className }: DataTableProps) {
       sorting: [
         {
           id: "date",
-          desc: false,
+          desc: true,
+        },
+        {
+          id: "time",
+          desc: true,
         },
       ],
     },
