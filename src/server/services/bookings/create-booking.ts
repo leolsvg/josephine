@@ -9,6 +9,7 @@ import type { TPutBooking } from "@/server/db/types";
 import { sendBooking } from "@/server/services/emails/send-email";
 import { checkIfExists, type DuplicateBookingError } from "./check-if-exists";
 import { type ClosedError, checkIfIsOpen } from "./check-if-is-open";
+import { checkCapacitySlot } from "./check-settings";
 
 export class SendEmailError extends Error {
   constructor(cause: ErrorResponse) {
@@ -33,6 +34,7 @@ export const createBooking = (
 > =>
   checkIfExists(db, input.email, input.phone, input.date, input.time)
     .andThen(() => checkIfIsOpen(db, input.date, input.time))
+    .andThen(() => checkCapacitySlot(db, input.date, input.time, input.guests))
     .andThen(() =>
       safeDrizzleQuery(db.insert(bookingsTable).values(input).returning()),
     )

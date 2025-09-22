@@ -1,9 +1,10 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Button } from "../ui/button";
 import { useFormContext } from "./types";
 
-export function SubmitButton({ children }: { children: string }) {
+export function SubmitButton({ children }: { children: ReactNode }) {
   const context = useFormContext();
   return (
     <context.Subscribe

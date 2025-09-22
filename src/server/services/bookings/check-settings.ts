@@ -1,8 +1,7 @@
-import { and, eq, exists, gte, isNull, lte, or, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { err, ok } from "neverthrow";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
-import type { HM } from "@/server/db/types";
-import { type DB, db } from "../../db";
+import type { DB } from "../../db";
 import {
   bookingsTable,
   exceptionsTable,
@@ -33,7 +32,12 @@ export class MaxCapacityServiceError extends Error {
   }
 }
 
-export function checkCapacitySlot(db: DB, date: string, time: string) {
+export function checkCapacitySlot(
+  db: DB,
+  date: string,
+  time: string,
+  guests: number,
+) {
   return safeDrizzleQuery(
     db
       .select({
@@ -87,73 +91,115 @@ export function checkCapacitySlot(db: DB, date: string, time: string) {
             )
           `),
       ).andThen((c) =>
-        c[0].bookingCount > s.maxCapacityPerSlot ? err() : ok(),
+        c[0].bookingCount + guests > s.maxCapacityPerSlot
+          ? err(new MaxCapacitySlotError())
+          : ok(),
       );
     });
 }
 
-const exceptions = (db: DB, date: string, time: HM) =>
-  db
-    .select({ count: sql`1` })
-    .from(exceptionsTable)
-    .crossJoinLateral(
-      sql`jsonb_array_elements(${exceptionsTable}."periods") AS p(period)`,
-    )
-    .where(
-      and(
-        lte(exceptionsTable.from, sql`DATE '${sql.raw(date)}'`),
-        or(
-          isNull(exceptionsTable.to),
-          gte(exceptionsTable.to, sql`DATE '${sql.raw(date)}'`),
-        ),
-        gte(sql`TIME '${sql.raw(time)}'`, sql`(p.period ->> 'start')::time`),
-        lte(sql`TIME '${sql.raw(time)}'`, sql`(p.period ->> 'end')::time`),
-      ),
-    );
+// const e = await checkCapacityService(db, "2025-09-24", "14:00:00", 5);
+// console.log(e);
 
-const e = await checkCapacityService(db, "2025-09-24", "19:00:00");
-console.log(e);
+// export async function checkCapacityService(
+//   db: DB,
+//   date: string,
+//   time: HM,
+//   guests: number,
+// ) {
+//   const settings =  safeDrizzleQuery(
+//     db
+//       .select({
+//         maxCapacityPerSlot: settingsTable.maxCapacityPerSlot,
+//         maxCapacityPerService: settingsTable.maxCapacityPerService,
+//         maxGuestsPerBooking: settingsTable.maxGuestsPerBooking,
+//       })
+//       .from(settingsTable)
+//       .limit(1),
+//   )
+//     .andThen((s) => (s.length === 1 ? ok(s[0]) : err(new NoSettingsError())))
+//     .andThen((c) => {
+//       const result = raw(db, date, time);
+//       const count = result[0].count as number;
+//       count + guests > c.maxCapacityPerService
+//         ? err(new MaxCapacityServiceError())
+//         : ok();
+//     });
+// }
 
-export async function checkCapacityService(db: DB, date: string, time: HM) {
-  const exception = db
-    .select({ count: sql`1` })
-    .from(exceptionsTable)
-    .crossJoinLateral(
-      sql`jsonb_array_elements(${exceptionsTable.periods}) AS p(period)`,
-    )
-    .where(
-      and(
-        lte(exceptionsTable.from, sql`DATE '${sql.raw(date)}'`),
-        or(
-          isNull(exceptionsTable.to),
-          gte(exceptionsTable.to, sql`DATE '${sql.raw(date)}'`),
-        ),
-        gte(bookingsTable.time, sql`(p.period ->> 'start')::time`),
-        lte(bookingsTable.time, sql`(p.period ->> 'end')::time`),
-      ),
-    );
+// const t = fromSafePromise(raw(db, "date", "10:00:00")).andThen((r) => {
+//   ok(r);
+//   // const count = r[0].count as number;
+//   // count + 10 > 40
+//   //   ? err(new MaxCapacityServiceError())
+//   //   : ok();
+// });
 
-  const weekly = db
-    .select({ count: sql`1` })
-    .from(weeklyTable)
-    .where(
-      and(
-        sql`EXTRACT(DOW FROM DATE '${sql.raw(date)}') = ${weeklyTable.day}`,
-        gte(bookingsTable.time, weeklyTable.start),
-        lte(bookingsTable.time, weeklyTable.end),
-      ),
-    );
-
-  const result = db
-    .select({
-      bookingCount: sql<number>`COUNT(DISTINCT ${bookingsTable.id})`,
-    })
-    .from(bookingsTable)
-    .where(
-      and(
-        or(exists(exception), exists(weekly)),
-        eq(bookingsTable.date, sql`DATE '${sql.raw(date)}'`),
-      ),
-    );
-  return { result: await result, sql: result.toSQL() };
-}
+// function raw(db: DB, date: string, time: HM) {
+//   return db.execute(
+//     sql`
+//               WITH
+//             target_service AS (
+//               SELECT
+//                 -- Determine the start and end of the service for the given date and input time
+//                 CASE
+//                   WHEN EXISTS (
+//                     SELECT
+//                       1
+//                     FROM
+//                       exceptions e
+//                       CROSS JOIN LATERAL jsonb_array_elements(e.periods) AS p (period)
+//                     WHERE
+//                       e.from <= DATE '${sql.raw(date)}'
+//                       AND (
+//                         e.to IS NULL
+//                         OR e.to >= DATE '${sql.raw(date)}'
+//                       )
+//                       AND TIME '${sql.raw(time)}' >= (p.period ->> 'start')::time
+//                       AND TIME '${sql.raw(time)}' <= (p.period ->> 'end')::time
+//                   ) THEN (
+//                     SELECT
+//                       p.period
+//                     FROM
+//                       exceptions e
+//                       CROSS JOIN LATERAL jsonb_array_elements(e.periods) AS p (period)
+//                     WHERE
+//                       e.from <= DATE '${sql.raw(date)}'
+//                       AND (
+//                         e.to IS NULL
+//                         OR e.to >= DATE '${sql.raw(date)}'
+//                       )
+//                       AND TIME '${sql.raw(time)}' >= (p.period ->> 'start')::time
+//                       AND TIME '${sql.raw(time)}' <= (p.period ->> 'end')::time
+//                     LIMIT
+//                       1
+//                   )
+//                   ELSE (
+//                     SELECT
+//                       jsonb_build_object('start', w.start, 'end', w.end)
+//                     FROM
+//                       weekly w
+//                     WHERE
+//                       EXTRACT(
+//                         DOW
+//                         FROM
+//                           DATE '${sql.raw(date)}'
+//                       ) = w.day
+//                       AND TIME '${sql.raw(time)}' >= w.start
+//                       AND TIME '${sql.raw(time)}' <= w.end
+//                     LIMIT
+//                       1
+//                   )
+//                 END AS period
+//             )
+//           SELECT
+//             COUNT(*)
+//           FROM
+//             bookings b
+//             JOIN target_service ts ON b.date = DATE '${sql.raw(date)}'
+//           WHERE
+//             b.time >= (ts.period ->> 'start')::time
+//             AND b.time <= (ts.period ->> 'end')::time;
+//     `,
+//   );
+// }

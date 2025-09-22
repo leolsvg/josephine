@@ -9,6 +9,7 @@ import {
   type menuCategoryEnum,
   type menuServiceEnum,
   type menusTable,
+  settingsTable,
 } from "./schema";
 
 export type TBooking = InferSelectModel<typeof bookingsTable>;
@@ -17,6 +18,9 @@ export type TMenuCategory = InferEnum<typeof menuCategoryEnum>;
 export type TMenuService = InferEnum<typeof menuServiceEnum>;
 export const SPutBooking = createInsertSchema(bookingsTable);
 export const SPatchBooking = createUpdateSchema(bookingsTable);
+export const SSettings = createInsertSchema(settingsTable).omit({
+  id: true,
+});
 export type TPutBooking = InferInsertModel<typeof bookingsTable>;
 
 export type HM = `${number}:${number}` | `${number}:${number}:${number}`;
