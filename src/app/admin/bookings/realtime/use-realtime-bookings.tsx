@@ -1,30 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { useTRPC } from "@/lib/trpc/react";
 import type { TBooking } from "@/server/db/types";
 
-export function useRealtimeBookings(initialBookings: TBooking[]) {
-  const [bookings, setBookings] = useState(initialBookings);
+export function useRealtimeBookings() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
   useEffect(() => {
     const channel = supabase
       .channel("bookings")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "bookings" },
-        (p) => {
-          setBookings((current) => {
-            switch (p.eventType) {
+        (payload) => {
+          queryClient.cancelQueries({ queryKey: trpc.bookings.get.queryKey() });
+          queryClient.setQueryData(trpc.bookings.get.queryKey(), (current) => {
+            switch (payload.eventType) {
               case "INSERT":
-                return [...current, p.new as TBooking];
+                return current
+                  ? [...current, payload.new as TBooking]
+                  : undefined;
 
               case "UPDATE":
-                return current.map((item) =>
-                  item.id === p.new.id ? (p.new as TBooking) : item,
+                return current?.map((item) =>
+                  item.id === payload.new.id ? (payload.new as TBooking) : item,
                 );
 
               case "DELETE":
-                return current.filter((item) => item.id !== p.old.id);
+                return current?.filter((item) => item.id !== payload.old.id);
 
               default:
                 return current;
@@ -38,6 +45,6 @@ export function useRealtimeBookings(initialBookings: TBooking[]) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
-  return bookings;
+  }, [queryClient, trpc]);
+  return useSuspenseQuery(trpc.bookings.get.queryOptions());
 }
