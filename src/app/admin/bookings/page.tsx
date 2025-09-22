@@ -5,10 +5,14 @@ import { columns } from "./data-table/bookings-columns";
 import { DataTable } from "./data-table/bookings-table";
 import { Sidebar } from "./sidebar";
 
-export default async function BookingsPage() {
+export const dynamic = "force-dynamic";
+
+export default function BookingsPage() {
   return (
     <div className="flex gap-3">
-      <Sidebar />
+      <Suspense>
+        <Sidebar />
+      </Suspense>
       <Suspense
         fallback={
           <Card className="py-0 overflow-hidden grow">
