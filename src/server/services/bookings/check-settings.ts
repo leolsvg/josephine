@@ -1,18 +1,27 @@
 import { sql } from "drizzle-orm";
 import { err, ok } from "neverthrow";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
-import type { DB } from "../../db";
+import type { DB } from "@/server/db";
 import {
   bookingsTable,
   exceptionsTable,
   settingsTable,
   weeklyTable,
-} from "../../db/schema";
+} from "@/server/db/schema";
 
 export class NoSettingsError extends Error {
   constructor() {
     super("Aucun paramètre trouvé dans la base de données");
     this.name = "NoSettingsError";
+  }
+}
+
+export class MaxGuestsError extends Error {
+  constructor(maxGuests: number) {
+    super(
+      `Nos réservations en ligne sont limitées à ${maxGuests} personnes. Pour un groupe plus large, merci de nous contacter directement.`,
+    );
+    this.name = "MaxGuestsError";
   }
 }
 
@@ -32,12 +41,7 @@ export class MaxCapacityServiceError extends Error {
   }
 }
 
-export function checkCapacitySlot(
-  db: DB,
-  date: string,
-  time: string,
-  guests: number,
-) {
+export function getSettings(db: DB) {
   return safeDrizzleQuery(
     db
       .select({
@@ -47,23 +51,38 @@ export function checkCapacitySlot(
       })
       .from(settingsTable)
       .limit(1),
-  )
-    .andThen((s) => (s.length === 0 ? err(new NoSettingsError()) : ok(s[0])))
-    .andThen((s) => {
-      return safeDrizzleQuery(
-        db
-          .select({
-            bookingCount: sql<number>`COUNT(DISTINCT ${bookingsTable.id})`,
-          })
-          .from(bookingsTable)
-          .innerJoin(
-            weeklyTable,
-            sql`EXTRACT(DOW FROM ${bookingsTable.date}) = ${weeklyTable.day}
+  ).andThen((s) => (s.length === 0 ? err(new NoSettingsError()) : ok(s[0])));
+}
+
+export function checkGuestsLimit(db: DB, guests: number) {
+  return getSettings(db).andThen((r) =>
+    guests > r.maxGuestsPerBooking
+      ? err(new MaxGuestsError(r.maxGuestsPerBooking))
+      : ok(),
+  );
+}
+
+export function checkCapacitySlot(
+  db: DB,
+  date: string,
+  time: string,
+  guests: number,
+) {
+  return getSettings(db).andThen((s) => {
+    return safeDrizzleQuery(
+      db
+        .select({
+          bookingCount: sql<number>`COUNT(DISTINCT ${bookingsTable.id})`,
+        })
+        .from(bookingsTable)
+        .innerJoin(
+          weeklyTable,
+          sql`EXTRACT(DOW FROM ${bookingsTable.date}) = ${weeklyTable.day}
         AND ${bookingsTable.time} >= ${weeklyTable.start}
         AND ${bookingsTable.time} <= ${weeklyTable.end}`,
-          )
-          .innerJoin(
-            sql`
+        )
+        .innerJoin(
+          sql`
               (
                 SELECT
                   ${time}::time AS input_time,
@@ -73,10 +92,10 @@ export function checkCapacitySlot(
                   ) AS interval_start
               ) ti
             `,
-            sql`${bookingsTable.time} >= ti.interval_start::time
+          sql`${bookingsTable.time} >= ti.interval_start::time
               AND ${bookingsTable.time} < (ti.interval_start + interval '15 minutes')::time`,
-          )
-          .where(sql`
+        )
+        .where(sql`
             ${bookingsTable.date} = ${date}
             AND NOT EXISTS (
               SELECT 1
@@ -90,12 +109,12 @@ export function checkCapacitySlot(
                 )
             )
           `),
-      ).andThen((c) =>
-        c[0].bookingCount + guests > s.maxCapacityPerSlot
-          ? err(new MaxCapacitySlotError())
-          : ok(),
-      );
-    });
+    ).andThen((c) =>
+      c[0].bookingCount + guests > s.maxCapacityPerSlot
+        ? err(new MaxCapacitySlotError())
+        : ok(),
+    );
+  });
 }
 
 // const e = await checkCapacityService(db, "2025-09-24", "14:00:00", 5);
