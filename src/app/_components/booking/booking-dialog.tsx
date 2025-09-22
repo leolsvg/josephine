@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
+import { SBooking } from "@/components/booking/booking-schema";
 import {
   bookingFormOptions,
   useBookingForm,
@@ -14,7 +15,6 @@ import type { AppRouter } from "@/server/routers";
 import { ErrorState } from "./error-state";
 import { FormState } from "./form-state";
 import { Pending } from "./pending-state";
-import { SBooking } from "./schema";
 import { SuccessState } from "./success-state";
 
 export function BookingDialog() {

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import type { TBooking } from "@/server/db/types";
 import { useRealtimeBookingIds } from "../realtime/use-realtime-booking-ids";
-import { columns } from "./columns";
+import { columns } from "./bookings-columns";
 
 export function InnerTable({ table }: { table: TanStackTable<TBooking> }) {
   const rows = table.getRowModel().rows;
@@ -49,7 +49,7 @@ export function InnerTable({ table }: { table: TanStackTable<TBooking> }) {
         {isEmpty ? (
           <TableRow>
             <TableCell colSpan={columns.length} className="h-24 text-center">
-              Pas de réservations.
+              Pas de réservations
             </TableCell>
           </TableRow>
         ) : (

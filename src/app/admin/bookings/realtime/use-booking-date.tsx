@@ -8,33 +8,25 @@ import { TIMEZONE } from "@/lib/utils";
 const SDate = z.iso.date();
 
 export function useBookingsDate() {
-  const todayTemporal = useMemo(() => {
-    return Temporal.Now.zonedDateTimeISO(TIMEZONE).toPlainDate();
-  }, []);
-
-  const tomorrowTemporal = useMemo(() => {
-    return todayTemporal.add({ days: 1 });
-  }, [todayTemporal]);
-
+  const todayTemporal = Temporal.Now.zonedDateTimeISO(TIMEZONE).toPlainDate();
+  const tomorrowTemporal = todayTemporal.add({ days: 1 });
   const [date, setDate] = useQueryState(
     "date",
     parseAsString.withDefault(todayTemporal.toString()),
   );
 
-  const safeDate = useMemo(() => SDate.safeParse(date).data, [date]);
-
-  useEffect(() => console.log(safeDate, date), [safeDate, date]);
+  const { success, data } = useMemo(() => SDate.safeParse(date), [date]);
 
   function prevDay() {
-    if (safeDate) {
-      const prev = Temporal.PlainDate.from(safeDate).subtract({ days: 1 });
+    if (success) {
+      const prev = Temporal.PlainDate.from(data).subtract({ days: 1 });
       setDate(prev.toString());
     }
   }
 
   function nextDay() {
-    if (safeDate) {
-      const next = Temporal.PlainDate.from(date).add({ days: 1 });
+    if (success) {
+      const next = Temporal.PlainDate.from(data).add({ days: 1 });
       setDate(next.toString());
     }
   }
@@ -51,13 +43,13 @@ export function useBookingsDate() {
     setDate(tomorrowTemporal.toString());
   }
 
-  const isToday = safeDate && safeDate === todayTemporal.toString();
-  const isTomorrow = safeDate && safeDate === tomorrowTemporal.toString();
+  const isToday = success && data === todayTemporal.toString();
+  const isTomorrow = success && data === tomorrowTemporal.toString();
 
   return {
     today,
     tomorrow,
-    date: safeDate,
+    date: data,
     prevDay,
     nextDay,
     all,

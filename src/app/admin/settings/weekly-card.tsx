@@ -1,8 +1,9 @@
 "use client";
 
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronRight, Plus, Trash } from "lucide-react";
-import { useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { Suspense, useState } from "react";
+import { PendingFormData } from "@/components/form/pending-form-data";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,68 +18,18 @@ import { DayConfig } from "@/lib/utils";
 import type { Period } from "@/server/db/types";
 
 export default function WeeklyCard() {
-  const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.schedule.getWeekly.queryOptions());
-  const [closedDays, setClosedDays] = useState<Record<number, boolean>>({});
-  const toggleDay = (day: number) => {
-    setClosedDays((prev) => ({ ...prev, [day]: !prev[day] }));
-  };
   return (
     <Card className="pb-0 min-w-80 overflow-hidden">
       <CardHeader>
         <CardTitle>Périodes de réservation</CardTitle>
         <CardDescription>
-          Ajouter, Modifier ou supprimer des jours d'ouverture ou des périodes
-          de service
+          Ajouter, modifier ou supprimer des jours d'ouverture ou des périodes
+          de service hebdomadaires
         </CardDescription>
       </CardHeader>
-      <Table>
-        <TableBody>
-          {data.map((w, i) => {
-            const hasPeriods = w !== null && w.periods.length > 0;
-            return (
-              <>
-                <TableRow key={crypto.randomUUID()} className="bg-muted/50">
-                  <TableCell>
-                    <div className="flex justify-between items-center">
-                      {hasPeriods ? (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => toggleDay(i)}
-                        >
-                          {closedDays[i] ? (
-                            <ChevronRight className="size-4" />
-                          ) : (
-                            <ChevronDown className="size-4" />
-                          )}
-                        </Button>
-                      ) : (
-                        <div />
-                      )}
-                      <div className="font-bold">
-                        {DayConfig[i].label}
-                        {!hasPeriods && " (fermé)"}
-                      </div>
-                      <div />
-                      {/* <Button variant="ghost" size="icon">
-                        <Plus className="size-4" />
-                      </Button> */}
-                    </div>
-                  </TableCell>
-                </TableRow>
-                {!closedDays[i] && hasPeriods && (
-                  <TableRow>
-                    <TableCell colSpan={3}>
-                      <SubTable periods={w.periods} />
-                    </TableCell>
-                  </TableRow>
-                )}
-              </>
-            );
-          })}
-        </TableBody>
-      </Table>
+      <Suspense fallback={<PendingFormData />}>
+        <WeeklyTable />
+      </Suspense>
     </Card>
   );
 }
@@ -102,6 +53,64 @@ export function SubTable({ periods }: { periods: Period[] }) {
             </TableCell>
           </TableRow>
         ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+export function WeeklyTable() {
+  const trpc = useTRPC();
+  const { data } = useSuspenseQuery(trpc.schedule.getWeekly.queryOptions());
+  const [closedDays, setClosedDays] = useState<Record<number, boolean>>({});
+  const toggleDay = (day: number) => {
+    setClosedDays((prev) => ({ ...prev, [day]: !prev[day] }));
+  };
+  return (
+    <Table>
+      <TableBody>
+        {data.map((w, i) => {
+          const hasPeriods = w !== null && w.periods.length > 0;
+          return (
+            <>
+              <TableRow key={crypto.randomUUID()} className="bg-muted/50">
+                <TableCell>
+                  <div className="flex justify-between items-center">
+                    {hasPeriods ? (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleDay(i)}
+                      >
+                        {closedDays[i] ? (
+                          <ChevronRight className="size-4" />
+                        ) : (
+                          <ChevronDown className="size-4" />
+                        )}
+                      </Button>
+                    ) : (
+                      <div />
+                    )}
+                    <div className="font-bold">
+                      {DayConfig[i].label}
+                      {!hasPeriods && " (fermé)"}
+                    </div>
+                    <div />
+                    {/* <Button variant="ghost" size="icon">
+                        <Plus className="size-4" />
+                      </Button> */}
+                  </div>
+                </TableCell>
+              </TableRow>
+              {!closedDays[i] && hasPeriods && (
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <SubTable periods={w.periods} />
+                  </TableCell>
+                </TableRow>
+              )}
+            </>
+          );
+        })}
       </TableBody>
     </Table>
   );

@@ -28,7 +28,7 @@ export const SBooking = z.object({
     ),
   date: z.iso.date("Merci de choisir une date valide pour votre réservation."),
   time: z.iso.time("Merci d'indiquer l'heure de votre réservation."),
-  notes: z.string().nullable(),
+  notes: z.string().optional().nullable(),
 });
 
 export type TBooking = z.infer<typeof SBooking>;

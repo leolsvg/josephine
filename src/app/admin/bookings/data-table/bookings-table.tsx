@@ -15,18 +15,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FullDateFormat } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
 import { useBookingsDate } from "../realtime/use-booking-date";
-import { DataTableFooter } from "./data-table-footer";
-import { DataTableHeader } from "./data-table-header";
+import { useRealtimeBookings } from "../realtime/use-realtime-bookings";
+import { DataTableFooter } from "./bookings-table-footer";
+import { DataTableHeader } from "./bookings-table-header";
 import { InnerTable } from "./inner-table";
 import { usePagination } from "./use-pagination";
 
 interface DataTableProps {
   columns: ColumnDef<TBooking, any>[];
-  data: TBooking[];
   className?: string;
 }
 
-export function DataTable({ columns, data, className }: DataTableProps) {
+export function DataTable({ columns, className }: DataTableProps) {
+  const { data } = useRealtimeBookings();
   const { date } = useBookingsDate();
   const [pagination, onPaginationChange] = usePagination();
   const [globalFilter, onGlobalFilterChange] = useQueryState(

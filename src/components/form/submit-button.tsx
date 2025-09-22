@@ -4,21 +4,25 @@ import type { ReactNode } from "react";
 import { Button } from "../ui/button";
 import { useFormContext } from "./types";
 
-export function SubmitButton({ children }: { children: ReactNode }) {
+export function SubmitButton({
+  children,
+  isPending,
+}: {
+  children: ReactNode;
+  isPending?: boolean;
+}) {
   const context = useFormContext();
   return (
-    <context.Subscribe
-      selector={({ isSubmitting, canSubmit }) => ({ isSubmitting, canSubmit })}
-    >
-      {({ isSubmitting, canSubmit }) => (
+    <context.Subscribe selector={({ canSubmit }) => ({ canSubmit })}>
+      {({ canSubmit }) => (
         <Button
           className="w-full"
           type="submit"
-          aria-disabled={isSubmitting}
-          disabled={!canSubmit}
+          aria-disabled={!canSubmit || isPending}
+          disabled={!canSubmit || isPending}
           onClick={() => context.handleSubmit()}
         >
-          {isSubmitting ? "Chargement" : children}
+          {isPending ? "Chargement" : children}
         </Button>
       )}
     </context.Subscribe>

@@ -6,7 +6,7 @@ import { TIMEZONE } from "@/lib/utils";
 import type { DB } from "@/server/db";
 import { bookingsTable } from "@/server/db/schema";
 import type { TPutBooking } from "@/server/db/types";
-import { sendBooking } from "@/server/services/emails/send-email";
+import { sendBookingConfirmationEmail } from "@/server/services/emails/send-booking-confirmation-email";
 import { checkIfExists, type DuplicateBookingError } from "./check-if-exists";
 import { type ClosedError, checkIfIsOpen } from "./check-if-is-open";
 import { checkCapacitySlot } from "./check-settings";
@@ -39,7 +39,7 @@ export const createBooking = (
       safeDrizzleQuery(db.insert(bookingsTable).values(input).returning()),
     )
     .andThen(([booking]) =>
-      sendBooking({
+      sendBookingConfirmationEmail({
         name: booking.name,
         date: new Date(
           Temporal.PlainDate.from(input.date).toZonedDateTime({

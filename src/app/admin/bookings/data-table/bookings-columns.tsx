@@ -66,7 +66,7 @@ export const columns = [
 
     cell: ({ getValue }) => (
       <Textarea
-        className="min-h-8 h-8"
+        className="min-h-10 h-10"
         disabled
         defaultValue={getValue() ?? ""}
       />

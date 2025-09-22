@@ -1,7 +1,7 @@
 import { addHours } from "date-fns";
 import ical, { ICalCalendarMethod } from "ical-generator";
 import { err, fromPromise, ok } from "neverthrow";
-import { BookingConfirmationEmail } from "@/components/booking-confirmation-email";
+import { BookingConfirmationEmail } from "@/components/booking/booking-confirmation-email";
 import { ResendSendError, ResendUnknownError } from "@/lib/errors/resend";
 import { Josephine } from "@/lib/josephine";
 import { resend } from "@/lib/resend";
@@ -39,7 +39,7 @@ interface Test {
   notes?: string;
 }
 
-export function sendBooking({
+export function sendBookingConfirmationEmail({
   name,
   reservationId,
   guests,
