@@ -48,7 +48,7 @@ export function checkCapacitySlot(
       .from(settingsTable)
       .limit(1),
   )
-    .andThen((s) => (s.length === 0 ? ok(s[0]) : err(new NoSettingsError())))
+    .andThen((s) => (s.length === 0 ? err(new NoSettingsError()) : ok(s[0])))
     .andThen((s) => {
       return safeDrizzleQuery(
         db
