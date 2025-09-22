@@ -26,9 +26,11 @@ export const { useAppForm: useBookingForm, withForm: withBookingForm } =
     formContext,
   });
 
-export const defaultBooking: Partial<
+export type TDefaultBooking = Partial<
   Omit<TBooking, "id" | "status" | "createdAt" | "updatedAt">
-> = {
+>;
+
+export const defaultBooking: TDefaultBooking = {
   date: undefined,
   time: undefined,
   email: undefined,

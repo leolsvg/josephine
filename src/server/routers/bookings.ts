@@ -23,7 +23,7 @@ export const bookings = createTRPCRouter({
     }
     return result.value;
   }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(SId)
     .mutation(async ({ ctx, input: { id } }) => {
       const result = await safeDrizzleQuery(
@@ -38,7 +38,7 @@ export const bookings = createTRPCRouter({
       }
       return result.value;
     }),
-  put: publicProcedure.input(SPutBooking).mutation(async ({ ctx, input }) => {
+  book: publicProcedure.input(SPutBooking).mutation(async ({ ctx, input }) => {
     const result = await createBooking(ctx.db, input);
     if (result.isErr()) {
       throw new TRPCError({
@@ -49,7 +49,7 @@ export const bookings = createTRPCRouter({
     }
     return result.value;
   }),
-  patch: publicProcedure
+  patch: protectedProcedure
     .input(
       SId.extend({
         value: SPatchBooking,
@@ -61,4 +61,7 @@ export const bookings = createTRPCRouter({
         .set(value)
         .where(eq(bookingsTable.id, id));
     }),
+  put: protectedProcedure.input(SPutBooking).mutation(({ ctx, input }) => {
+    return ctx.db.insert(bookingsTable).values(input);
+  }),
 });

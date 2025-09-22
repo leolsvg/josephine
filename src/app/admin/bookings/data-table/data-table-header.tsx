@@ -1,6 +1,5 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PutBookingDialog } from "../mutate/put-booking-dialog";
 
 interface DataTableHeaderProps {
   title?: string;
@@ -25,9 +24,7 @@ export function DataTableHeader({
         onChange={(e) => onSearch(e.target.value)}
         className="w-auto md:w-64"
       />
-      <Button size="icon">
-        <Plus />
-      </Button>
+      <PutBookingDialog />
     </div>
   );
 }

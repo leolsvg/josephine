@@ -20,7 +20,7 @@ import { SuccessState } from "./success-state";
 export function BookingDialog() {
   const trpc = useTRPC();
   const { mutate, status, reset, error } = useMutation(
-    trpc.bookings.put.mutationOptions(),
+    trpc.bookings.book.mutationOptions(),
   );
   const form = useBookingForm({
     ...bookingFormOptions,

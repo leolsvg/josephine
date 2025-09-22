@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTRPC } from "@/lib/trpc/react";
 import { cn } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
+import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
 
 const columnHelper = createColumnHelper<TBooking>();
 
@@ -64,9 +65,11 @@ export const columns = [
     header: "Note",
 
     cell: ({ getValue }) => (
-      <Textarea className="min-h-8 h-8" disabled>
-        {getValue()}
-      </Textarea>
+      <Textarea
+        className="min-h-8 h-8"
+        disabled
+        defaultValue={getValue() ?? ""}
+      />
     ),
   }),
   columnHelper.accessor("status", {
@@ -77,7 +80,9 @@ export const columns = [
   }),
   columnHelper.display({
     id: "actions",
-    cell: ({ row }) => <DeleteBookingButton id={row.original.id} />,
+    cell: ({ row }) => (
+      <PatchBookingDialog id={row.original.id} booking={row.original} />
+    ),
     meta: {
       className: "w-0 whitespace-nowrap text-right",
     },

@@ -39,6 +39,10 @@ export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "full",
 });
 
+export const DateFormat = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "medium",
+});
+
 /** Convert JS Date → Temporal.ZonedDateTime in TIMEZONE */
 export function toZdt(date: Date, timeZone = TIMEZONE): Temporal.ZonedDateTime {
   return Temporal.Instant.fromEpochMilliseconds(

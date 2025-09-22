@@ -58,7 +58,7 @@ export function InnerTable({ table }: { table: TanStackTable<TBooking> }) {
               key={r.id}
               className={`transition-colors duration-700 ${
                 bookingIds.has(r.original.id)
-                  ? "bg-yellow-200 animate-pulse"
+                  ? bookingIds.get(r.original.id)
                   : ""
               }`}
             >
