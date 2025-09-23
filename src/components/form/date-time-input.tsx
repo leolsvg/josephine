@@ -67,11 +67,12 @@ export function DateTimeInput({
               locale={fr}
               mode="single"
               selected={dateDate}
-              onSelect={(date) =>
+              onSelect={(date) => {
                 onDateChange(
                   date ? toZdt(date).toPlainDate().toString() : undefined,
-                )
-              }
+                );
+                onTimeChange(undefined);
+              }}
               defaultMonth={dateDate}
               disabled={disabled}
               showOutsideDays={false}
