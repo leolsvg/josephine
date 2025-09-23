@@ -1,13 +1,12 @@
 "use client";
 
-import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Fragment } from "react";
 import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { TIMEZONE } from "@/lib/utils";
+import { TIMEZONE, toZdt } from "@/lib/utils";
 import {
   Dialog,
   DialogClose,
@@ -69,7 +68,9 @@ export function DateTimeInput({
               mode="single"
               selected={dateDate}
               onSelect={(date) =>
-                onDateChange(date ? format(date, "yyyy-MM-dd") : undefined)
+                onDateChange(
+                  date ? toZdt(date).toPlainDate().toString() : undefined,
+                )
               }
               defaultMonth={dateDate}
               disabled={disabled}

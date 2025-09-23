@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from "clsx";
-import { type DateArg, format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
 
@@ -18,10 +17,6 @@ export const LOCALE = "fr-FR";
 export const SId = z.object({
   id: z.number(),
 });
-
-export function toYMD(date: DateArg<Date>) {
-  return format(date, "yyyy-MM-dd");
-}
 
 export type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 

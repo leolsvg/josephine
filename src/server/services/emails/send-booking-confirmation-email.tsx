@@ -1,17 +1,21 @@
-import { addHours } from "date-fns";
 import ical, { ICalCalendarMethod } from "ical-generator";
 import { err, fromPromise, ok } from "neverthrow";
 import { BookingConfirmationEmail } from "@/components/booking/booking-confirmation-email";
 import { ResendSendError, ResendUnknownError } from "@/lib/errors/resend";
 import { Josephine } from "@/lib/josephine";
 import { resend } from "@/lib/resend";
+import { toZdt } from "@/lib/utils";
 
 function createIcsAttachment(
   date: Date,
   reservationId: number,
   guests: number,
 ) {
-  const end = addHours(date, 2);
+  const end = new Date(
+    toZdt(date).add({
+      hours: 2,
+    }).epochMilliseconds,
+  );
   return ical({
     method: ICalCalendarMethod.REQUEST,
     events: [
@@ -56,7 +60,6 @@ export function sendBookingConfirmationEmail({
       react: (
         <BookingConfirmationEmail
           name={name}
-          reservationId={reservationId}
           date={date}
           guests={guests}
           email={email}
