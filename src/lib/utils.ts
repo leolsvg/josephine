@@ -35,6 +35,11 @@ export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
   timeZone: TIMEZONE,
 });
 
+export const TimeFormat = new Intl.DateTimeFormat("fr-FR", {
+  timeStyle: "short",
+  timeZone: TIMEZONE,
+});
+
 export const FullDateTimeFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "full",
   timeStyle: "short",

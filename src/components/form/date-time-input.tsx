@@ -6,7 +6,7 @@ import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { TIMEZONE, toZdt } from "@/lib/utils";
+import { FullDateFormat, TIMEZONE, toZdt } from "@/lib/utils";
 import {
   Dialog,
   DialogClose,
@@ -45,7 +45,7 @@ export function DateTimeInput({
         >
           {dateDate && time ? (
             <span>
-              {dateFormat(dateDate)} à {timeFormat(time)}
+              {FullDateFormat.format(dateDate)} à {timeFormat(time)}
             </span>
           ) : (
             <span className="text-muted-foreground">Séléctionner une date</span>
@@ -61,7 +61,7 @@ export function DateTimeInput({
           Choisissez la date et l'heure de votre réservation au restaurant.
         </DialogDescription>
         <div className="relative p-0 md:pr-48">
-          <div className="p-6">
+          <div className="flex items-center justify-center">
             <Calendar
               timeZone={TIMEZONE}
               locale={fr}
@@ -75,10 +75,10 @@ export function DateTimeInput({
               defaultMonth={dateDate}
               disabled={disabled}
               showOutsideDays={false}
-              className="bg-transparent p-0 [--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+              className="bg-transparent p-6 [--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
             />
           </div>
-          <div className="no-scrollbar inset-y-0 right-0 flex max-h-72 w-full scroll-pb-6 flex-col gap-4 overflow-y-auto border-t p-6 md:absolute md:max-h-none md:w-48 md:border-t-0 md:border-l">
+          <div className="hidden md:flex no-scrollbar inset-y-0 right-0 max-h-72 w-full scroll-pb-6 flex-col gap-4 overflow-y-auto border-t p-6 md:absolute md:max-h-none md:w-48 md:border-t-0 md:border-l">
             {dateDate ? (
               <div className="grid gap-2">
                 {timeSlots(dateDate).map((g, i) => (
@@ -105,8 +105,25 @@ export function DateTimeInput({
               </span>
             )}
           </div>
+          <div className="flex justify-center md:hidden border-t p-3">
+            {dateDate ? (
+              <select
+                name="time"
+                onChange={(e) => onTimeChange(`${e.target.value}:00`)}
+              >
+                <option value="">Sélectionner une heure</option>
+                {timeSlots(dateDate).map((g) =>
+                  g.map((t) => <option key={g + t}>{t}</option>),
+                )}
+              </select>
+            ) : (
+              <span className="text-muted-foreground grow flex items-center justify-center text-center">
+                Sélectionnez une date
+              </span>
+            )}
+          </div>
         </div>
-        <DialogFooter className="flex flex-col gap-4 border-t px-6 !py-5 md:flex-row">
+        <DialogFooter className="sm:flex-col flex flex-col gap-4 border-t px-6 !py-5 md:flex-row items-center">
           <div className="text-sm">
             {dateDate && time ? (
               <DateTimeFormat date={dateDate} time={time} />
@@ -129,14 +146,6 @@ export function DateTimeInput({
   );
 }
 
-function dateFormat(date: Date) {
-  return date.toLocaleDateString("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
-}
-
 function timeFormat(time: string) {
   return time.slice(0, 5);
 }
@@ -145,7 +154,8 @@ function DateTimeFormat({ date, time }: { date: Date; time: string }) {
   return (
     <>
       <span>Votre réservation est planifiée pour le </span>
-      <strong>{dateFormat(date)}</strong> à <strong>{timeFormat(time)}</strong>.
+      <strong>{FullDateFormat.format(date)}</strong> à{" "}
+      <strong>{timeFormat(time)}</strong>.
     </>
   );
 }
