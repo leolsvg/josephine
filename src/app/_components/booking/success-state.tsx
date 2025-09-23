@@ -18,6 +18,7 @@ export const SuccessState = withBookingForm({
     >
       {({ email, name }) => (
         <motion.div
+          className="px-2"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}

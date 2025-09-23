@@ -8,6 +8,7 @@ export function Pending() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       aria-live="polite"
+      className="px-2"
     >
       <div className="text-center space-y-4">
         <motion.div

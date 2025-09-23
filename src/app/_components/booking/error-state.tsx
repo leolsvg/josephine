@@ -13,7 +13,7 @@ export function ErrorState({
   error: TRPCClientErrorLike<AppRouter> | null;
 }) {
   return (
-    <div>
+    <div className="px-2">
       <DialogHeader>
         <DialogTitle>Une erreur est survenue</DialogTitle>
       </DialogHeader>
