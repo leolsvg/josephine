@@ -32,3 +32,8 @@ export const SBooking = z.object({
 });
 
 export type TBooking = z.infer<typeof SBooking>;
+
+export const SBookingAdmin = SBooking.extend({
+  phone: z.union([z.literal(""), SBooking.shape.phone]),
+  email: z.union([z.literal(""), SBooking.shape.email]),
+});

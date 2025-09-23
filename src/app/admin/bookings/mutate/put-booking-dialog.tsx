@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { BookingBaseForm } from "@/components/booking/booking-base-form";
-import { SBooking } from "@/components/booking/booking-schema";
+import { SBookingAdmin } from "@/components/booking/booking-schema";
 import { PendingFormData } from "@/components/form/pending-form-data";
 import {
   bookingFormOptions,
@@ -14,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -41,10 +40,10 @@ export function PutBookingDialog() {
       ...bookingFormOptions.defaultValues,
     },
     validators: {
-      onSubmit: SBooking,
+      onSubmit: SBookingAdmin,
     },
     onSubmit: async ({ value }) => {
-      mutate(SBooking.parse(value));
+      mutate(SBookingAdmin.parse(value));
     },
   });
   return (
