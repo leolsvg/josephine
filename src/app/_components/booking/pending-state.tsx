@@ -17,12 +17,7 @@ export function Pending() {
           transition={{ duration: 0.35, ease: "easeOut" }}
           className="my-5"
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-          >
-            <Loader2 className="mx-auto size-16 text-primary" />
-          </motion.div>
+          <Loader2 className="mx-auto size-16 text-primary animate-spin" />
         </motion.div>
 
         <div className="space-y-2">
@@ -38,7 +33,7 @@ export function Pending() {
             <motion.div
               className="h-full w-1/3 bg-primary"
               initial={{ x: "-100%" }}
-              animate={{ x: ["-100%", "100%"] }}
+              animate={{ x: ["-100%", "200%"] }}
               transition={{
                 repeat: Infinity,
                 duration: 1.4,
