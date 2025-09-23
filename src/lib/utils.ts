@@ -37,10 +37,18 @@ export const DayConfig = [
 
 export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "full",
+  timeZone: TIMEZONE,
+});
+
+export const FullDateTimeFormat = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "full",
+  timeStyle: "short",
+  timeZone: TIMEZONE,
 });
 
 export const DateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium",
+  timeZone: TIMEZONE,
 });
 
 /** Convert JS Date → Temporal.ZonedDateTime in TIMEZONE */

@@ -15,11 +15,10 @@ import {
   Section,
   Tailwind,
 } from "@react-email/components";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale/fr";
 import type { ComponentProps, ReactNode } from "react";
 import { env } from "@/lib/env";
 import { Josephine } from "@/lib/josephine";
+import { FullDateTimeFormat } from "@/lib/utils";
 
 function Link(props: ComponentProps<typeof BaseLink>) {
   return <BaseLink {...props} className="underline text-black" />;
@@ -73,7 +72,6 @@ function CardContent({ children }: { children: ReactNode }) {
 type BookingConfirmationEmailProps = {
   name: string;
   email: string;
-  reservationId: number;
   date: Date;
   guests: number;
   phone: string;
@@ -83,13 +81,12 @@ type BookingConfirmationEmailProps = {
 export function BookingConfirmationEmail({
   name,
   email,
-  reservationId,
   date,
   guests,
   phone,
   notes,
 }: BookingConfirmationEmailProps) {
-  const formatDate = format(date, "PPPPp", { locale: fr });
+  const formatDate = FullDateTimeFormat.format(date);
   return (
     <Html>
       <Tailwind>
@@ -139,10 +136,6 @@ export function BookingConfirmationEmail({
                   <CardTitle>Récapitulatif</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Row>
-                    <Column className="w-1/3">N° de réservation</Column>
-                    <Column className="text-right">#{reservationId}</Column>
-                  </Row>
                   <Row>
                     <Column className="w-1/3">Date</Column>
                     <Column className="text-right">{formatDate}</Column>
