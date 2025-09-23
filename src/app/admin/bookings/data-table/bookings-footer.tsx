@@ -22,7 +22,7 @@ import { DEFAULT_PAGE_SIZE } from "./use-pagination";
 
 const variant = "secondary";
 
-export function DataTableFooter<TData>({ table }: { table: Table<TData> }) {
+export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
   const pageCount = table.getPageCount();
   const pageIndex = table.getState().pagination.pageIndex;
   const rows = table.getFilteredRowModel().rows.length;

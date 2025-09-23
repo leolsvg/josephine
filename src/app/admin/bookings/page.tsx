@@ -1,15 +1,15 @@
 import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Bookings } from "./data-table/bookings";
 import { columns } from "./data-table/bookings-columns";
-import { DataTable } from "./data-table/bookings-table";
 import { Sidebar } from "./sidebar";
 
 export const dynamic = "force-dynamic";
 
 export default function BookingsPage() {
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-col md:flex-row gap-3 items-center md:items-start">
       <Suspense>
         <Sidebar />
       </Suspense>
@@ -26,7 +26,7 @@ export default function BookingsPage() {
           </Card>
         }
       >
-        <DataTable className="grow" columns={columns} />
+        <Bookings className="grow" columns={columns} />
       </Suspense>
     </div>
   );

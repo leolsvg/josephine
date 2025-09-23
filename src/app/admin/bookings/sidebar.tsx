@@ -31,7 +31,7 @@ export function Sidebar() {
       );
   }, [date]);
   return (
-    <div className="flex flex-col gap-2 w-100">
+    <div className="flex flex-col gap-2 md:w-100 w-full">
       <div className="grid grid-cols-3 gap-2">
         <Button
           type="button"
@@ -106,7 +106,7 @@ export function Sidebar() {
                 : null,
             )
           }
-          className="md:[--cell-size:--spacing(12)]"
+          className="[--cell-size:--spacing(12)]"
         />
       </div>
     </div>
