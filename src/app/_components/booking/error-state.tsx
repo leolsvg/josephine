@@ -2,11 +2,7 @@ import type { TRPCClientErrorLike } from "@trpc/client";
 import { CircleAlert } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { AppRouter } from "@/server/routers";
 
 export function ErrorState({
