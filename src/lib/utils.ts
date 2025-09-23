@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from "clsx";
-import { type DateArg, format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
 
@@ -19,10 +18,6 @@ export const SId = z.object({
   id: z.number(),
 });
 
-export function toYMD(date: DateArg<Date>) {
-  return format(date, "yyyy-MM-dd");
-}
-
 export type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export const DayConfig = [
@@ -37,10 +32,18 @@ export const DayConfig = [
 
 export const FullDateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "full",
+  timeZone: TIMEZONE,
+});
+
+export const FullDateTimeFormat = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "full",
+  timeStyle: "short",
+  timeZone: TIMEZONE,
 });
 
 export const DateFormat = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium",
+  timeZone: TIMEZONE,
 });
 
 /** Convert JS Date → Temporal.ZonedDateTime in TIMEZONE */
