@@ -31,7 +31,9 @@ export function Header() {
     <header className="flex items-center p-3 border-b gap-3">
       <Link href="/" className="flex gap-3 items-center">
         <JosephineIcon className="dark:brightness-0 dark:invert size-8" />
-        <div className="text-xl font-bold">Restautant Josephine</div>
+        <div className="text-xl font-bold hidden md:block">
+          Restautant Josephine
+        </div>
       </Link>
       <div className="grow" />
       <div className="flex">
