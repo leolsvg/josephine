@@ -5,7 +5,6 @@ import { JosephineIcon } from "@/components/josephine-icon";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
@@ -21,7 +20,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <main className="grow overflow-auto p-5">{children}</main>
         </div>
       </NuqsAdapter>
-      <Toaster closeButton richColors />
     </ThemeProvider>
   );
 }

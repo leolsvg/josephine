@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/lib/trpc/react";
 import { geistMono, geistSans } from "@/styles/fonts";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
       >
         <TRPCReactProvider>{children}</TRPCReactProvider>
         <Analytics />
+        <Toaster closeButton richColors />
       </body>
     </html>
   );

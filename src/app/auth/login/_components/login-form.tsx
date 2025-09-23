@@ -1,6 +1,9 @@
 "use client";
 
+import { AuthError } from "@supabase/supabase-js";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import z from "zod";
 import {
   Card,
@@ -14,8 +17,8 @@ import { cn } from "@/lib/utils";
 import { useLoginForm } from "./use-login-form";
 
 const SLogin = z.object({
-  email: z.email("Adresse mail invalide"),
-  password: z.string().min(1, "Merci de saisir votre mot de passe"),
+  email: z.email("Adresse mail invalide."),
+  password: z.string().min(1, "Merci de saisir votre mot de passe."),
 });
 
 export type TLogin = z.infer<typeof SLogin>;
@@ -25,25 +28,40 @@ const defaultValues: TLogin = {
   password: "",
 };
 
+function useAuth() {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: async ({ email, password }: TLogin) => {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => router.push("/admin/bookings"),
+    onError: (e) => {
+      if (e instanceof AuthError && e.code === "invalid_credentials")
+        return toast.error("Email ou mot de passe invalide.");
+      if (e instanceof Error) {
+        return toast.error(`Une erreur inconnue est survenue : ${e.message}.`);
+      }
+      return toast.error(`Une erreur inconnue est survenue.`);
+    },
+  });
+}
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const router = useRouter();
+  const { mutate, isPending } = useAuth();
   const form = useLoginForm({
     defaultValues,
     validators: {
       onSubmit: SLogin,
     },
-    onSubmit: async ({ value: { email, password } }) => {
-      try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        router.push("/admin/bookings");
-      } catch {}
+    onSubmit: async ({ value }) => {
+      mutate(value);
     },
   });
 
@@ -87,8 +105,8 @@ export function LoginForm({
                 )}
               </form.AppField>
               <form.AppForm>
-                <form.SubmitButton>
-                  {form.state.isSubmitting ? "Logging in..." : "Login"}
+                <form.SubmitButton isPending={isPending}>
+                  Login
                 </form.SubmitButton>
               </form.AppForm>
             </div>
