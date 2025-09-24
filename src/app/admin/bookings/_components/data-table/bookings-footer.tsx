@@ -42,7 +42,7 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
           "Pas de réservations"
         )}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col md:flex-row items-end md:items-center gap-3 ">
         <div className="text-muted-foreground">
           Page <strong>{pageIndex + 1}</strong> sur <strong>{pageCount}</strong>
         </div>
