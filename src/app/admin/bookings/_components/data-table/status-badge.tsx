@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTRPC } from "@/lib/trpc/react";
 import { cn } from "@/lib/utils";
-import type { TBooking } from "@/server/db/types";
+import type { TBooking, TStatus } from "@/server/db/types";
 
 export const EStatusConfig = {
   pending: {
@@ -29,17 +29,14 @@ export const EStatusConfig = {
     label: "Annulée",
     className: "bg-gray-100 text-gray-800",
   },
-} as const satisfies Record<
-  TBooking["status"],
-  { label: string; className: string }
->;
+} as const satisfies Record<TStatus, { label: string; className: string }>;
 
 export function StatusBadge({
   id,
   status,
 }: {
   id: TBooking["id"];
-  status: TBooking["status"];
+  status: TStatus;
 }) {
   const trpc = useTRPC();
   const { mutate, isPending } = useMutation(
