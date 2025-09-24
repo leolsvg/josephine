@@ -1,13 +1,13 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Card } from "@/components/ui/card";
 import { TIMEZONE } from "@/lib/utils";
 import { useBookingsDate } from "./realtime/use-booking-date";
+import { StatusPieChart } from "./status-pie-chart";
 
 export function Sidebar() {
   const {
@@ -21,6 +21,7 @@ export function Sidebar() {
     isTomorrow,
     setDate,
   } = useBookingsDate();
+
   const [month, setMonth] = useState<Date>();
   useEffect(() => {
     if (date)
@@ -31,6 +32,7 @@ export function Sidebar() {
         ),
       );
   }, [date]);
+
   return (
     <div className="flex flex-col gap-2 md:w-100 w-full">
       <div className="grid grid-cols-3 gap-2">
@@ -82,7 +84,6 @@ export function Sidebar() {
       </div>
       <div className="flex justify-center">
         <Calendar
-          fixedWeeks
           locale={fr}
           timeZone={TIMEZONE}
           month={month}
@@ -110,6 +111,10 @@ export function Sidebar() {
           className="[--cell-size:--spacing(12)]"
         />
       </div>
+
+      <Suspense>
+        <StatusPieChart />
+      </Suspense>
     </div>
   );
 }

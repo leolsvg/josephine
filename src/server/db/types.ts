@@ -10,12 +10,14 @@ import {
   type menuServiceEnum,
   type menusTable,
   settingsTable,
+  type statusEnum,
 } from "./schema";
 
 export type TBooking = InferSelectModel<typeof bookingsTable>;
 export type TMenu = InferSelectModel<typeof menusTable>;
 export type TMenuCategory = InferEnum<typeof menuCategoryEnum>;
 export type TMenuService = InferEnum<typeof menuServiceEnum>;
+export type TStatus = InferEnum<typeof statusEnum>;
 export const SPutBooking = createInsertSchema(bookingsTable);
 export const SPatchBooking = createUpdateSchema(bookingsTable);
 export const SSettings = createInsertSchema(settingsTable).omit({
