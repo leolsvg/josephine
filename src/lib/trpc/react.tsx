@@ -14,7 +14,6 @@ import SuperJSON from "superjson";
 import { env } from "@/lib/env";
 import type { AppRouter } from "../../server/routers";
 import { createQueryClient } from "./query-client";
-import { createTRPCReact } from "@trpc/react-query";
 
 let clientQueryClientSingleton: QueryClient | undefined;
 const getQueryClient = () => {
@@ -49,7 +48,7 @@ export function TRPCReactProvider(props: { children: ReactNode }) {
           },
         }),
       ],
-    })
+    }),
   );
 
   return (
@@ -68,5 +67,3 @@ const getBaseUrl = () => {
   // eslint-disable-next-line no-restricted-properties
   return `http://localhost:${process.env.PORT ?? 3000}`;
 };
-
-export const trpc = createTRPCReact<AppRouter>();
