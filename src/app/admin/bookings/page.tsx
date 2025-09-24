@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Bookings } from "./data-table/bookings";
-import { columns } from "./data-table/bookings-columns";
-import { Sidebar } from "./sidebar";
+import { Bookings } from "./_components/data-table/bookings";
+import { columns } from "./_components/data-table/bookings-columns";
+import { Sidebar } from "./_components/sidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +26,7 @@ export default function BookingsPage() {
           </Card>
         }
       >
-        <Bookings className="grow" columns={columns} />
+        <Bookings className="w-full" columns={columns} />
       </Suspense>
     </div>
   );
