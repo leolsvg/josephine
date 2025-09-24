@@ -12,9 +12,9 @@ import { SubTable } from "./sub-table";
 export function ExceptionsTable() {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.schedule.getExceptions.queryOptions());
-  const [closedDays, setClosedDays] = useState<Record<number, boolean>>({});
+  const [openedDays, setOpenedDays] = useState<Record<number, boolean>>({});
   const toggleDay = (day: number) => {
-    setClosedDays((prev) => ({ ...prev, [day]: !prev[day] }));
+    setOpenedDays((prev) => ({ ...prev, [day]: !prev[day] }));
   };
   const hasExceptions = data.length > 0;
   return (
@@ -34,10 +34,10 @@ export function ExceptionsTable() {
                           size="icon"
                           onClick={() => toggleDay(i)}
                         >
-                          {closedDays[i] ? (
-                            <ChevronRight className="size-4" />
-                          ) : (
+                          {openedDays[i] ? (
                             <ChevronDown className="size-4" />
+                          ) : (
+                            <ChevronRight className="size-4" />
                           )}
                         </Button>
                       ) : (
@@ -55,7 +55,7 @@ export function ExceptionsTable() {
                     </div>
                   </TableCell>
                 </TableRow>
-                {!closedDays[i] && hasPeriods && (
+                {openedDays[i] && hasPeriods && (
                   <TableRow>
                     <TableCell colSpan={3}>
                       <SubTable periods={e.periods} />

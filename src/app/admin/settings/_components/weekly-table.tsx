@@ -12,9 +12,9 @@ import { SubTable } from "./sub-table";
 export function WeeklyTable() {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.schedule.getWeekly.queryOptions());
-  const [closedDays, setClosedDays] = useState<Record<number, boolean>>({});
+  const [openedDays, setOpenedDays] = useState<Record<number, boolean>>({});
   const toggleDay = (day: number) => {
-    setClosedDays((prev) => ({ ...prev, [day]: !prev[day] }));
+    setOpenedDays((prev) => ({ ...prev, [day]: !prev[day] }));
   };
   return (
     <Table>
@@ -32,10 +32,10 @@ export function WeeklyTable() {
                         size="icon"
                         onClick={() => toggleDay(i)}
                       >
-                        {closedDays[i] ? (
-                          <ChevronRight className="size-4" />
-                        ) : (
+                        {openedDays[i] ? (
                           <ChevronDown className="size-4" />
+                        ) : (
+                          <ChevronRight className="size-4" />
                         )}
                       </Button>
                     ) : (
@@ -52,7 +52,7 @@ export function WeeklyTable() {
                   </div>
                 </TableCell>
               </TableRow>
-              {!closedDays[i] && hasPeriods && (
+              {openedDays[i] && hasPeriods && (
                 <TableRow>
                   <TableCell colSpan={3}>
                     <SubTable periods={w.periods} />
