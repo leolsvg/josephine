@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Card } from "@/components/ui/card";
 import { TIMEZONE } from "@/lib/utils";
 import { useBookingsDate } from "./realtime/use-booking-date";
 
@@ -109,6 +110,7 @@ export function Sidebar() {
           className="[--cell-size:--spacing(12)]"
         />
       </div>
+      <Card>Toto</Card>
     </div>
   );
 }
