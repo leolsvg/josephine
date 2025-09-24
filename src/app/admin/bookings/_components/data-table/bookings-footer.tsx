@@ -29,9 +29,9 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
   const hasReservations = rows !== 0;
   const guests = table
     .getPrePaginationRowModel()
-    .rows.reduce((p, c) => p + (c.getValue("guests") as number), 0);
+    .rows.reduce((p, c) => p + Number(c.getValue("guests")), 0);
   return (
-    <div className="flex items-center justify-between bg-background pt-3 pl-3">
+    <div className="flex items-center justify-between bg-background pt-3 pl-3 gap-3">
       <div className="text-muted-foreground">
         {hasReservations ? (
           <>
@@ -42,7 +42,7 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
           "Pas de réservations"
         )}
       </div>
-      <div className="flex flex-col md:flex-row items-end md:items-center gap-3 ">
+      <div className="flex flex-col md:flex-row items-end md:items-center gap-3">
         <div className="text-muted-foreground">
           Page <strong>{pageIndex + 1}</strong> sur <strong>{pageCount}</strong>
         </div>
