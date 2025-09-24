@@ -1,12 +1,11 @@
-import type { Route } from "next";
 import Link from "next/link";
 import { JosephineIcon } from "@/components/josephine-icon";
 import type { NavItem } from "@/lib/utils";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
-const menus: NavItem<Route>[] = [
-  { title: "Menu déjeuner", href: `/menus/lunch` },
+const menus: NavItem[] = [
+  { title: "Menu déjeuner", href: "/menus/lunch" },
   {
     title: "Carte soir et week-end",
     href: "/menus/dinner",

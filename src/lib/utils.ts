@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import type { Route } from "next";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
 
@@ -6,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export type NavItem<T extends string = string> = {
-  href: T;
+export type NavItem = {
+  href: Route;
   title: string;
 };
 

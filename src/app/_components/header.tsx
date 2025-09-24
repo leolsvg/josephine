@@ -1,5 +1,4 @@
 import { Menu } from "lucide-react";
-import type { Route } from "next";
 import Link from "next/link";
 import { JosephineIcon } from "@/components/josephine-icon";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import {
 import type { NavItem } from "@/lib/utils";
 import { BookingDialog } from "./booking/booking-dialog";
 
-export const navigationItems: NavItem<Route>[] = [
+export const navigationItems: NavItem[] = [
   {
     href: "#menu",
     title: "Menu",
