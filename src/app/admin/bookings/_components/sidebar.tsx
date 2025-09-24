@@ -110,7 +110,6 @@ export function Sidebar() {
           className="[--cell-size:--spacing(12)]"
         />
       </div>
-      <Card>Toto</Card>
     </div>
   );
 }
