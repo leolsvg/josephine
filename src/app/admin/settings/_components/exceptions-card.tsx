@@ -10,7 +10,7 @@ import { ExceptionsTable } from "./exceptions-table";
 
 export function ExceptionsCard() {
   return (
-    <Card className="pb-0  min-w-100 grow overflow-hidden">
+    <Card className="pb-0 lg:min-w-100 grow overflow-hidden">
       <CardHeader>
         <CardTitle>Exceptions</CardTitle>
         <CardDescription>
