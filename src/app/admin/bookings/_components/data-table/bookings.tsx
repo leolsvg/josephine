@@ -2,7 +2,6 @@
 
 import {
   type ColumnDef,
-  type ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -10,7 +9,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { parseAsString, useQueryState } from "nuqs";
-import { useEffect, useState } from "react";
 import { FullDateFormat } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
 import { useBookingsDate } from "../realtime/use-booking-date";
@@ -19,6 +17,8 @@ import { BookingsCards } from "./bookings-cards";
 import { BookingsFooter } from "./bookings-footer";
 import { BookingsHeader } from "./bookings-header";
 import { BookingsTable } from "./bookings-table";
+import { useColumnFilters } from "./use-column-filters";
+import { useColumnVisibility } from "./use-column-visibility";
 import { usePagination } from "./use-pagination";
 
 interface DataTableProps {
@@ -35,14 +35,8 @@ export function Bookings({ columns, className }: DataTableProps) {
     parseAsString,
   );
 
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  useEffect(() => {
-    date
-      ? setColumnFilters([{ id: "date", value: date }])
-      : setColumnFilters((p) => [...p.filter((f) => f.id !== "date")]);
-  }, [date]);
-
+  const { columnVisibility, onColumnVisibilityChange } = useColumnVisibility();
+  const { columnFilters, onColumnFiltersChange } = useColumnFilters();
   const table = useReactTable({
     data,
     columns,
@@ -54,10 +48,8 @@ export function Bookings({ columns, className }: DataTableProps) {
     state: {
       pagination,
       globalFilter,
-      columnVisibility: {
-        date: !date,
-      },
-      columnFilters: columnFilters,
+      columnVisibility,
+      columnFilters,
     },
     initialState: {
       sorting: [
@@ -71,14 +63,16 @@ export function Bookings({ columns, className }: DataTableProps) {
         },
       ],
     },
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange,
     onPaginationChange,
+    onColumnVisibilityChange,
     onGlobalFilterChange,
   });
 
   return (
     <div className={className}>
       <BookingsHeader
+        table={table}
         globalFilter={table.getState().globalFilter ?? ""}
         title={
           date

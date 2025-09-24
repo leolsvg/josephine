@@ -1,0 +1,78 @@
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTRPC } from "@/lib/trpc/react";
+import { cn } from "@/lib/utils";
+import type { TBooking } from "@/server/db/types";
+
+export const EStatusConfig = {
+  pending: {
+    label: "En attente",
+    className: "bg-amber-100 text-amber-800",
+  },
+  present: {
+    label: "Présent",
+    className: "bg-green-100 text-green-800",
+  },
+  absent: {
+    label: "Absent",
+    className: "bg-red-100 text-red-800",
+  },
+  canceled: {
+    label: "Annulée",
+    className: "bg-gray-100 text-gray-800",
+  },
+} as const satisfies Record<
+  TBooking["status"],
+  { label: string; className: string }
+>;
+
+export function StatusBadge({
+  id,
+  status,
+}: {
+  id: TBooking["id"];
+  status: TBooking["status"];
+}) {
+  const trpc = useTRPC();
+  const { mutate, isPending } = useMutation(
+    trpc.bookings.patch.mutationOptions(),
+  );
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild disabled={isPending}>
+        <Badge
+          className={cn(
+            "cursor-default",
+            EStatusConfig[status].className,
+            isPending ? "opacity-50" : "hover:opacity-50",
+          )}
+        >
+          {isPending && <Loader2 className="animate-spin" />}
+          {EStatusConfig[status].label}
+        </Badge>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuRadioGroup
+          value={status}
+          onValueChange={(v) =>
+            mutate({ id, value: { status: v as TBooking["status"] } })
+          }
+        >
+          {Object.entries(EStatusConfig).map(([k, v]) => (
+            <DropdownMenuRadioItem value={k} key={k}>
+              {v.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

@@ -1,16 +1,21 @@
+import type { Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
+import type { TBooking } from "@/server/db/types";
 import { PutBookingDialog } from "../mutate/put-booking-dialog";
+import { ColumnVisibilitySelect } from "./column-visibility-select";
 
 interface DataTableHeaderProps {
   title?: string;
   onSearch: (search: string) => void;
   globalFilter: string;
+  table: Table<TBooking>;
 }
 
 export function BookingsHeader({
   title,
   onSearch,
   globalFilter,
+  table,
 }: DataTableHeaderProps) {
   return (
     <div className="flex pb-3 md:items-center gap-3 flex-col md:flex-row">
@@ -18,6 +23,7 @@ export function BookingsHeader({
         {title}
       </div>
       <div className="flex items-center gap-3">
+        <ColumnVisibilitySelect table={table} />
         <Input
           type="text"
           placeholder="Recherche"
