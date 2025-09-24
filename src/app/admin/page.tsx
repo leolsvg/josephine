@@ -1,11 +1,11 @@
-import { BookingsChart } from "./_components/bookings-chart";
+import { BookingsAreaChart } from "./_components/bookings-area-chart";
 
 export default function DashboardPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Tableau de bord</h1>
       <p>Bienvenue sur le tableau de bord administrateur.</p>
-      <BookingsChart />
+      <BookingsAreaChart />
     </div>
   );
 }

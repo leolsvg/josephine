@@ -1,8 +1,8 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -12,24 +12,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useTRPC } from "@/lib/trpc/react";
-import { useQuery } from "@tanstack/react-query";
 
 export const description = "A simple area chart";
-
-// const chartData = [
-//   { month: "January", bookings: 120 },
-//   { month: "February", bookings: 305 },
-//   { month: "March", bookings: 237 },
-//   { month: "April", bookings: 73 },
-//   { month: "May", bookings: 209 },
-//   { month: "June", bookings: 214 },
-// ];
 
 const chartConfig = {
   total: {
@@ -38,11 +28,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BookingsChart() {
+export function BookingsAreaChart() {
   const trpc = useTRPC();
-  const { data, isLoading, isError } = useQuery(
-    trpc.dashboard.get.queryOptions()
-  );
+  const { data } = useQuery(trpc.dashboard.get.queryOptions());
 
   return (
     <Card>
@@ -75,11 +63,6 @@ export function BookingsChart() {
               axisLine={false}
               width={34}
               allowDecimals={false}
-              domain={[
-                0,
-                (dataMax: number) => Math.ceil((dataMax + 1) / 5) * 5, // arrondi au 5 supérieur
-                // ou: (dataMax) => dataMax + 5
-              ]}
             />
             <ChartTooltip
               cursor={false}
