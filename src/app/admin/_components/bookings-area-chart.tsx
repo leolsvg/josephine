@@ -30,7 +30,9 @@ const chartConfig = {
 
 export function BookingsAreaChart() {
   const trpc = useTRPC();
-  const { data } = useQuery(trpc.dashboard.get.queryOptions());
+  const { data } = useQuery(
+    trpc.statistics.getBookingsByInterval.queryOptions(),
+  );
 
   return (
     <Card>
