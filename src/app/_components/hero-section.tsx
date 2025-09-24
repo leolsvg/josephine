@@ -1,9 +1,20 @@
+import Image from "next/image";
+import Background from "../../../public/restaurant/bar.jpeg";
+
 export function HeroSection() {
   return (
     <main>
-      <section className="bg-cover bg-center bg-no-repeat h-dvh bg-[url('/restaurant/bar.jpeg')] relative">
-        <div className="absolute inset-0 bg-black opacity-50 z-0" />
-        <div className="relative  flex flex-col justify-center items-center size-full text-white gap-6 z-10">
+      <section className="relative h-dvh">
+        <Image
+          src={Background}
+          alt="Bar du restaurant Joséphine"
+          fill
+          priority
+          placeholder="blur"
+          className="object-cover object-center -z-10"
+        />
+        <div className="absolute inset-0 bg-black/50 -z-10" />
+        <div className="relative flex flex-col justify-center items-center size-full text-white gap-6">
           <h1 className="text-5xl sm:text-6xl font-bold leading-tight text-center px-6">
             Bienvenue chez Joséphine
           </h1>
