@@ -15,21 +15,28 @@ import type { TBooking, TStatus } from "@/server/db/types";
 export const EStatusConfig = {
   pending: {
     label: "En attente",
-    className: "bg-amber-100 text-amber-800",
+    className: "bg-warning/20 text-warning",
+    color: "var(--warning)",
   },
   present: {
     label: "Présent",
-    className: "bg-green-100 text-green-800",
+    className: "bg-success/20 text-success",
+    color: "var(--success)",
   },
   absent: {
     label: "Absent",
-    className: "bg-red-100 text-red-800",
+    className: "bg-destructive/10 text-destructive",
+    color: "var(--destructive)",
   },
   canceled: {
     label: "Annulée",
-    className: "bg-gray-100 text-gray-800",
+    className: "bg-primary/10 text-primary",
+    color: "var(--primary)",
   },
-} as const satisfies Record<TStatus, { label: string; className: string }>;
+} as const satisfies Record<
+  TStatus,
+  { label: string; className: string; color: string }
+>;
 
 export function StatusBadge({
   id,

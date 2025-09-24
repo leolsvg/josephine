@@ -6,8 +6,8 @@ import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { TIMEZONE } from "@/lib/utils";
-import { PieStatus } from "./pie-chart";
 import { useBookingsDate } from "./realtime/use-booking-date";
+import { StatusPieChart } from "./status-pie-chart";
 
 export function Sidebar() {
   const {
@@ -84,7 +84,6 @@ export function Sidebar() {
       </div>
       <div className="flex justify-center">
         <Calendar
-          fixedWeeks
           locale={fr}
           timeZone={TIMEZONE}
           month={month}
@@ -114,7 +113,7 @@ export function Sidebar() {
       </div>
 
       <Suspense>
-        <PieStatus />
+        <StatusPieChart />
       </Suspense>
     </div>
   );
