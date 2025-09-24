@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Calendar, Clock, Loader2, Trash, Users } from "lucide-react";
+import { Calendar, Clock, ForkKnife, Loader2, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,20 +53,28 @@ export const columns = [
   }),
   columnHelper.accessor("phone", { header: "Téléphone" }),
   columnHelper.accessor("guests", {
-    header: "Invités",
+    header: "Couverts",
+    meta: {
+      className: "flex justify-center",
+    },
     cell: ({ getValue }) => (
-      <div className="flex gap-3 items-center">
-        <Users className="size-4" />
-        <span className="font-semi-bold">{getValue()} personnes</span>
-      </div>
+      <Badge
+        className="flex gap-2 items-center text-base [&>svg]:size-4"
+        variant="outline"
+      >
+        <ForkKnife />
+        <span>{getValue()}</span>
+      </Badge>
     ),
   }),
   columnHelper.accessor("notes", {
     header: "Note",
-
+    meta: {
+      className: "w-full",
+    },
     cell: ({ getValue }) => (
       <Textarea
-        className="min-h-10 h-10"
+        className="min-h-10 md:h-10"
         disabled
         defaultValue={getValue() ?? ""}
       />
@@ -80,6 +88,7 @@ export const columns = [
   }),
   columnHelper.display({
     id: "actions",
+    enableHiding: false,
     cell: ({ row }) => (
       <PatchBookingDialog id={row.original.id} booking={row.original} />
     ),
@@ -126,8 +135,8 @@ export function StatusBadge({
       <DropdownMenuTrigger asChild disabled={isPending}>
         <Badge
           className={cn(
-            EStatusConfig[status].className,
             "cursor-default",
+            EStatusConfig[status].className,
             isPending ? "opacity-50" : "hover:opacity-50",
           )}
         >
@@ -178,4 +187,7 @@ export const EStatusConfig = {
     label: "Annulée",
     className: "bg-gray-100 text-gray-800",
   },
-} as const satisfies Record<TBooking["status"], object>;
+} as const satisfies Record<
+  TBooking["status"],
+  { label: string; className: string }
+>;
