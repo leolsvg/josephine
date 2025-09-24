@@ -31,15 +31,18 @@ export function BookingsCards({
         rows.map((r) => (
           <Card
             key={r.original.id}
-            className={`transition-colors duration-700 ${
+            className={`transition-colors duration-700 p-2 ${
               bookingIds.has(r.original.id) ? bookingIds.get(r.original.id) : ""
             }`}
           >
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-2 p-2">
               {r.getVisibleCells().map((c) => {
                 const header = headers.find((h) => h.column.id === c.column.id);
                 return (
-                  <div className="flex justify-between items-center" key={c.id}>
+                  <div
+                    className="flex justify-between items-center gap-3"
+                    key={c.id}
+                  >
                     <span className="text-sm text-muted-foreground">
                       {header
                         ? flexRender(
