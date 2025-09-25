@@ -55,7 +55,7 @@ export function sendBookingConfirmationEmail({
   return fromPromise(
     resend.emails.send({
       from: `Restaurant Joséphine <${Josephine.noreply}>`,
-      to: email,
+      to: [email, Josephine.email],
       subject: `Restaurant Joséphine — Réservation`,
       react: (
         <BookingConfirmationEmail
