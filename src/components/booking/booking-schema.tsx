@@ -2,6 +2,7 @@ import z from "zod";
 
 export const MIN_GUESTS = 1;
 export const MAX_GUESTS = 10;
+export const MAX_NOTES_LENGTH = 500;
 
 export const SBooking = z.object({
   name: z
@@ -28,7 +29,15 @@ export const SBooking = z.object({
     ),
   date: z.iso.date("Merci de choisir une date valide pour votre réservation."),
   time: z.iso.time("Merci d'indiquer l'heure de votre réservation."),
-  notes: z.string().optional().nullable(),
+  notes: z
+    .string()
+    .trim()
+    .max(
+      MAX_NOTES_LENGTH,
+      `Les notes ne peuvent pas dépasser ${MAX_NOTES_LENGTH} caractères.`,
+    )
+    .optional()
+    .nullable(),
 });
 
 export type TBooking = z.infer<typeof SBooking>;

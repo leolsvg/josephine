@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import { SBooking } from "@/components/booking/booking-schema";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import {
   createTRPCRouter,
@@ -38,7 +39,7 @@ export const bookings = createTRPCRouter({
       }
       return result.value;
     }),
-  book: publicProcedure.input(SPutBooking).mutation(async ({ ctx, input }) => {
+  book: publicProcedure.input(SBooking).mutation(async ({ ctx, input }) => {
     const result = await createBooking(ctx.db, input);
     if (result.isErr()) {
       throw new TRPCError({
