@@ -27,6 +27,18 @@ export const columns = [
     ),
   }),
   columnHelper.accessor("time", {
+    filterFn: (row, columnId, filterValue) => {
+      const separator = Temporal.PlainTime.from("15:00");
+      const time = Temporal.PlainTime.from(row.getValue(columnId));
+      if (filterValue === "lunch") {
+        return time.until(separator).hours >= 0;
+      }
+      if (filterValue === "dinner") {
+        console.log(time.until(separator).hours);
+        return time.until(separator).hours < 0;
+      }
+      return true;
+    },
     header: "Heure",
     cell: ({ getValue }) => (
       <Badge

@@ -1,38 +1,37 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
+import {
+  Calendar1,
+  ChevronLeft,
+  ChevronRight,
+  Moon,
+  Sun,
+  X,
+} from "lucide-react";
+import { Suspense } from "react";
 import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { TIMEZONE } from "@/lib/utils";
-import { useBookingsDate } from "./realtime/use-booking-date";
+import { useColumnFilters } from "./data-table/hooks/use-column-filters";
+import { useDateFilter } from "./data-table/hooks/use-date-filter";
+import { useTimeFilter } from "./data-table/hooks/use-time-filter";
 import { StatusPieChart } from "./status-pie-chart";
 
 export function Sidebar() {
+  const { reset } = useColumnFilters();
+  const { dinner, lunch, meal, allMeals } = useTimeFilter();
   const {
     date,
     nextDay,
     prevDay,
-    all,
+    allDays,
     today,
     tomorrow,
     isToday,
     isTomorrow,
     setDate,
-  } = useBookingsDate();
-
-  const [month, setMonth] = useState<Date>();
-  useEffect(() => {
-    if (date)
-      setMonth(
-        new Date(
-          Temporal.PlainDate.from(date).toZonedDateTime(TIMEZONE)
-            .epochMilliseconds,
-        ),
-      );
-  }, [date]);
-
+  } = useDateFilter();
   return (
     <div className="flex flex-col gap-2 md:w-100 w-full">
       <div className="grid grid-cols-3 gap-2">
@@ -53,7 +52,7 @@ export function Sidebar() {
         <Button
           type="button"
           variant={!date ? "default" : "outline"}
-          onClick={all}
+          onClick={allDays}
         >
           Afficher tout
         </Button>
@@ -82,12 +81,48 @@ export function Sidebar() {
           <ChevronRight />
         </Button>
       </div>
+      <div className="grid grid-cols-3 gap-2">
+        <Button
+          type="button"
+          variant={meal === "lunch" ? "default" : "outline"}
+          onClick={lunch}
+        >
+          <Sun />
+          <span>Midi</span>
+        </Button>
+        <Button
+          type="button"
+          variant={meal === "dinner" ? "default" : "outline"}
+          onClick={dinner}
+        >
+          <Moon />
+          <span>Soir</span>
+        </Button>
+        <Button
+          type="button"
+          variant={!meal ? "default" : "outline"}
+          onClick={allMeals}
+        >
+          <Calendar1 />
+          Jour
+        </Button>
+      </div>
+      <Button type="button" onClick={reset} variant="ghost">
+        <X />
+        <span>Reset</span>
+      </Button>
       <div className="flex justify-center">
         <Calendar
           locale={fr}
           timeZone={TIMEZONE}
-          month={month}
-          onMonthChange={setMonth}
+          month={
+            date
+              ? new Date(
+                  Temporal.PlainDate.from(date).toZonedDateTime(TIMEZONE)
+                    .epochMilliseconds,
+                )
+              : undefined
+          }
           mode="single"
           showOutsideDays={false}
           selected={

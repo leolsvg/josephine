@@ -11,15 +11,15 @@ import {
 import { parseAsString, useQueryState } from "nuqs";
 import { FullDateFormat } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
-import { useBookingsDate } from "../realtime/use-booking-date";
 import { useRealtimeBookings } from "../realtime/use-realtime-bookings";
 import { BookingsCards } from "./bookings-cards";
 import { BookingsFooter } from "./bookings-footer";
 import { BookingsHeader } from "./bookings-header";
 import { BookingsTable } from "./bookings-table";
-import { useColumnFilters } from "./use-column-filters";
-import { useColumnVisibility } from "./use-column-visibility";
-import { usePagination } from "./use-pagination";
+import { useColumnFilters } from "./hooks/use-column-filters";
+import { useColumnVisibility } from "./hooks/use-column-visibility";
+import { useDateFilter } from "./hooks/use-date-filter";
+import { usePagination } from "./hooks/use-pagination";
 
 interface DataTableProps {
   columns: ColumnDef<TBooking, any>[];
@@ -28,7 +28,6 @@ interface DataTableProps {
 
 export function Bookings({ columns, className }: DataTableProps) {
   const { data } = useRealtimeBookings();
-  const { date } = useBookingsDate();
   const [pagination, onPaginationChange] = usePagination();
   const [globalFilter, onGlobalFilterChange] = useQueryState(
     "search",
@@ -36,7 +35,8 @@ export function Bookings({ columns, className }: DataTableProps) {
   );
 
   const { columnVisibility, onColumnVisibilityChange } = useColumnVisibility();
-  const { columnFilters, onColumnFiltersChange } = useColumnFilters();
+  const { columnFilters, setColumnFilters } = useColumnFilters();
+  const { date } = useDateFilter();
   const table = useReactTable({
     data,
     columns,
@@ -63,7 +63,7 @@ export function Bookings({ columns, className }: DataTableProps) {
         },
       ],
     },
-    onColumnFiltersChange,
+    onColumnFiltersChange: setColumnFilters,
     onPaginationChange,
     onColumnVisibilityChange,
     onGlobalFilterChange,

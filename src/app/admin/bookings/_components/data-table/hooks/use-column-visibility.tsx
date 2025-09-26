@@ -2,10 +2,10 @@ import type { VisibilityState } from "@tanstack/react-table";
 import { parseAsJson, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import z from "zod";
-import { useBookingsDate } from "../realtime/use-booking-date";
+import { useDateFilter } from "./use-date-filter";
 
 export function useColumnVisibility() {
-  const { date } = useBookingsDate();
+  const { date } = useDateFilter();
   const [columnVisibility, setColumnVisibility] =
     useQueryState<VisibilityState>(
       "columns",

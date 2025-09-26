@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DEFAULT_PAGE_SIZE } from "./use-pagination";
+import { DEFAULT_PAGE_SIZE } from "./hooks/use-pagination";
 
 const variant = "secondary";
 

@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/chart";
 import { useTRPC } from "@/lib/trpc/react";
 import type { TStatus } from "@/server/db/types";
+import { useDateFilter } from "./data-table/hooks/use-date-filter";
 import { EStatusConfig } from "./data-table/status-badge";
-import { useBookingsDate } from "./realtime/use-booking-date";
 
 const chartConfig = {
   ...EStatusConfig,
@@ -31,7 +31,7 @@ const defaultBookingCounts = {
 };
 
 export function StatusPieChart() {
-  const { date } = useBookingsDate();
+  const { date } = useDateFilter();
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.bookings.get.queryOptions());
 
