@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  type ColumnDef,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -10,9 +9,9 @@ import {
 } from "@tanstack/react-table";
 import { parseAsString, useQueryState } from "nuqs";
 import { FullDateFormat } from "@/lib/utils";
-import type { TBooking } from "@/server/db/types";
 import { useRealtimeBookings } from "../realtime/use-realtime-bookings";
 import { BookingsCards } from "./bookings-cards";
+import type { TBookingColumns } from "./bookings-columns";
 import { BookingsFooter } from "./bookings-footer";
 import { BookingsHeader } from "./bookings-header";
 import { BookingsTable } from "./bookings-table";
@@ -22,7 +21,7 @@ import { useDateFilter } from "./hooks/use-date-filter";
 import { usePagination } from "./hooks/use-pagination";
 
 interface DataTableProps {
-  columns: ColumnDef<TBooking, any>[];
+  columns: TBookingColumns;
   className?: string;
 }
 

@@ -9,7 +9,9 @@ import { cn } from "@/lib/utils";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: shadcn code
     <nav
+      // biome-ignore lint/a11y/noRedundantRoles: shadcn code
       role="navigation"
       aria-label="pagination"
       data-slot="pagination"

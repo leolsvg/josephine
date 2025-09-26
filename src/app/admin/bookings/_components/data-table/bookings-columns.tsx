@@ -107,3 +107,5 @@ export const columns = [
     },
   }),
 ];
+
+export type TBookingColumns = typeof columns;
