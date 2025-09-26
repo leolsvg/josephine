@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/chart";
 import { useTRPC } from "@/lib/trpc/react";
 import type { TStatus } from "@/server/db/types";
-import { useDateFilter } from "./data-table/hooks/use-date-filter";
-import { EStatusConfig } from "./data-table/status-badge";
+import { useDateFilter } from "../data-table/hooks/use-date-filter";
+import { EStatusConfig } from "../data-table/status-badge";
 
 const chartConfig = {
   ...EStatusConfig,
@@ -105,7 +105,7 @@ export function StatusPieChart() {
                         y={(viewBox.cy || 0) + 24}
                         className="fill-muted-foreground"
                       >
-                        Réservations
+                        Réservation{(!hasData || totalBookings !== 1) && "s"}
                       </tspan>
                     </text>
                   );

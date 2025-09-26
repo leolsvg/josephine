@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 import { parseAsString, useQueryState } from "nuqs";
 import { FullDateFormat } from "@/lib/utils";
-import { useRealtimeBookings } from "../realtime/use-realtime-bookings";
 import { BookingsCards } from "./bookings-cards";
 import type { TBookingColumns } from "./bookings-columns";
 import { BookingsFooter } from "./bookings-footer";
@@ -19,6 +18,7 @@ import { useColumnFilters } from "./hooks/use-column-filters";
 import { useColumnVisibility } from "./hooks/use-column-visibility";
 import { useDateFilter } from "./hooks/use-date-filter";
 import { usePagination } from "./hooks/use-pagination";
+import { useRealtimeBookings } from "./hooks/use-realtime-bookings";
 
 interface DataTableProps {
   columns: TBookingColumns;

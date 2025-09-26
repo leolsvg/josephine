@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
-import { useRealtimeBookingIds } from "../realtime/use-realtime-booking-ids";
 import { columns } from "./bookings-columns";
+import { useRealtimeBookingIds } from "./hooks/use-realtime-booking-ids";
 
 export function BookingsTable({
   table,

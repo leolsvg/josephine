@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
-import { useRealtimeBookingIds } from "../realtime/use-realtime-booking-ids";
+import { useRealtimeBookingIds } from "./hooks/use-realtime-booking-ids";
 
 export function BookingsCards({
   table,
