@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/lib/trpc/react";
@@ -36,8 +37,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <TRPCReactProvider>{children}</TRPCReactProvider>
-        <Analytics />
         <Toaster closeButton richColors />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
