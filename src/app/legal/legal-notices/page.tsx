@@ -60,11 +60,18 @@ export default function LegalNoticesPage() {
 
       <section className="text-sm leading-normal">
         <h2 className="text-lg font-semibold mb-2">Propriété intellectuelle</h2>
-        <p>
-          Tous les contenus du site (textes, images, logos, graphismes, vidéos,
-          etc.) sont protégés par le droit d'auteur. Sauf mention contraire, ils
-          sont la propriété exclusive du Restaurant Joséphine et ne peuvent être
+        <p className="mb-2">
+          Tous les contenus du site (textes, images, graphismes, vidéos, etc.)
+          sont protégés par le droit d'auteur. Sauf mention contraire, ils sont
+          la propriété exclusive du Restaurant Joséphine et ne peuvent être
           reproduits sans autorisation écrite préalable.
+        </p>
+        <p>
+          Les logos et marques affichés sur ce site sont la propriété exclusive
+          de leurs titulaires respectifs. Ils sont utilisés uniquement à des
+          fins d'identification et pour rediriger vers leurs sites officiels.
+          Leur utilisation n'implique aucune affiliation, parrainage ou
+          approbation.
         </p>
       </section>
 
