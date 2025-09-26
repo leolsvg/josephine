@@ -1,21 +1,25 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
+import Cave from "../../../public/suppliers/cave_a_fromage.png";
+import Chatel from "../../../public/suppliers/chatel.png";
+import Vergers from "../../../public/suppliers/vergers_de_la_passion.png";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
 const suppliers = [
   {
     title: "La cave à fromages",
-    src: "/suppliers/cave_a_fromage.png",
+    src: Cave,
     href: "https://www.lacaveafromagescherbourg.com/",
   },
   {
     title: "Chatel",
-    src: "/suppliers/chatel.png",
+    src: Chatel,
     href: "https://www.facebook.com/boulangeriechatel/",
   },
   {
     title: "Les vergers de la passion",
-    src: "/suppliers/vergers_de_la_passion.png",
+    src: Vergers,
     href: "https://les-vergers-de-la-passion-cidrerie.fr/",
   },
 ];
@@ -37,12 +41,12 @@ export function SuppliersSection() {
         {suppliers.map((s) => (
           <a
             href={s.href}
-            key={s.src}
+            key={s.href}
             target="_blank"
             rel="noopener noreferrer"
           >
             <SupplierCard>
-              <img src={s.src} alt="m" className="max-h-40" />
+              <Image src={s.src} alt={s.title} className="max-h-40" />
             </SupplierCard>
           </a>
         ))}
