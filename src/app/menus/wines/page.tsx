@@ -15,7 +15,7 @@ type Category = {
   items: CategoryItem[];
 };
 
-export default function CartePage() {
+export default function WinesPage() {
   const categories: Category[] = [
     {
       title: "NOS BULLES",

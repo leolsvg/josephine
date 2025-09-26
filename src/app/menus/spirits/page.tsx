@@ -14,7 +14,7 @@ type Category = {
   items: CategoryItem[];
 };
 
-export default function CartePage() {
+export default function SpiritsPage() {
   const categories: Category[] = [
     {
       title: "LA SÉLECTION DE WHISKIES",

@@ -34,7 +34,6 @@ export const columns = [
         return time.until(separator).hours >= 0;
       }
       if (filterValue === "dinner") {
-        console.log(time.until(separator).hours);
         return time.until(separator).hours < 0;
       }
       return true;

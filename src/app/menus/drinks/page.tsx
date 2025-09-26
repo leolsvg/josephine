@@ -14,7 +14,7 @@ type Category = {
   items: CategoryItem[];
 };
 
-export default function CartePage() {
+export default function DrinksPage() {
   const categories: Category[] = [
     {
       title: "NOS EAUX",

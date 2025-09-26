@@ -13,7 +13,7 @@ interface Plat {
   price: string;
 }
 
-export default function CartePage() {
+export default function DinnerPage() {
   const [plats, setPlats] = useState<Plat[]>([]);
 
   useEffect(() => {

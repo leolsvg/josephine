@@ -12,7 +12,7 @@ interface Plat {
   service: string;
 }
 
-export default function CartePage() {
+export default function LunchPage() {
   const [plats, setPlats] = useState<Plat[]>([]);
   useEffect(() => {
     const fetchPlats = async () => {

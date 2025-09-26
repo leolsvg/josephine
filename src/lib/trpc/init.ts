@@ -33,12 +33,12 @@ const t = initTRPC.context<Context>().create({
 export const createCallerFactory = t.createCallerFactory;
 export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
-export const protectedProcedure = t.procedure.use(async (opts) => {
-  if (opts.ctx.user === null) throw new TRPCError({ code: "UNAUTHORIZED" });
-  return opts.next({
+export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (ctx.user === null) throw new TRPCError({ code: "UNAUTHORIZED" });
+  return next({
     ctx: {
       // ✅ user value is known to be non-null now
-      user: opts.ctx.user,
+      user: ctx.user,
     },
   });
 });
