@@ -62,33 +62,30 @@ export const columns = [
   columnHelper.accessor("phone", { header: "Téléphone" }),
   columnHelper.accessor("guests", {
     header: "Couverts",
-    meta: {
-      className: "flex justify-center",
-    },
     cell: ({ getValue }) => (
-      <Badge
-        className="flex gap-2 items-center text-base [&>svg]:size-4"
-        variant="outline"
-      >
-        <ForkKnife />
-        <span>{getValue()}</span>
-      </Badge>
+      <div className="flex justify-center h-full items-center">
+        <Badge
+          className="flex gap-2 items-center text-base [&>svg]:size-4"
+          variant="outline"
+        >
+          <ForkKnife />
+          <span>{getValue()}</span>
+        </Badge>
+      </div>
     ),
   }),
   columnHelper.accessor("notes", {
     header: "Note",
     meta: {
-      className: "w-full",
-      cardClassName: "w-full",
+      className: "w-full max-w-[1px]",
+      cardClassName: "grow overflow-hidden",
     },
     cell: ({ getValue }) => (
       <Popover>
         <PopoverTrigger asChild>
-          <Textarea
-            className="min-h-10 md:h-10 focus-visible:ring-0 caret-transparent cursor-default"
-            readOnly
-            defaultValue={getValue() ?? ""}
-          />
+          <div className="p-2 text-middle max-w-full truncate overflow-ellipsis bg-accent rounded-md cursor-pointer">
+            {getValue() ?? ""}
+          </div>
         </PopoverTrigger>
         <PopoverContent className="max-w-xs sm:max-w-xl whitespace-pre-wrap break-words text-sm">
           {getValue()}
