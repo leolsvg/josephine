@@ -51,7 +51,12 @@ export function BookingsCards({
                           )
                         : ""}
                     </span>
-                    <span className="text-sm font-medium">
+                    <span
+                      className={cn(
+                        "text-sm font-medium",
+                        c.column.columnDef.meta?.cardClassName,
+                      )}
+                    >
                       {flexRender(c.column.columnDef.cell, c.getContext())}
                     </span>
                   </div>

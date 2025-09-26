@@ -5,6 +5,11 @@ import { Calendar, Clock, ForkKnife } from "lucide-react";
 import { EmailLink } from "@/components/email-link";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { TBooking } from "@/server/db/types";
 import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
 import { DeleteBookingButton } from "./delete-booking-button";
@@ -74,13 +79,21 @@ export const columns = [
     header: "Note",
     meta: {
       className: "w-full",
+      cardClassName: "w-full",
     },
     cell: ({ getValue }) => (
-      <Textarea
-        className="min-h-10 md:h-10"
-        disabled
-        defaultValue={getValue() ?? ""}
-      />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Textarea
+            className="min-h-10 md:h-10"
+            disabled
+            defaultValue={getValue() ?? ""}
+          />
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs sm:max-w-xl whitespace-pre-wrap break-words">
+          {getValue()}
+        </TooltipContent>
+      </Tooltip>
     ),
   }),
   columnHelper.accessor("status", {
