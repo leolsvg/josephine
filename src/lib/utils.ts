@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import type { Route } from "next";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
+import type { TMenuCategory } from "@/server/db/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -68,3 +69,19 @@ export function toDate(zdt: Temporal.ZonedDateTime): Date {
 export function startOfDay(date: Date): Temporal.ZonedDateTime {
   return toZdt(date).startOfDay();
 }
+
+export const menuCategories = [
+  "partager",
+  "entree",
+  "plat",
+  "fromage",
+  "dessert",
+] as const satisfies TMenuCategory[];
+
+export const menuSectionTitles = {
+  partager: "À PARTAGER",
+  entree: "ENTRÉES",
+  plat: "PLATS",
+  fromage: "FROMAGE",
+  dessert: "DESSERTS",
+} as const;

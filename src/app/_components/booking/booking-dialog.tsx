@@ -11,13 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useTRPC } from "@/lib/trpc/react";
+import { cn } from "@/lib/utils";
 import type { AppRouter } from "@/server/routers";
 import { ErrorState } from "./error-state";
 import { FormState } from "./form-state";
 import { Pending } from "./pending-state";
 import { SuccessState } from "./success-state";
 
-export function BookingDialog() {
+export function BookingDialog({ className }: { className?: string }) {
   const trpc = useTRPC();
   const { mutate, status, reset, error } = useMutation(
     trpc.bookings.book.mutationOptions(),
@@ -39,7 +40,10 @@ export function BookingDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="uppercase px-7 bg-[#000150] rounded" size="sm">
+        <Button
+          className={cn("uppercase px-7 bg-[#000150] rounded", className)}
+          size="sm"
+        >
           Réserver
         </Button>
       </DialogTrigger>

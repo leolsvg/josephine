@@ -18,18 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { menuCategories } from "@/lib/utils";
 import type { TMenuCategory, TMenuService } from "@/server/db/types";
 import { useDeleteMenu } from "./use-delete-menu";
 import { useMenus } from "./use-menus";
 import { useUpdateMenu } from "./use-update-menu";
-
-export const menuCategories = [
-  "partager",
-  "entree",
-  "plat",
-  "fromage",
-  "dessert",
-] as const satisfies TMenuCategory[];
 
 export function MenuTable({ service }: { service: TMenuService }) {
   const { data } = useMenus();
