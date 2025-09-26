@@ -54,7 +54,7 @@ export function StatusBadge({
       <DropdownMenuTrigger asChild disabled={isPending}>
         <Badge
           className={cn(
-            "cursor-default",
+            "cursor-pointer",
             EStatusConfig[status].className,
             isPending ? "opacity-50" : "hover:opacity-50",
           )}
