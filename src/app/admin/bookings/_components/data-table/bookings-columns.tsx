@@ -4,12 +4,12 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Calendar, Clock, ForkKnife } from "lucide-react";
 import { EmailLink } from "@/components/email-link";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 import type { TBooking } from "@/server/db/types";
 import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
 import { DeleteBookingButton } from "./delete-booking-button";
@@ -82,18 +82,18 @@ export const columns = [
       cardClassName: "w-full",
     },
     cell: ({ getValue }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
+      <Popover>
+        <PopoverTrigger asChild>
           <Textarea
-            className="min-h-10 md:h-10"
-            disabled
+            className="min-h-10 md:h-10 focus-visible:ring-0 caret-transparent cursor-default"
+            readOnly
             defaultValue={getValue() ?? ""}
           />
-        </TooltipTrigger>
-        <TooltipContent className="max-w-xs sm:max-w-xl whitespace-pre-wrap break-words">
+        </PopoverTrigger>
+        <PopoverContent className="max-w-xs sm:max-w-xl whitespace-pre-wrap break-words text-sm">
           {getValue()}
-        </TooltipContent>
-      </Tooltip>
+        </PopoverContent>
+      </Popover>
     ),
   }),
   columnHelper.accessor("status", {
