@@ -26,6 +26,10 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
   const pageCount = table.getPageCount();
   const pageIndex = table.getState().pagination.pageIndex;
   const rows = table.getFilteredRowModel().rows.length;
+  const pageSizes = Array.from(
+    new Set([...PAGE_SIZES, table.getState().pagination.pageSize]),
+  ).sort((a, b) => a - b);
+
   const hasReservations = rows !== 0;
   const guests = table
     .getPrePaginationRowModel()
@@ -102,7 +106,7 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {PAGE_SIZES.map((s) => (
+            {pageSizes.map((s) => (
               <SelectItem key={s} value={String(s)}>
                 {s}
               </SelectItem>
