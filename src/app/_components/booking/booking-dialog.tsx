@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import { SBooking } from "@/components/booking/booking-schema";
 import {
@@ -20,6 +20,10 @@ import { SuccessState } from "./success-state";
 
 export function BookingDialog({ className }: { className?: string }) {
   const trpc = useTRPC();
+  // Preload weekly and exceptions
+  const queryClient = useQueryClient();
+  queryClient.prefetchQuery(trpc.schedule.getWeekly.queryOptions());
+  queryClient.prefetchQuery(trpc.schedule.getExceptions.queryOptions());
   const { mutate, status, reset, error } = useMutation(
     trpc.bookings.book.mutationOptions(),
   );
