@@ -1,6 +1,7 @@
 import { parseAsIndex, parseAsInteger, useQueryStates } from "nuqs";
 
-export const DEFAULT_PAGE_SIZE = 14;
+export const DEFAULT_PAGE_SIZE = 8;
+export const PAGE_SIZES = [DEFAULT_PAGE_SIZE, 14, 20, 50, 100];
 
 const paginationParsers = {
   pageIndex: parseAsIndex.withDefault(0),

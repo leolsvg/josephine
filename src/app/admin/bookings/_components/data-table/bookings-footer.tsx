@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DEFAULT_PAGE_SIZE } from "./hooks/use-pagination";
+import { PAGE_SIZES } from "./hooks/use-pagination";
 
 const variant = "secondary";
 
@@ -102,9 +102,9 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {[DEFAULT_PAGE_SIZE, 20, 50, 100].map((size) => (
-              <SelectItem key={size} value={String(size)}>
-                {size}
+            {PAGE_SIZES.map((s) => (
+              <SelectItem key={s} value={String(s)}>
+                {s}
               </SelectItem>
             ))}
           </SelectContent>
