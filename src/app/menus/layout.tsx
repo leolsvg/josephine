@@ -27,7 +27,7 @@ export default function MenuLayout({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex flex-col lg:flex-row">
       <Link
-        href="/"
+        href="/#menu"
         className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition"
         aria-label="Retour à l'accueil"
       >
