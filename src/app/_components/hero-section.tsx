@@ -4,7 +4,7 @@ import Background from "../../../public/restaurant/bar.jpeg";
 export function HeroSection() {
   return (
     <main>
-      <section className="relative h-dvh">
+      <section className="relative h-svh">
         <Image
           src={Background}
           alt="Bar du restaurant Joséphine"
