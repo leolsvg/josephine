@@ -12,17 +12,18 @@ export default function WinesPage() {
           src={TableImage}
           alt="Josephine Table"
           fill
+          placeholder="blur"
           className="object-cover object-center"
           priority
         />
       </div>
       <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-16 lg:ml-0 lg:mr-auto">
-        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-[#000000] text-center lg:text-left">
+        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-black text-center lg:text-left">
           NOS VINS
         </h1>
         {wines.map((cat, idx) => (
           <section key={`${cat.title}-${idx}`}>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000] mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-black mb-6">
               {cat.title}
             </h2>
             {cat.subtitle && (

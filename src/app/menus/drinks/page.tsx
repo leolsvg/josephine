@@ -12,17 +12,18 @@ export default function DrinksPage() {
           src={TableWindowImage}
           alt="Josephine Table Fenêtre"
           fill
+          placeholder="blur"
           className="object-cover object-center"
           priority
         />
       </div>
       <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-20 lg:ml-0 lg:mr-auto">
-        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-[#000000] text-center lg:text-left">
+        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-black text-center lg:text-left">
           NOS BOISSONS
         </h1>
         {drinks.map((cat) => (
           <section key={cat.title}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#000000]">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-black">
               {cat.title}
             </h2>
             <ul className="space-y-4">

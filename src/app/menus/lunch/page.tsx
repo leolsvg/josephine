@@ -32,6 +32,7 @@ export default function LunchPage() {
           src={TableImage}
           alt="Josephine Table Fenêtre"
           fill
+          placeholder="blur"
           className="object-cover object-center"
           priority
         />

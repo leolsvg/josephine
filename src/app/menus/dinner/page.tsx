@@ -32,6 +32,7 @@ export default function DinnerPage() {
           src={TableImage}
           alt="Josephine Table Fenêtre"
           fill
+          placeholder="blur"
           className="object-cover object-center"
           priority
         />
