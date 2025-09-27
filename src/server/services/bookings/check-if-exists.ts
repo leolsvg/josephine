@@ -6,9 +6,7 @@ import { bookingsTable } from "../../db/schema";
 
 export class DuplicateBookingError extends Error {
   constructor() {
-    super(
-      "A booking already exists for this date/time with the same email or phone.",
-    );
+    super("Une réservation existe déjà pour cette date/heure.");
     this.name = "DuplicateBookingError";
   }
 }
