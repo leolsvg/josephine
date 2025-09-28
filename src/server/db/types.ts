@@ -25,7 +25,7 @@ export const SSettings = createInsertSchema(settingsTable).omit({
 });
 export type TPutBooking = InferInsertModel<typeof bookingsTable>;
 
-export type HM = `${number}:${number}` | `${number}:${number}:${number}`;
+export type HM = `${string}:${string}` | `${string}:${string}:${string}`;
 export type Period = { start: HM; end: HM };
 export type Dayly = { periods: Period[] };
 export type Weekly = Dayly[]; // 0..6 => Sunday..Saturday;
