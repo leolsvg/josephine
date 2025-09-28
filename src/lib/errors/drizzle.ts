@@ -2,11 +2,9 @@ import { fromPromise } from "neverthrow";
 
 export class DrizzleQueryError extends Error {
   constructor(cause: unknown) {
-    super("A database query error occurred.");
+    super("Une erreur est survenue avec la base de données.");
     this.name = "DrizzleQueryError";
-    if (cause instanceof Error) {
-      this.cause = cause;
-    }
+    this.cause = cause;
   }
 }
 
