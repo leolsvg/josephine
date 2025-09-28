@@ -37,7 +37,7 @@ export function ErrorState({
             <CircleAlert className="mx-auto my-5 size-16 text-destructive" />
           </motion.div>
           <p className="text-muted-foreground p-3">{error?.message}</p>
-          <Button onClick={() => reset()}>Réssayer</Button>
+          <Button onClick={() => reset()}>Réessayer</Button>
         </div>
       </motion.div>
     </div>
