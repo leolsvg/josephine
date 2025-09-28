@@ -9,7 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
 import type { TBooking } from "@/server/db/types";
 import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
 import { DeleteBookingButton } from "./delete-booking-button";
@@ -27,7 +26,7 @@ export const columns = [
         variant="secondary"
       >
         <Calendar />
-        <span>{getValue()}</span>
+        <span>{getValue().toString()}</span>
       </Badge>
     ),
   }),
@@ -50,7 +49,11 @@ export const columns = [
         variant="default"
       >
         <Clock />
-        <span>{getValue().slice(0, 5)}</span>
+        <span>
+          {getValue().toString({
+            smallestUnit: "minute",
+          })}
+        </span>
       </Badge>
     ),
   }),

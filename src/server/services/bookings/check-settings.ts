@@ -1,16 +1,15 @@
 import { sql } from "drizzle-orm";
 import { err, ok } from "neverthrow";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
-import { TIMEZONE, toDate, toZdt } from "@/lib/utils";
+import { TIMEZONE, toDate } from "@/lib/utils";
 import type { DB } from "@/server/db";
 import {
   bookingsTable,
   exceptionsTable,
   settingsTable,
-  weeklyTable,
 } from "@/server/db/schema";
+import { timesGroupsForDate } from "../utils/schedule";
 import { getExceptions, getWeekly } from "./schedule";
-import { generateTimeSlots } from "./utils";
 
 export class NoSettingsError extends Error {
   constructor() {
@@ -67,8 +66,8 @@ export function checkGuestsLimit(db: DB, guests: number) {
 
 export function checkCapacitySlot(
   db: DB,
-  date: string,
-  time: string,
+  date: Temporal.PlainDate,
+  time: Temporal.PlainTime,
   guests: number,
 ) {
   const MAX_GUESTS_PER_HOUR = 30;
@@ -77,14 +76,11 @@ export function checkCapacitySlot(
     getWeekly(db).andThen((w) =>
       getExceptions(db).andThen((e) =>
         ok(
-          generateTimeSlots(
-            toDate(Temporal.PlainDate.from(date).toZonedDateTime(TIMEZONE)),
+          timesGroupsForDate(
+            toDate(date.toZonedDateTime(TIMEZONE)),
             w,
             e,
-            {
-              slotMinutes: 60,
-              now: new Date(),
-            },
+            // TODO add duration 1 hour
           ),
         ),
       ),

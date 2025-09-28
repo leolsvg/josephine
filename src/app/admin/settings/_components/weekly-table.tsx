@@ -20,7 +20,7 @@ export function WeeklyTable() {
     <Table>
       <TableBody>
         {data.map((w, i) => {
-          const hasPeriods = w !== null && w.periods.length > 0;
+          const hasPeriods = w !== null && w.length > 0;
           return (
             <>
               <TableRow key={crypto.randomUUID()} className="bg-muted/50">
@@ -55,7 +55,7 @@ export function WeeklyTable() {
               {openedDays[i] && hasPeriods && (
                 <TableRow>
                   <TableCell colSpan={3}>
-                    <SubTable periods={w.periods} />
+                    <SubTable periods={w} />
                   </TableCell>
                 </TableRow>
               )}

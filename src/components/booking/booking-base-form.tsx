@@ -3,7 +3,10 @@ import {
   bookingFormOptions,
   withBookingForm,
 } from "@/components/form/use-booking-form";
-import { generateSlots, isDateOpen } from "@/server/services/bookings/utils";
+import {
+  isDateOpen,
+  timesGroupsForDate,
+} from "@/server/services/utils/schedule";
 import { MAX_GUESTS, MIN_GUESTS } from "./booking-schema";
 import { useSchedule } from "./use-schedule";
 
@@ -62,15 +65,21 @@ export const BookingBaseForm = withBookingForm({
                 <DateTimeField
                   id="date"
                   label="Date"
-                  date={dateField.state.value}
-                  time={timeField.state.value}
-                  onDateChange={dateField.handleChange}
-                  onTimeChange={timeField.handleChange}
+                  date={dateField.state.value?.toString()}
+                  time={timeField.state.value?.toString()}
+                  onDateChange={(date) => {
+                    const d = date ? Temporal.PlainDate.from(date) : undefined;
+                    dateField.handleChange(d);
+                  }}
+                  onTimeChange={(time) => {
+                    const t = time ? Temporal.PlainTime.from(time) : undefined;
+                    timeField.handleChange(t);
+                  }}
                   disabled={(date) => {
                     return !isDateOpen(date, weekly, exceptions);
                   }}
                   timeSlots={(date) => {
-                    return generateSlots(date, weekly, exceptions);
+                    return timesGroupsForDate(date, weekly, exceptions);
                   }}
                 />
               )}

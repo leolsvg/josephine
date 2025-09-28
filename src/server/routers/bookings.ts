@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { SBooking } from "@/components/booking/booking-schema";
+import {
+  SBooking,
+  SBookingAdminPatch,
+  SBookingAdminPut,
+} from "@/components/booking/booking-schema";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import {
   createTRPCRouter,
@@ -9,7 +13,6 @@ import {
 } from "@/lib/trpc/init";
 import { SId } from "@/lib/utils";
 import { bookingsTable } from "../db/schema";
-import { SPatchBooking, SPutBooking } from "../db/types";
 import { createBooking } from "../services/bookings/create-booking";
 
 export const bookings = createTRPCRouter({
@@ -53,7 +56,7 @@ export const bookings = createTRPCRouter({
   patch: protectedProcedure
     .input(
       SId.extend({
-        value: SPatchBooking,
+        value: SBookingAdminPatch,
       }),
     )
     .mutation(({ ctx, input: { id, value } }) => {
@@ -62,7 +65,7 @@ export const bookings = createTRPCRouter({
         .set(value)
         .where(eq(bookingsTable.id, id));
     }),
-  put: protectedProcedure.input(SPutBooking).mutation(({ ctx, input }) => {
+  put: protectedProcedure.input(SBookingAdminPut).mutation(({ ctx, input }) => {
     return ctx.db.insert(bookingsTable).values(input);
   }),
 });

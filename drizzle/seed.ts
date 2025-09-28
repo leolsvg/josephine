@@ -27,20 +27,60 @@ main().catch((err) => {
 async function insertSchedule() {
   console.log("🌱 Seeding booking periods...");
   await db.insert(weeklyTable).values([
-    { day: 2, start: "12:00:00", end: "14:00:00" },
-    { day: 3, start: "12:00:00", end: "14:00:00" },
-    { day: 4, start: "12:00:00", end: "14:00:00" },
-    { day: 5, start: "12:00:00", end: "14:00:00" },
-    { day: 2, start: "19:00:00", end: "21:00:00" },
-    { day: 3, start: "19:00:00", end: "21:00:00" },
-    { day: 4, start: "19:00:00", end: "21:00:00" },
-    { day: 5, start: "19:00:00", end: "21:30:00" },
-    { day: 6, start: "19:00:00", end: "21:30:00" },
+    {
+      day: 2,
+      start: Temporal.PlainTime.from("12:00:00"),
+      end: Temporal.PlainTime.from("14:00:00"),
+    },
+    {
+      day: 3,
+      start: Temporal.PlainTime.from("12:00:00"),
+      end: Temporal.PlainTime.from("14:00:00"),
+    },
+    {
+      day: 4,
+      start: Temporal.PlainTime.from("12:00:00"),
+      end: Temporal.PlainTime.from("14:00:00"),
+    },
+    {
+      day: 5,
+      start: Temporal.PlainTime.from("12:00:00"),
+      end: Temporal.PlainTime.from("14:00:00"),
+    },
+    {
+      day: 2,
+      start: Temporal.PlainTime.from("19:00:00"),
+      end: Temporal.PlainTime.from("21:00:00"),
+    },
+    {
+      day: 3,
+      start: Temporal.PlainTime.from("19:00:00"),
+      end: Temporal.PlainTime.from("21:00:00"),
+    },
+    {
+      day: 4,
+      start: Temporal.PlainTime.from("19:00:00"),
+      end: Temporal.PlainTime.from("21:00:00"),
+    },
+    {
+      day: 5,
+      start: Temporal.PlainTime.from("19:00:00"),
+      end: Temporal.PlainTime.from("21:30:00"),
+    },
+    {
+      day: 6,
+      start: Temporal.PlainTime.from("19:00:00"),
+      end: Temporal.PlainTime.from("21:30:00"),
+    },
   ]);
 
-  await db
-    .insert(exceptionsTable)
-    .values([{ from: faker.date.soon({ days: 14 }) }]);
+  await db.insert(exceptionsTable).values([
+    {
+      from: Temporal.PlainDate.from(
+        faker.date.soon({ days: 14 }).toDateString(),
+      ),
+    },
+  ]);
 }
 
 function randomTime() {
@@ -49,7 +89,9 @@ function randomTime() {
     max: 14,
   });
   const minute = faker.helpers.arrayElement([0, 15, 30, 45]);
-  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+  return Temporal.PlainTime.from(
+    `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
+  );
 }
 
 async function insertBookings() {
@@ -57,7 +99,7 @@ async function insertBookings() {
     Array.from({ length: 400 }).map(() => {
       const date = faker.date.soon({ days: 14 }); // within next 2 weeks
       return {
-        date: date.toISOString().split("T")[0],
+        date: Temporal.PlainDate.from(date.toDateString()),
         time: randomTime(),
         name: faker.person.fullName(),
         email: faker.internet.email(),

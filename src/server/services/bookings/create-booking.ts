@@ -9,7 +9,6 @@ import type { TPutBooking } from "@/server/db/types";
 import { sendBookingConfirmationEmail } from "@/server/services/emails/send-booking-confirmation-email";
 import { checkIfExists, type DuplicateBookingError } from "./check-if-exists";
 import { type ClosedError, checkIfIsOpen } from "./check-if-is-open";
-import { checkCapacitySlot, checkGuestsLimit } from "./check-settings";
 
 export class SendEmailError extends Error {
   constructor(cause: ErrorResponse) {
@@ -34,8 +33,9 @@ export const createBooking = (
 > =>
   checkIfExists(db, input.email, input.phone, input.date, input.time)
     .andThen(() => checkIfIsOpen(db, input.date, input.time))
-    .andThen(() => checkGuestsLimit(db, input.guests))
-    .andThen(() => checkCapacitySlot(db, input.date, input.time, input.guests))
+    // TODO
+    // .andThen(() => checkGuestsLimit(db, input.guests))
+    // .andThen(() => checkCapacitySlot(db, input.date, input.time, input.guests))
     .andThen(() =>
       safeDrizzleQuery(db.insert(bookingsTable).values(input).returning()),
     )
