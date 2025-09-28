@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { AddMenuButton } from "./_components/add-menu-button";
 import { MenuTable } from "./_components/menus-table";
 
+export const dynamic = "force-dynamic";
+
 export default function MenusPage() {
   return (
     <div>
