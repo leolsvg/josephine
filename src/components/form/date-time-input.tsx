@@ -193,14 +193,13 @@ function TimeSlotsMobile({
         Sélectionnez une date
       </span>
     );
-  console.log(time);
   return (
     <select
       name="time"
-      value={time}
+      value={time ?? ""}
       onChange={(e) => onTimeChange(e.target.value)}
     >
-      <option value={undefined} selected disabled hidden>
+      <option value={""} disabled hidden>
         Sélectionner une heure
       </option>
       {timeSlots(date).map((g, i) => (
