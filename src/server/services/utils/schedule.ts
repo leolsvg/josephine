@@ -66,7 +66,6 @@ export function timesGroupsForDate(
     .toPlainDate();
   const periods = effectiveScheduleForDate(plainDate, weekly, exceptions);
   const u = isToday(plainDate) ? futureTimeRanges(periods) : periods;
-  console.log(isToday(plainDate), u, plainDate.toString());
   return timesGroupsForTimeRanges(u);
 }
 
