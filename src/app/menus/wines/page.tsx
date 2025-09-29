@@ -11,7 +11,6 @@ export default function WinesPage() {
         <Image
           src={TableImage}
           alt="Josephine Table"
-          fill
           placeholder="blur"
           className="object-cover object-center"
           priority
