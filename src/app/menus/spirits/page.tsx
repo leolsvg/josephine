@@ -11,6 +11,7 @@ export default function SpiritsPage() {
         <Image
           src={TableWindowImage}
           alt="Josephine Table Fenêtre"
+          fill
           placeholder="blur"
           className="object-cover object-center"
           priority
