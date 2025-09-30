@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { err, ok } from "neverthrow";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
+import { Josephine } from "@/lib/josephine";
 import { TIMEZONE, toDate } from "@/lib/utils";
 import type { DB } from "@/server/db";
 import {
@@ -21,7 +22,7 @@ export class NoSettingsError extends Error {
 export class MaxGuestsError extends Error {
   constructor(maxGuests: number) {
     super(
-      `Nos réservations en ligne sont limitées à ${maxGuests} personnes. Pour un groupe plus large, merci de nous contacter directement.`,
+      `Nos réservations en ligne sont limitées à ${maxGuests} personnes. Pour un groupe plus large, merci de nous contacter par téléphone au ${Josephine.phone}.`,
     );
     this.name = "MaxGuestsError";
   }
@@ -56,8 +57,11 @@ export function getSettings(db: DB) {
   ).andThen((s) => (s.length === 0 ? err(new NoSettingsError()) : ok(s[0])));
 }
 
-export function checkGuestsLimit(db: DB, guests: number) {
-  return getSettings(db).andThen((r) =>
+export function checkGuestsLimit(
+  settings: ReturnType<typeof getSettings>,
+  guests: number,
+) {
+  return settings.andThen((r) =>
     guests > r.maxGuestsPerBooking
       ? err(new MaxGuestsError(r.maxGuestsPerBooking))
       : ok(),
