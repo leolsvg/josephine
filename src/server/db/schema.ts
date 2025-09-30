@@ -98,6 +98,7 @@ export const bookingsTable = pgTable(
     guests: integer().notNull(),
     notes: text(),
     status: statusEnum().notNull().default("pending"),
+    table: integer(), // Nullable until seating
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp()
       .notNull()

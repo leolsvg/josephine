@@ -9,11 +9,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
 import type { TBooking } from "@/server/db/types";
 import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
 import { DeleteBookingButton } from "./delete-booking-button";
 import { StatusBadge } from "./status-badge";
+import { TableBadge } from "./table-badge";
 
 const columnHelper = createColumnHelper<TBooking>();
 
@@ -91,6 +91,14 @@ export const columns = [
           {getValue()}
         </PopoverContent>
       </Popover>
+    ),
+  }),
+  columnHelper.accessor("table", {
+    header: "Table",
+    cell: ({ getValue, row }) => (
+      <div className="flex justify-center h-full items-center">
+        <TableBadge table={getValue()} id={row.original.id} />
+      </div>
     ),
   }),
   columnHelper.accessor("status", {
