@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
   Command,
@@ -49,10 +51,13 @@ export function TableBadge({
 }) {
   const trpc = useTRPC();
   const { mutate, isPending } = useMutation(
-    trpc.bookings.patch.mutationOptions(),
+    trpc.bookings.patch.mutationOptions({
+      onError: (e) => toast.error(e.message),
+    }),
   );
+  const [open, setOpen] = useState(false);
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild disabled={isPending}>
         <Badge
           variant={table ? "default" : "outline"}
@@ -75,6 +80,7 @@ export function TableBadge({
                 value={"À placer"}
                 onSelect={() => {
                   mutate({ id, value: { table: null } });
+                  setOpen(false);
                 }}
               >
                 À placer
@@ -85,6 +91,7 @@ export function TableBadge({
                   key={t.id}
                   onSelect={(value) => {
                     mutate({ id, value: { table: Number(value) } });
+                    setOpen(false);
                   }}
                   className="justify-between"
                 >
