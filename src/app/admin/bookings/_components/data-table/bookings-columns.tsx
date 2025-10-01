@@ -1,18 +1,17 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { Calendar, Clock, ForkKnife } from "lucide-react";
 import { EmailLink } from "@/components/email-link";
-import { Badge } from "@/components/ui/badge";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import type { TBooking } from "@/server/db/types";
 import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
-import { DeleteBookingButton } from "./delete-booking-button";
-import { StatusBadge } from "./status-badge";
+import { DateBadge } from "./columns/date-badge";
+import { DeleteBookingButton } from "./columns/delete-booking-button";
+import { GuestsBadge } from "./columns/guests-badge";
+import { NotesPopover } from "./columns/notes-popover";
+import { PhoneLink } from "./columns/phone-link";
+import { StatusBadge } from "./columns/status-badge";
+import { TableBadge } from "./columns/table-badge";
+import { TimeBadge } from "./columns/time-badge";
 
 const columnHelper = createColumnHelper<TBooking>();
 
@@ -20,15 +19,7 @@ export const columns = [
   columnHelper.accessor("date", {
     header: "Date",
     filterFn: "equalsString",
-    cell: ({ getValue }) => (
-      <Badge
-        className="flex gap-2 items-center text-base [&>svg]:size-4"
-        variant="secondary"
-      >
-        <Calendar />
-        <span>{getValue().toString()}</span>
-      </Badge>
-    ),
+    cell: ({ getValue }) => <DateBadge date={getValue().toString()} />,
   }),
   columnHelper.accessor("time", {
     filterFn: (row, columnId, filterValue) => {
@@ -44,36 +35,29 @@ export const columns = [
     },
     header: "Heure",
     cell: ({ getValue }) => (
-      <Badge
-        className="flex gap-2 items-center text-base [&>svg]:size-4"
-        variant="default"
-      >
-        <Clock />
-        <span>
-          {getValue().toString({
-            smallestUnit: "minute",
-          })}
-        </span>
-      </Badge>
+      <TimeBadge
+        time={getValue().toString({
+          smallestUnit: "minute",
+        })}
+      />
     ),
   }),
-  columnHelper.accessor("name", { header: "Nom" }),
+  columnHelper.accessor("name", {
+    header: "Nom",
+  }),
   columnHelper.accessor("email", {
     header: "Email",
-    cell: ({ getValue }) => <EmailLink email={getValue()} />,
+    cell: ({ getValue }) => <EmailLink email={getValue() ?? ""} />,
   }),
-  columnHelper.accessor("phone", { header: "Téléphone" }),
+  columnHelper.accessor("phone", {
+    header: "Téléphone",
+    cell: ({ getValue }) => <PhoneLink phone={getValue() ?? ""} />,
+  }),
   columnHelper.accessor("guests", {
     header: "Couverts",
     cell: ({ getValue }) => (
       <div className="flex justify-center h-full items-center">
-        <Badge
-          className="flex gap-2 items-center text-base [&>svg]:size-4"
-          variant="outline"
-        >
-          <ForkKnife />
-          <span>{getValue()}</span>
-        </Badge>
+        <GuestsBadge guests={getValue()} />
       </div>
     ),
   }),
@@ -83,17 +67,14 @@ export const columns = [
       className: "w-full max-w-[1px]",
       cardClassName: "grow overflow-hidden",
     },
-    cell: ({ getValue }) => (
-      <Popover>
-        <PopoverTrigger asChild>
-          <div className="p-2 text-middle max-w-full truncate overflow-ellipsis bg-accent rounded-md cursor-pointer">
-            {getValue() ?? ""}
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="max-w-xs sm:max-w-xl whitespace-pre-wrap break-words text-sm">
-          {getValue()}
-        </PopoverContent>
-      </Popover>
+    cell: ({ getValue }) => <NotesPopover notes={getValue()} />,
+  }),
+  columnHelper.accessor("table", {
+    header: "Table",
+    cell: ({ getValue, row }) => (
+      <div className="flex justify-center items-center">
+        <TableBadge table={getValue()} id={row.original.id} />
+      </div>
     ),
   }),
   columnHelper.accessor("status", {

@@ -122,11 +122,12 @@ export const bookingsTable = pgTable(
     date: temporalDate().notNull(),
     time: temporalTime().notNull(),
     name: text().notNull(),
-    email: text().notNull(),
-    phone: text().notNull(),
+    email: text(),
+    phone: text(),
     guests: integer().notNull(),
     notes: text(),
     status: statusEnum().notNull().default("pending"),
+    table: integer(), // Nullable until seating
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp()
       .notNull()

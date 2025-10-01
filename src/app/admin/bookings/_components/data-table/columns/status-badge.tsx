@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -47,7 +48,9 @@ export function StatusBadge({
 }) {
   const trpc = useTRPC();
   const { mutate, isPending } = useMutation(
-    trpc.bookings.patch.mutationOptions(),
+    trpc.bookings.patch.mutationOptions({
+      onError: (e) => toast.error(e.message),
+    }),
   );
   return (
     <DropdownMenu>
