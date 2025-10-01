@@ -10,7 +10,7 @@ import {
 import { parseAsString, useQueryState } from "nuqs";
 import { FullDateFormat } from "@/lib/utils";
 import { BookingsCards } from "./bookings-cards";
-import type { TBookingColumns } from "./bookings-columns";
+import { columns } from "./bookings-columns";
 import { BookingsFooter } from "./bookings-footer";
 import { BookingsHeader } from "./bookings-header";
 import { BookingsTable } from "./bookings-table";
@@ -21,11 +21,10 @@ import { usePagination } from "./hooks/use-pagination";
 import { useRealtimeBookings } from "./hooks/use-realtime-bookings";
 
 interface DataTableProps {
-  columns: TBookingColumns;
   className?: string;
 }
 
-export function Bookings({ columns, className }: DataTableProps) {
+export function Bookings({ className }: DataTableProps) {
   const { data } = useRealtimeBookings();
   const [pagination, onPaginationChange] = usePagination();
   const [globalFilter, onGlobalFilterChange] = useQueryState(

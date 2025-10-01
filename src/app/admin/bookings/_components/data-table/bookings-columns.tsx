@@ -1,6 +1,10 @@
 "use client";
 
-import { createColumnHelper } from "@tanstack/react-table";
+import {
+  createColumnHelper,
+  type FilterFn,
+  type SortingFn,
+} from "@tanstack/react-table";
 import { EmailLink } from "@/components/email-link";
 import type { TBooking } from "@/server/db/types";
 import { PatchBookingDialog } from "../mutate/patch-booking-dialog";
@@ -13,34 +17,44 @@ import { StatusBadge } from "./columns/status-badge";
 import { TableBadge } from "./columns/table-badge";
 import { TimeBadge } from "./columns/time-badge";
 
+const plainDateSortingFn: SortingFn<TBooking> = (rowA, rowB) => {
+  const a = rowA.original.date;
+  const b = rowB.original.date;
+  return Temporal.PlainDate.compare(a, b);
+};
+
+const plainTimeSortingFn: SortingFn<TBooking> = (rowA, rowB) => {
+  const a = rowA.original.time;
+  const b = rowB.original.time;
+  return Temporal.PlainTime.compare(a, b);
+};
+
+const plainTimeFilterFn: FilterFn<TBooking> = (row, _columnId, filterValue) => {
+  const separator = Temporal.PlainTime.from("15:00");
+  const time = row.original.time;
+  if (filterValue === "lunch") {
+    return time.until(separator).hours >= 0;
+  }
+  if (filterValue === "dinner") {
+    return time.until(separator).hours < 0;
+  }
+  return true;
+};
+
 const columnHelper = createColumnHelper<TBooking>();
 
 export const columns = [
   columnHelper.accessor("date", {
     header: "Date",
     filterFn: "equalsString",
-    cell: ({ getValue }) => <DateBadge date={getValue().toString()} />,
+    sortingFn: plainDateSortingFn,
+    cell: ({ getValue }) => <DateBadge date={getValue()} />,
   }),
   columnHelper.accessor("time", {
-    filterFn: (row, columnId, filterValue) => {
-      const separator = Temporal.PlainTime.from("15:00");
-      const time = Temporal.PlainTime.from(row.getValue(columnId));
-      if (filterValue === "lunch") {
-        return time.until(separator).hours >= 0;
-      }
-      if (filterValue === "dinner") {
-        return time.until(separator).hours < 0;
-      }
-      return true;
-    },
+    sortingFn: plainTimeSortingFn,
+    filterFn: plainTimeFilterFn,
     header: "Heure",
-    cell: ({ getValue }) => (
-      <TimeBadge
-        time={getValue().toString({
-          smallestUnit: "minute",
-        })}
-      />
-    ),
+    cell: ({ getValue }) => <TimeBadge time={getValue()} />,
   }),
   columnHelper.accessor("name", {
     header: "Nom",

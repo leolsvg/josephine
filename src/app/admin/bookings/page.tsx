@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Bookings } from "./_components/data-table/bookings";
-import { columns } from "./_components/data-table/bookings-columns";
 import { Sidebar } from "./_components/sidebar/sidebar";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +25,7 @@ export default function BookingsPage() {
           </Card>
         }
       >
-        <Bookings className="w-full" columns={columns} />
+        <Bookings className="w-full" />
       </Suspense>
     </div>
   );
