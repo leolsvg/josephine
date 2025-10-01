@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/chart";
 import { useTRPC } from "@/lib/trpc/react";
 import type { TStatus } from "@/server/db/types";
+import { EStatusConfig } from "../data-table/columns/status-badge";
 import { useDateFilter } from "../data-table/hooks/use-date-filter";
-import { EStatusConfig } from "../data-table/status-badge";
 
 const chartConfig = {
   ...EStatusConfig,
