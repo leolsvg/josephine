@@ -1,11 +1,11 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { ipAddress } from "@vercel/functions";
-import type { NextRequest } from "next/server";
 import z, { ZodError } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import SuperJSON from "@/lib/superjson";
 import { db } from "@/server/db";
-export const createTRPCContext = async (opts: NextRequest) => {
+
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   const supabase = await createClient();
   console.log(
     "==========================================",
