@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/performance/noImgElement: Only used at build time for og image generation */
 
-import "temporal-polyfill/global";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";

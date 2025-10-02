@@ -7,15 +7,11 @@ import { db } from "@/server/db";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const supabase = await createClient();
-  console.log(
-    "==========================================",
-    opts.headers.get("x-forwarded-for"),
-    ipAddress(opts),
-  );
   const { data } = await supabase.auth.getUser();
   return {
     db,
     user: data.user,
+    ip: ipAddress(opts),
     ...opts,
   };
 };

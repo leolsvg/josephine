@@ -43,7 +43,7 @@ export const bookings = createTRPCRouter({
       return result.value;
     }),
   book: publicProcedure.input(SBooking).mutation(async ({ ctx, input }) => {
-    const result = await createBooking(ctx.db, input);
+    const result = await createBooking(ctx.db, input, ctx.ip);
     if (result.isErr()) {
       throw new TRPCError({
         message: result.error.message,

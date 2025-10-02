@@ -10,6 +10,7 @@ import { sendBookingConfirmationEmail } from "@/server/services/emails/send-book
 import { checkCapacityByService } from "./check-capacity-by-service";
 import { checkIfExists } from "./check-if-exists";
 import { checkIfIsOpen } from "./check-if-is-open";
+import { checkRateLimit } from "./check-rate-limit";
 import { checkGuestsLimit, getSettings } from "./check-settings";
 import { getExceptions, getWeekly } from "./schedule";
 
@@ -42,9 +43,13 @@ export const getEffectiveSchedule = (db: DB, date: Temporal.PlainDate) =>
   });
 
 // Infered TS type is incorrect but all the errors will be returned and thrown by the route handler
-export const createBooking = (db: DB, input: CreateBookingInput) =>
+export const createBooking = (
+  db: DB,
+  input: CreateBookingInput,
+  ipAddress: string | undefined,
+) =>
   safeTry(async function* () {
-    // TODO: rate limit per IP
+    yield* checkRateLimit(ipAddress, input.email);
     yield* checkIfExists(db, input.email, input.phone, input.date, input.time);
     const settings = yield* getSettings(db);
     yield* checkGuestsLimit(settings.maxGuestsPerBooking, input.guests);
