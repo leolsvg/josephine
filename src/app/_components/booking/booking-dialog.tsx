@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import { SBooking } from "@/components/booking/booking-schema";
 import {
@@ -27,6 +27,9 @@ export function BookingDialog({ className }: { className?: string }) {
   const { mutate, status, reset, error } = useMutation(
     trpc.bookings.book.mutationOptions(),
   );
+  const { data: bookingEnabled } = useQuery(
+    trpc.settings.bookingEnabled.queryOptions(),
+  );
   const form = useBookingForm({
     ...bookingFormOptions,
     validators: {
@@ -36,31 +39,31 @@ export function BookingDialog({ className }: { className?: string }) {
       mutate(SBooking.parse(value));
     },
   });
-
-  return (
-    <Dialog
-      onOpenChange={(open) => {
-        if (!open) form.reset();
-      }}
-    >
-      <DialogTrigger asChild>
-        <Button
-          className={cn("uppercase px-7 bg-[#000150] rounded", className)}
-          size="sm"
-        >
-          Réserver
-        </Button>
-      </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-lg max-h-dvh px-4"
-        onInteractOutside={(e) => {
-          e.preventDefault();
+  if (bookingEnabled)
+    return (
+      <Dialog
+        onOpenChange={(open) => {
+          if (!open) form.reset();
         }}
       >
-        <Content form={form} status={status} reset={reset} error={error} />
-      </DialogContent>
-    </Dialog>
-  );
+        <DialogTrigger asChild>
+          <Button
+            className={cn("uppercase px-7 bg-[#000150] rounded", className)}
+            size="sm"
+          >
+            Réserver
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          className="sm:max-w-lg max-h-dvh px-4"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <Content form={form} status={status} reset={reset} error={error} />
+        </DialogContent>
+      </Dialog>
+    );
 }
 
 const Content = withBookingForm({
