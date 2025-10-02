@@ -48,16 +48,6 @@ export const checkCapacityByService = (
         `),
     );
 
-    console.log("Checking capacity by service...", {
-      date: date.toString(),
-      time: time.toString(),
-      effective: effective.map(
-        (e) => `${e.start.toString()} - ${e.end.toString()}`,
-      ),
-      service: `${service.start.toString()} - ${service.end.toString()}`,
-      result,
-      settings,
-    });
     return Number(result.count) + guests <= settings.maxCapacityPerService
       ? okAsync()
       : err(new MaxCapacityServiceError());
