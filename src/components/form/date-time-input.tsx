@@ -6,7 +6,7 @@ import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { FullDateFormat, TIMEZONE, toZdt } from "@/lib/utils";
+import { FullDateFormat, TIMEZONE, toZdt } from "@/lib/utils/date";
 import {
   Dialog,
   DialogClose,
@@ -48,7 +48,7 @@ export function DateTimeInput({
               {FullDateFormat.format(dateDate)} à {timeFormat(time)}
             </span>
           ) : (
-            <span className="text-muted-foreground">Séléctionner une date</span>
+            <span className="text-muted-foreground">Sélectionner une date</span>
           )}
           <CalendarIcon className="text-muted-foreground" />
         </Button>

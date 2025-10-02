@@ -43,7 +43,7 @@ function useAuth() {
       if (e instanceof AuthError && e.code === "invalid_credentials")
         return toast.error("Email ou mot de passe invalide.");
       if (e instanceof Error) {
-        return toast.error(`Une erreur inconnue est survenue : ${e.message}.`);
+        return toast.error(`Une erreur est survenue : ${e.message}.`);
       }
       return toast.error(`Une erreur inconnue est survenue.`);
     },

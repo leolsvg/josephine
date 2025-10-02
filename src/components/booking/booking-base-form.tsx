@@ -3,10 +3,7 @@ import {
   bookingFormOptions,
   withBookingForm,
 } from "@/components/form/use-booking-form";
-import {
-  isDateOpen,
-  timesGroupsForDate,
-} from "@/server/services/utils/schedule";
+import { isDateOpen, timesGroupsForDate } from "@/lib/utils/schedule";
 import { MAX_GUESTS, MIN_GUESTS } from "./booking-schema";
 import { useSchedule } from "./use-schedule";
 

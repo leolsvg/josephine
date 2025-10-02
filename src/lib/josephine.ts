@@ -1,5 +1,5 @@
 import { env } from "./env";
-import { TIMEZONE } from "./utils";
+import { TIMEZONE } from "./utils/date";
 
 export const Josephine = {
   name: "Joséphine",

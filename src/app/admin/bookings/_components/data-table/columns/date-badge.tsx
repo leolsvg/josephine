@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { DateFormat } from "@/lib/utils";
+import { DateFormat } from "@/lib/utils/date";
 
 export function DateBadge({ date }: { date: Temporal.PlainDate }) {
   return (
