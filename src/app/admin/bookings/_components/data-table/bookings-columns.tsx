@@ -79,7 +79,7 @@ export const columns = [
     header: "Note",
     meta: {
       className: "w-full max-w-[1px]",
-      cardClassName: "grow overflow-hidden",
+      cardClassName: "overflow-hidden text-right",
     },
     cell: ({ getValue }) => <NotesPopover notes={getValue()} />,
   }),
