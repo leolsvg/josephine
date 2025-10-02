@@ -1,4 +1,8 @@
 import { err, ok, type Result } from "neverthrow";
+import {
+  formatPhoneNumber,
+  formatPhoneNumberIntl,
+} from "react-phone-number-input";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import { Josephine } from "@/lib/josephine";
 import type { DB } from "@/server/db";
@@ -14,7 +18,7 @@ export class NoSettingsError extends Error {
 export class MaxGuestsError extends Error {
   constructor(maxGuests: number) {
     super(
-      `Nos réservations en ligne sont limitées à ${maxGuests} personnes. Pour un groupe plus large, merci de nous contacter par téléphone au ${Josephine.phone}.`,
+      `Nos réservations en ligne sont limitées à ${maxGuests} personnes. Pour un groupe plus large, merci de nous contacter par téléphone au ${formatPhoneNumber(Josephine.phone) ?? Josephine.phone}.`,
     );
     this.name = "MaxGuestsError";
   }
