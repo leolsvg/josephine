@@ -51,12 +51,12 @@ export function isDateInRange(date: Temporal.PlainDate, range: DateRange) {
 /**
  * Check if a given date is in the past relative to the current date (not time).
  *
- * @param time - Temporal.PlainDate to check
+ * @param date - Temporal.PlainDate to check
  * @returns `true` if the date is before today, otherwise `false`
  */
-export function isPast(time: Temporal.PlainDate) {
+export function isPast(date: Temporal.PlainDate) {
   const now = Temporal.Now.plainDateISO(TIMEZONE);
-  return Temporal.PlainDate.compare(time, now) < 0;
+  return Temporal.PlainDate.compare(date, now) < 0;
 }
 
 /**
