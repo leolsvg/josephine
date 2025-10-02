@@ -1,11 +1,17 @@
 import { initTRPC, TRPCError } from "@trpc/server";
+import { ipAddress } from "@vercel/functions";
+import type { NextRequest } from "next/server";
 import z, { ZodError } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import SuperJSON from "@/lib/superjson";
 import { db } from "@/server/db";
-
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: NextRequest) => {
   const supabase = await createClient();
+  console.log(
+    "==========================================",
+    opts.headers.get("x-forwarded-for"),
+    ipAddress(opts),
+  );
   const { data } = await supabase.auth.getUser();
   return {
     db,

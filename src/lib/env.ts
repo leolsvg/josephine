@@ -12,6 +12,8 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.url(),
     RESEND_API_KEY: z.string().min(1),
+    UPSTASH_REDIS_URL: z.string().min(1),
+    UPSTASH_REDIS_TOKEN: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_DOMAIN: z.string().min(1),
@@ -26,5 +28,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
+    UPSTASH_REDIS_URL: process.env.UPSTASH_REDIS_URL,
+    UPSTASH_REDIS_TOKEN: process.env.UPSTASH_REDIS_TOKEN,
   },
 });
