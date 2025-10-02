@@ -65,7 +65,7 @@ export function CapacityForm() {
         {(field) => (
           <field.NumberField
             id="maxCapacityPerSlot"
-            label=" Capacité maximum par créneau"
+            label=" Capacité maximum par créneau (pas développé)"
           />
         )}
       </form.AppField>
