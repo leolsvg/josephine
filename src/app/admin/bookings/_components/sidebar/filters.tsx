@@ -9,11 +9,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { useColumnFilters } from "../data-table/hooks/use-column-filters";
 import { useDateFilter } from "../data-table/hooks/use-date-filter";
+import { useGlobalFilter } from "../data-table/hooks/use-global-filter";
 import { useTimeFilter } from "../data-table/hooks/use-time-filter";
 
 export function Filters() {
   const { reset } = useColumnFilters();
   const { dinner, lunch, meal, allMeals } = useTimeFilter();
+  const { reset: resetGlobalFilter } = useGlobalFilter();
   const {
     date,
     nextDay,
@@ -45,7 +47,10 @@ export function Filters() {
       <Button
         type="button"
         variant={!date ? "default" : "outline"}
-        onClick={allDays}
+        onClick={() => {
+          allDays();
+          allMeals();
+        }}
         className="col-span-2"
       >
         Afficher tout
@@ -72,6 +77,7 @@ export function Filters() {
         <span>Jour suivant</span>
         <ChevronRight />
       </Button>
+
       <Button
         type="button"
         variant={meal === "lunch" ? "default" : "outline"}
@@ -99,14 +105,18 @@ export function Filters() {
         <Calendar1 />
         Jour
       </Button>
+
       <Button
         type="button"
-        onClick={reset}
+        onClick={() => {
+          resetGlobalFilter();
+          reset();
+        }}
         variant="ghost"
         className="col-span-6"
       >
         <X />
-        <span>Reset</span>
+        <span>Réinitialiser</span>
       </Button>
     </div>
   );

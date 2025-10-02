@@ -7,8 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { parseAsString, useQueryState } from "nuqs";
-import { FullDateFormat } from "@/lib/utils";
+import { FullDateFormat } from "@/lib/utils/date";
 import { BookingsCards } from "./bookings-cards";
 import { columns } from "./bookings-columns";
 import { BookingsFooter } from "./bookings-footer";
@@ -17,6 +16,7 @@ import { BookingsTable } from "./bookings-table";
 import { useColumnFilters } from "./hooks/use-column-filters";
 import { useColumnVisibility } from "./hooks/use-column-visibility";
 import { useDateFilter } from "./hooks/use-date-filter";
+import { useGlobalFilter } from "./hooks/use-global-filter";
 import { usePagination } from "./hooks/use-pagination";
 import { useRealtimeBookings } from "./hooks/use-realtime-bookings";
 
@@ -27,11 +27,7 @@ interface DataTableProps {
 export function Bookings({ className }: DataTableProps) {
   const { data } = useRealtimeBookings();
   const [pagination, onPaginationChange] = usePagination();
-  const [globalFilter, onGlobalFilterChange] = useQueryState(
-    "search",
-    parseAsString,
-  );
-
+  const { globalFilter, onGlobalFilterChange } = useGlobalFilter();
   const { columnVisibility, onColumnVisibilityChange } = useColumnVisibility();
   const { columnFilters, setColumnFilters } = useColumnFilters();
   const { date } = useDateFilter();
