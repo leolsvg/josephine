@@ -105,9 +105,7 @@
           "name": "For realtime enable all operations to authenticated users",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "true",
           "withCheck": "true"
         }
@@ -241,18 +239,14 @@
           "name": "Enable read access for all users",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon"
-          ],
+          "to": ["anon"],
           "using": "true"
         },
         "Enable all operations to authenticated users": {
           "name": "Enable all operations to authenticated users",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "true",
           "withCheck": "true"
         }
@@ -350,31 +344,17 @@
     "public.menu-category": {
       "name": "menu-category",
       "schema": "public",
-      "values": [
-        "fromage",
-        "entree",
-        "plat",
-        "dessert",
-        "partager"
-      ]
+      "values": ["fromage", "entree", "plat", "dessert", "partager"]
     },
     "public.menu-service": {
       "name": "menu-service",
       "schema": "public",
-      "values": [
-        "soir",
-        "midi"
-      ]
+      "values": ["soir", "midi"]
     },
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": [
-        "pending",
-        "present",
-        "absent",
-        "canceled"
-      ]
+      "values": ["pending", "present", "absent", "canceled"]
     }
   },
   "schemas": {},
