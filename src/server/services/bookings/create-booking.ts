@@ -1,4 +1,4 @@
-import { okAsync, safeTry } from "neverthrow";
+import { errAsync, okAsync, safeTry } from "neverthrow";
 import type { ErrorResponse } from "resend";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import { TIMEZONE } from "@/lib/utils/date";
@@ -21,6 +21,13 @@ export class SendEmailError extends Error {
     );
     this.cause = cause;
     this.name = "SendEmailError";
+  }
+}
+
+export class BookingDisabledError extends Error {
+  constructor() {
+    super(`Les réservations sont actuellement désactivées.`);
+    this.name = "BookingDisabledError";
   }
 }
 
@@ -49,9 +56,10 @@ export const createBooking = (
   ipAddress: string | undefined,
 ) =>
   safeTry(async function* () {
+    const settings = yield* getSettings(db);
+    if (!settings.bookingEnabled) return errAsync(new BookingDisabledError());
     yield* checkRateLimit(ipAddress, input.email);
     yield* checkIfExists(db, input.email, input.phone, input.date, input.time);
-    const settings = yield* getSettings(db);
     yield* checkGuestsLimit(settings.maxGuestsPerBooking, input.guests);
     const effective = yield* getEffectiveSchedule(db, input.date);
     yield* checkIfIsOpen(input.date, input.time, effective);
@@ -82,6 +90,5 @@ export const createBooking = (
       phone: booking.phone,
       notes: booking.notes ?? undefined,
     });
-    // Todo increment rate limit counter
     return okAsync();
   });

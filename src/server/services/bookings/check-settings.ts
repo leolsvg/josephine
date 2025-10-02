@@ -27,6 +27,7 @@ export function getSettings(db: DB) {
         maxCapacityPerSlot: settingsTable.maxCapacityPerSlot,
         maxCapacityPerService: settingsTable.maxCapacityPerService,
         maxGuestsPerBooking: settingsTable.maxGuestsPerBooking,
+        bookingEnabled: settingsTable.bookingEnabled,
       })
       .from(settingsTable)
       .limit(1),

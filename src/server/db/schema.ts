@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   customType,
   integer,
   pgEnum,
@@ -168,4 +169,5 @@ export const settingsTable = pgTable("settings", {
   maxCapacityPerSlot: integer().notNull(),
   maxCapacityPerService: integer().notNull(),
   maxGuestsPerBooking: integer().notNull(),
+  bookingEnabled: boolean().notNull().default(true),
 }).enableRLS();
