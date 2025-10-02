@@ -12,7 +12,9 @@ export class ResendUnknownError extends Error {
 
 export class ResendSendError extends Error {
   constructor(cause: ErrorResponse) {
-    super("Une erreur est survenue lors de l'envoi du mail.");
+    super(
+      "Votre réservation est confirmée, mais nous n'avons pas pu envoyer le mail de confirmation.",
+    );
     this.name = "ResendSendError";
     this.cause = cause;
   }

@@ -14,6 +14,7 @@ import {
 } from "./schema";
 
 export type TBooking = InferSelectModel<typeof bookingsTable>;
+export type TSettings = InferSelectModel<typeof settingsTable>;
 export type TMenu = InferSelectModel<typeof menusTable>;
 export type TMenuCategory = InferEnum<typeof menuCategoryEnum>;
 export type TMenuService = InferEnum<typeof menuServiceEnum>;

@@ -1,15 +1,14 @@
-import { TIMEZONE } from "@/lib/utils";
+import { isDateInRange, isPast, isToday, TIMEZONE } from "@/lib/utils/date";
 import type { Exception, TimeRange, Weekly } from "@/server/db/types";
-import { isDateInRange } from "./date";
 
 /**
- * Get the effective opening periods for a given date.
+ * Get the effective opening time ranges for a given date.
  * Combines weekly schedule and exceptions.
  *
  * @param date - The target date
- * @param weekly - Weekly schedule (array of periods per weekday)
- * @param exceptions - Array of exceptions (closures or custom periods)
- * @returns Array of periods with `start` and `end` as HM strings
+ * @param weekly - Weekly schedule (array of time range per weekday)
+ * @param exceptions - Array of exception
+ * @returns Array of time ranges with `start` and `end` as HM strings
  */
 export function effectiveScheduleForDate(
   date: Temporal.PlainDate,
@@ -26,6 +25,13 @@ export function effectiveScheduleForDate(
   return weekly[dayIndex] ?? [];
 }
 
+/**
+ * Generate discrete time slots within a given time range.
+ *
+ * @param timeRange - The time range to split into slots
+ * @param duration - Duration of each slot (default 15 minutes)
+ * @returns Array of Temporal.PlainTime representing start times of each slot
+ */
 export function timesForTimeRange(
   timeRange: TimeRange,
   duration: Temporal.DurationLike = {
@@ -41,21 +47,25 @@ export function timesForTimeRange(
   return slots;
 }
 
-function isPast(time: Temporal.PlainDate) {
-  const now = Temporal.Now.plainDateISO(TIMEZONE);
-  return Temporal.PlainDate.compare(time, now) < 0;
-}
-
 /**
- * Generate time slots for given periods.
+ * Generate arrays of time slots for multiple time ranges.
  *
- * @param timeRanges - Precomputed periods from generateEffectiveSchedule
- * @returns Array of slot arrays (one array per period)
+ * @param timeRanges - Array of TimeRange objects
+ * @returns Array of arrays of Temporal.PlainTime slots (one array per time range)
  */
 export function timesGroupsForTimeRanges(timeRanges: TimeRange[]) {
   return timeRanges.map((p) => timesForTimeRange(p));
 }
 
+/**
+ * Generate arrays of time slots for a specific date (intended for direct usage by the date time picker).
+ *
+ *
+ * @param date - JavaScript Date object
+ * @param weekly - Weekly schedule
+ * @param exceptions - Array of exceptions
+ * @returns Array of arrays of Temporal.PlainTime slots, only future service slots if the date is today.
+ */
 export function timesGroupsForDate(
   date: Date,
   weekly: Weekly,
@@ -69,10 +79,14 @@ export function timesGroupsForDate(
   return timesGroupsForTimeRanges(u);
 }
 
-// .filter((p) =>
-//     Temporal.PlainTime.from(p.start) > Temporal.Now.plainTimeISO(TIMEZONE)
-// )
-
+/**
+ * Check if a given date is open (has at least one time range) and is not in the past (intended for direct usage by the date time picker).
+ *
+ * @param date - JavaScript Date object
+ * @param weekly - Weekly schedule
+ * @param exceptions - Array of exceptions
+ * @returns `true` if the date has any active periods, otherwise `false`
+ */
 export function isDateOpen(
   date: Date,
   weekly: Weekly,
@@ -86,26 +100,31 @@ export function isDateOpen(
   return periods.length > 0;
 }
 
+/**
+ * Check if a specific time is within any of the active periods (for server side validation).
+ * Only future periods are considered.
+ *
+ * @param time - Temporal.PlainTime to check
+ * @param effective - Array of TimeRange objects for the day
+ * @returns `true` if the time falls within any future period, otherwise `false`
+ */
 export function isDateTimeOpen(
-  date: Temporal.PlainDate,
   time: Temporal.PlainTime,
-  weekly: Weekly,
-  exceptions: Exception[],
+  effective: TimeRange[],
 ): boolean {
-  const periods = effectiveScheduleForDate(date, weekly, exceptions);
-  return futureTimeRanges(periods).some(
+  return futureTimeRanges(effective).some(
     ({ start, end }) =>
       Temporal.PlainTime.compare(time, start) >= 0 &&
       Temporal.PlainTime.compare(time, end) === -1,
   );
 }
 
-function isToday(date: Temporal.PlainDate) {
-  return (
-    Temporal.PlainDate.compare(Temporal.Now.plainDateISO(TIMEZONE), date) === 0
-  );
-}
-
+/**
+ * Filter out past time ranges.
+ *
+ * @param timeRanges - Array of TimeRange objects
+ * @returns Array of TimeRange objects that start in the future
+ */
 function futureTimeRanges(timeRanges: TimeRange[]) {
   return timeRanges.filter(
     (p) => Temporal.PlainTime.compare(Temporal.Now.plainTimeISO(), p.start) < 0,

@@ -1,16 +1,8 @@
-import { sql } from "drizzle-orm";
-import { err, ok } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import { Josephine } from "@/lib/josephine";
-import { TIMEZONE, toDate } from "@/lib/utils";
 import type { DB } from "@/server/db";
-import {
-  bookingsTable,
-  exceptionsTable,
-  settingsTable,
-} from "@/server/db/schema";
-import { timesGroupsForDate } from "../utils/schedule";
-import { getExceptions, getWeekly } from "./schedule";
+import { settingsTable } from "@/server/db/schema";
 
 export class NoSettingsError extends Error {
   constructor() {
@@ -28,22 +20,6 @@ export class MaxGuestsError extends Error {
   }
 }
 
-export class MaxCapacitySlotError extends Error {
-  constructor() {
-    super(
-      "Le restaurant est complet pour le créneau sélectionné. Vous pouvez choisir un autre horaire.",
-    );
-    this.name = "MaxCapacitySlotError";
-  }
-}
-
-export class MaxCapacityServiceError extends Error {
-  constructor() {
-    super("Le restaurant est complet pour le service sélectionné.");
-    this.name = "MaxCapacityServiceError";
-  }
-}
-
 export function getSettings(db: DB) {
   return safeDrizzleQuery(
     db
@@ -58,63 +34,61 @@ export function getSettings(db: DB) {
 }
 
 export function checkGuestsLimit(
-  settings: ReturnType<typeof getSettings>,
+  maxGuestsPerBooking: number,
   guests: number,
-) {
-  return settings.andThen((r) =>
-    guests > r.maxGuestsPerBooking
-      ? err(new MaxGuestsError(r.maxGuestsPerBooking))
-      : ok(),
-  );
+): Result<void, MaxGuestsError> {
+  return guests > maxGuestsPerBooking
+    ? err(new MaxGuestsError(maxGuestsPerBooking))
+    : ok();
 }
 
-export function checkCapacitySlot(
-  db: DB,
-  date: Temporal.PlainDate,
-  time: Temporal.PlainTime,
-  guests: number,
-) {
-  const MAX_GUESTS_PER_HOUR = 30;
+// export function checkCapacitySlot(
+//   db: DB,
+//   date: Temporal.PlainDate,
+//   time: Temporal.PlainTime,
+//   guests: number,
+// ) {
+//   const MAX_GUESTS_PER_HOUR = 30;
 
-  return getSettings(db).andThen((s) => {
-    getWeekly(db).andThen((w) =>
-      getExceptions(db).andThen((e) =>
-        ok(
-          timesGroupsForDate(
-            toDate(date.toZonedDateTime(TIMEZONE)),
-            w,
-            e,
-            // TODO add duration 1 hour
-          ),
-        ),
-      ),
-    );
-    // TODO
-    return safeDrizzleQuery(
-      db
-        .select({
-          totalGuests: sql<number>`COALESCE(SUM(${bookingsTable.guests}), 0)`,
-        })
-        .from(bookingsTable)
-        .where(sql`
-          ${bookingsTable.date} = ${date}
-          AND date_trunc('hour', ${bookingsTable.time}::time) = date_trunc('hour', ${time}::time)
-          AND NOT EXISTS (
-            SELECT 1
-            FROM ${exceptionsTable} e
-            WHERE e."from" <= ${bookingsTable.date}
-              AND (e."to" IS NULL OR e."to" >= ${bookingsTable.date})
-              AND ${bookingsTable.time} = ANY (
-                ARRAY(
-                  SELECT jsonb_array_elements_text(e.periods)::time
-                )
-              )
-          )
-        `),
-    ).andThen((c) =>
-      c[0].totalGuests + guests > MAX_GUESTS_PER_HOUR
-        ? err(new MaxCapacitySlotError())
-        : ok(),
-    );
-  });
-}
+//   return getSettings(db).andThen((s) => {
+//     getWeekly(db).andThen((w) =>
+//       getExceptions(db).andThen((e) =>
+//         ok(
+//           timesGroupsForDate(
+//             toDate(date.toZonedDateTime(TIMEZONE)),
+//             w,
+//             e,
+//             // TODO add duration 1 hour
+//           ),
+//         ),
+//       ),
+//     );
+//     // TODO
+//     return safeDrizzleQuery(
+//       db
+//         .select({
+//           totalGuests: sql<number>`COALESCE(SUM(${bookingsTable.guests}), 0)`,
+//         })
+//         .from(bookingsTable)
+//         .where(sql`
+//           ${bookingsTable.date} = ${date}
+//           AND date_trunc('hour', ${bookingsTable.time}::time) = date_trunc('hour', ${time}::time)
+//           AND NOT EXISTS (
+//             SELECT 1
+//             FROM ${exceptionsTable} e
+//             WHERE e."from" <= ${bookingsTable.date}
+//               AND (e."to" IS NULL OR e."to" >= ${bookingsTable.date})
+//               AND ${bookingsTable.time} = ANY (
+//                 ARRAY(
+//                   SELECT jsonb_array_elements_text(e.periods)::time
+//                 )
+//               )
+//           )
+//         `),
+//     ).andThen((c) =>
+//       c[0].totalGuests + guests > MAX_GUESTS_PER_HOUR
+//         ? err(new MaxCapacitySlotError())
+//         : ok(),
+//     );
+//   });
+// }
