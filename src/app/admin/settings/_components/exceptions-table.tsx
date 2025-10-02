@@ -44,7 +44,8 @@ export function ExceptionsTable() {
                         <div />
                       )}
                       <div className="font-bold">
-                        Du {DateFormat.format(e.from)}
+                        {e.to && "Du "}
+                        {DateFormat.format(e.from)}
                         {e.to && ` au ${DateFormat.format(e.to)}`}
                         {!hasPeriods && " (fermé)"}
                       </div>
