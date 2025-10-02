@@ -1,10 +1,11 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import { err, fromPromise, ok } from "neverthrow";
+import { errAsync, fromPromise, okAsync, safeTry } from "neverthrow";
+import { env } from "@/lib/env";
 import { redis } from "@/lib/redis";
 
-export const ratelimit = new Ratelimit({
+const ratelimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(5, "1 h"),
+  limiter: Ratelimit.slidingWindow(5, "3 m"),
   analytics: true,
 });
 
@@ -26,9 +27,14 @@ export class BookingRateLimitError extends Error {
 }
 
 export const checkRateLimit = (ip: string | undefined, email: string) =>
-  fromPromise(
-    ratelimit.limit(ip ?? email),
-    (e) => new RateLimitError(e),
-  ).andThen(({ success }) =>
-    success ? ok() : err(new BookingRateLimitError()),
-  );
+  safeTry(async function* () {
+    if (env.NODE_ENV === "development") {
+      console.warn("Skipping rate limit in development");
+      return okAsync();
+    }
+    const { success } = yield* fromPromise(
+      ratelimit.limit(ip ?? email),
+      (e) => new RateLimitError(e),
+    );
+    return success ? okAsync(success) : errAsync(new BookingRateLimitError());
+  });
