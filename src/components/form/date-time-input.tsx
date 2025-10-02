@@ -6,7 +6,7 @@ import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { FullDateFormat, TIMEZONE, toZdt } from "@/lib/utils";
+import { FullDateFormat, TIMEZONE, toZdt } from "@/lib/utils/date";
 import {
   Dialog,
   DialogClose,
@@ -32,7 +32,7 @@ export function DateTimeInput({
   onDateChange: (date: string | undefined) => void;
   onTimeChange: (time: string | undefined) => void;
   disabled: (date: Date) => boolean;
-  timeSlots: (date: Date) => string[][];
+  timeSlots: (date: Date) => Temporal.PlainTime[][];
 }) {
   const dateDate = date ? new Date(date) : undefined;
   return (
@@ -48,7 +48,7 @@ export function DateTimeInput({
               {FullDateFormat.format(dateDate)} à {timeFormat(time)}
             </span>
           ) : (
-            <span className="text-muted-foreground">Séléctionner une date</span>
+            <span className="text-muted-foreground">Sélectionner une date</span>
           )}
           <CalendarIcon className="text-muted-foreground" />
         </Button>
@@ -80,48 +80,20 @@ export function DateTimeInput({
             />
           </div>
           <div className="hidden md:flex no-scrollbar inset-y-0 right-0 max-h-72 w-full scroll-pb-6 flex-col gap-4 overflow-y-auto border-t p-6 md:absolute md:max-h-none md:w-48 md:border-t-0 md:border-l">
-            {dateDate ? (
-              <div className="grid gap-2">
-                {timeSlots(dateDate).map((g, i) => (
-                  <Fragment key={crypto.randomUUID()}>
-                    {g.map((t) => (
-                      <Button
-                        key={g + t}
-                        variant={`${t}:00` === time ? "default" : "outline"}
-                        onClick={() => onTimeChange(`${t}:00`)}
-                        className="w-full shadow-none"
-                      >
-                        {t}
-                      </Button>
-                    ))}
-                    {i < timeSlots(dateDate).length - 1 && (
-                      <Separator className="border-2 rounded" />
-                    )}
-                  </Fragment>
-                ))}
-              </div>
-            ) : (
-              <span className="text-muted-foreground grow flex items-center justify-center text-center">
-                Sélectionnez une date
-              </span>
-            )}
+            <TimeSlotsDesktop
+              date={dateDate}
+              onTimeChange={onTimeChange}
+              time={time}
+              timeSlots={timeSlots}
+            />
           </div>
           <div className="flex justify-center md:hidden border-t p-3">
-            {dateDate ? (
-              <select
-                name="time"
-                onChange={(e) => onTimeChange(`${e.target.value}:00`)}
-              >
-                <option value="">Sélectionner une heure</option>
-                {timeSlots(dateDate).map((g) =>
-                  g.map((t) => <option key={g + t}>{t}</option>),
-                )}
-              </select>
-            ) : (
-              <span className="text-muted-foreground grow flex items-center justify-center text-center">
-                Sélectionnez une date
-              </span>
-            )}
+            <TimeSlotsMobile
+              time={time}
+              date={dateDate}
+              onTimeChange={onTimeChange}
+              timeSlots={timeSlots}
+            />
           </div>
         </div>
         <DialogFooter className="sm:flex-col flex flex-col gap-4 border-t px-6 !py-5 md:flex-row items-center">
@@ -158,5 +130,90 @@ function DateTimeFormat({ date, time }: { date: Date; time: string }) {
       <strong>{FullDateFormat.format(date)}</strong> à{" "}
       <strong>{timeFormat(time)}</strong>.
     </>
+  );
+}
+
+function TimeSlotsDesktop({
+  time,
+  date,
+  timeSlots,
+  onTimeChange,
+}: {
+  time: string | undefined;
+  date: Date | undefined;
+  timeSlots: (date: Date) => Temporal.PlainTime[][];
+  onTimeChange: (time: string | undefined) => void;
+}) {
+  if (!date)
+    return (
+      <span className="text-muted-foreground grow flex items-center justify-center text-center">
+        Sélectionnez une date
+      </span>
+    );
+
+  return (
+    <div className="grid gap-2">
+      {timeSlots(date).map((g, i) => (
+        <Fragment key={crypto.randomUUID()}>
+          {g.map((t) => (
+            <Button
+              key={g + t.toString()}
+              variant={t.toString() === time ? "default" : "outline"}
+              onClick={() => onTimeChange(t.toString())}
+              className="w-full shadow-none"
+            >
+              {t.toString({
+                smallestUnit: "minute",
+              })}
+            </Button>
+          ))}
+          {i < timeSlots(date).length - 1 && (
+            <Separator className="border-2 rounded" />
+          )}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+function TimeSlotsMobile({
+  time,
+  date,
+  timeSlots,
+  onTimeChange,
+}: {
+  date: Date | undefined;
+  time: string | undefined;
+  timeSlots: (date: Date) => Temporal.PlainTime[][];
+  onTimeChange: (time: string | undefined) => void;
+}) {
+  if (!date)
+    return (
+      <span className="text-muted-foreground grow flex items-center justify-center text-center">
+        Sélectionnez une date
+      </span>
+    );
+  return (
+    <select
+      name="time"
+      value={time ?? ""}
+      onChange={(e) => onTimeChange(e.target.value)}
+    >
+      <option value={""} disabled hidden>
+        Sélectionner une heure
+      </option>
+      {timeSlots(date).map((g, i) => (
+        <Fragment key={crypto.randomUUID()}>
+          {g.map((t) => (
+            <option key={g + t.toString()} value={t.toString()}>
+              {t.toString({
+                smallestUnit: "minute",
+              })}
+            </option>
+          ))}
+          {i < timeSlots(date).length - 1 && <hr />}
+        </Fragment>
+      ))}
+    </select>
   );
 }

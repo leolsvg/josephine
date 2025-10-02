@@ -1,5 +1,5 @@
 import type { Table } from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
+import { SearchInput } from "@/components/form/search-input";
 import type { TBooking } from "@/server/db/types";
 import { PutBookingDialog } from "../mutate/put-booking-dialog";
 import { ColumnVisibilitySelect } from "./column-visibility-select";
@@ -24,8 +24,7 @@ export function BookingsHeader({
       </div>
       <div className="flex items-center gap-3">
         <ColumnVisibilitySelect table={table} />
-        <Input
-          type="text"
+        <SearchInput
           placeholder="Recherche"
           value={globalFilter}
           onChange={(e) => onSearch(e.target.value)}

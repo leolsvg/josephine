@@ -1,39 +1,11 @@
-import ical, { ICalCalendarMethod } from "ical-generator";
 import { err, fromPromise, ok } from "neverthrow";
 import { BookingConfirmationEmail } from "@/components/booking/booking-confirmation-email";
 import { ResendSendError, ResendUnknownError } from "@/lib/errors/resend";
 import { Josephine } from "@/lib/josephine";
 import { resend } from "@/lib/resend";
-import { toZdt } from "@/lib/utils";
+import { createIcsAttachment } from "./create-ics-attachment";
 
-function createIcsAttachment(
-  date: Date,
-  reservationId: number,
-  guests: number,
-) {
-  const end = new Date(
-    toZdt(date).add({
-      hours: 2,
-    }).epochMilliseconds,
-  );
-  return ical({
-    method: ICalCalendarMethod.REQUEST,
-    events: [
-      {
-        start: date,
-        end,
-        summary: "Réservation - Josephine",
-        description: `Réservation #${reservationId} — ${guests} ${
-          guests > 1 ? "personnes" : "personne"
-        }`,
-        location: Josephine.address,
-        url: Josephine.website,
-      },
-    ],
-  });
-}
-
-interface Test {
+interface SendBookingConfirmationEmailProps {
   name: string;
   reservationId: number;
   guests: number;
@@ -51,7 +23,7 @@ export function sendBookingConfirmationEmail({
   email,
   phone,
   notes,
-}: Test) {
+}: SendBookingConfirmationEmailProps) {
   return fromPromise(
     resend.emails.send({
       from: `Restaurant Joséphine <${Josephine.noreply}>`,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fr } from "react-day-picker/locale";
 import { Calendar as UICalendar } from "@/components/ui/calendar";
-import { TIMEZONE } from "@/lib/utils";
+import { TIMEZONE } from "@/lib/utils/date";
 import { useDateFilter } from "../data-table/hooks/use-date-filter";
 
 export function Calendar() {

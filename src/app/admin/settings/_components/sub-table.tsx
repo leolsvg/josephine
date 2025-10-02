@@ -1,18 +1,18 @@
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import type { Period } from "@/server/db/types";
+import type { TimeRange } from "@/server/db/types";
 
-export function SubTable({ periods }: { periods: Period[] }) {
+export function SubTable({ periods }: { periods: TimeRange[] }) {
   return (
     <Table>
       <TableBody>
         {periods.map((p) => (
-          <TableRow key={p.start}>
+          <TableRow key={p.start.toString()}>
             <TableCell>
-              <Input type="time" defaultValue={p.start} />
+              <Input type="time" defaultValue={p.start.toString()} />
             </TableCell>
             <TableCell>
-              <Input type="time" defaultValue={p.end} />
+              <Input type="time" defaultValue={p.end.toString()} />
             </TableCell>
             <TableCell className="w-0">
               {/* <Button variant="ghost" size="icon">

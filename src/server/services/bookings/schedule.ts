@@ -19,8 +19,8 @@ export function getWeekly(d: DB) {
   ).andThen((r) =>
     ok(
       r.reduce<Weekly>((acc, r) => {
-        const bucket = acc[r.day] ?? { periods: [] };
-        bucket.periods.push({
+        const bucket = acc[r.day] ?? [];
+        bucket.push({
           start: r.start,
           end: r.end,
         });

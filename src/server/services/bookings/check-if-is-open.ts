@@ -1,8 +1,6 @@
-import { errAsync, okAsync, safeTry } from "neverthrow";
-import { TIMEZONE } from "@/lib/utils";
-import type { DB } from "@/server/db";
-import { isOpen } from "@/server/services/bookings/utils";
-import { getExceptions, getWeekly } from "./schedule";
+import { errAsync, okAsync, type ResultAsync } from "neverthrow";
+import { isDateTimeOpen } from "@/lib/utils/schedule";
+import type { TimeRange } from "@/server/db/types";
 
 export class ClosedError extends Error {
   constructor(date: string, time: string) {
@@ -11,17 +9,12 @@ export class ClosedError extends Error {
   }
 }
 
-export const checkIfIsOpen = (db: DB, date: string, time: string) =>
-  safeTry(async function* () {
-    const w = yield* getWeekly(db);
-    const e = yield* getExceptions(db);
-    const d = new Date(
-      Temporal.PlainDate.from(date).toZonedDateTime({
-        timeZone: TIMEZONE,
-        plainTime: Temporal.PlainTime.from(time),
-      }).epochMilliseconds,
-    );
-    const open = isOpen(d, w, e);
-    if (!open) return errAsync(new ClosedError(date, time));
-    return okAsync();
-  });
+export const checkIfIsOpen = (
+  date: Temporal.PlainDate,
+  time: Temporal.PlainTime,
+  effective: TimeRange[],
+): ResultAsync<void, ClosedError> => {
+  const open = isDateTimeOpen(date, time, effective);
+  if (!open) return errAsync(new ClosedError(date.toString(), time.toString()));
+  return okAsync();
+};

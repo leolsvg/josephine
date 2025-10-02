@@ -1,7 +1,7 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
 import { parseAsJson, useQueryState } from "nuqs";
 import z from "zod";
-import { TIMEZONE } from "@/lib/utils";
+import { TIMEZONE } from "@/lib/utils/date";
 
 const SColumnFilters = z.array(
   z.object({

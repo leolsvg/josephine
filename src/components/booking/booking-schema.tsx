@@ -1,4 +1,5 @@
 import z from "zod";
+import type { TStatus } from "@/server/db/types";
 
 export const MIN_GUESTS = 1;
 export const MAX_GUESTS = 10;
@@ -27,8 +28,12 @@ export const SBooking = z.object({
       MAX_GUESTS,
       `Nos réservations en ligne sont limitées à ${MAX_GUESTS} personnes. Pour un groupe plus large, merci de nous contacter directement.`,
     ),
-  date: z.iso.date("Merci de choisir une date valide pour votre réservation."),
-  time: z.iso.time("Merci d'indiquer l'heure de votre réservation."),
+  date: z.instanceof(Temporal.PlainDate, {
+    error: "Merci de choisir une date valide pour votre réservation.",
+  }),
+  time: z.instanceof(Temporal.PlainTime, {
+    error: "Merci d'indiquer l'heure de votre réservation.",
+  }),
   notes: z
     .string()
     .trim()
@@ -42,7 +47,11 @@ export const SBooking = z.object({
 
 export type TBooking = z.infer<typeof SBooking>;
 
-export const SBookingAdmin = SBooking.extend({
+export const SBookingAdminPut = SBooking.extend({
   phone: z.union([z.literal(""), SBooking.shape.phone]),
   email: z.union([z.literal(""), SBooking.shape.email]),
+  status: z.enum(["absent", "canceled", "pending", "present"] as TStatus[]),
+  table: z.number().nullable(),
 });
+
+export const SBookingAdminPatch = SBookingAdminPut.partial();

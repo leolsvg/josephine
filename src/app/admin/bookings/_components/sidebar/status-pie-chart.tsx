@@ -37,7 +37,7 @@ export function StatusPieChart() {
 
   const filtered = useMemo(() => {
     if (!date) return data;
-    return data.filter((b) => b.date === date);
+    return data.filter((b) => b.date.toString() === date);
   }, [data, date]);
 
   const chartData = useMemo(() => {

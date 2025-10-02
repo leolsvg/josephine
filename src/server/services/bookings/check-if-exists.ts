@@ -23,8 +23,8 @@ export function checkIfExists(
   db: DB,
   email: string,
   phone: string,
-  date: string,
-  time: string,
+  date: Temporal.PlainDate,
+  time: Temporal.PlainTime,
 ) {
   return safeDrizzleQuery(
     db

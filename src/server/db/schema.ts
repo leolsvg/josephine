@@ -1,39 +1,68 @@
 import { sql } from "drizzle-orm";
 import {
   customType,
-  date,
   integer,
-  jsonb,
   pgEnum,
   pgPolicy,
   pgTable,
   smallint,
   text,
-  time,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { anonRole, authenticatedRole } from "drizzle-orm/supabase";
-import { type DayIndex, TIMEZONE } from "@/lib/utils";
-import type { HM, Period } from "./types";
+import type { DayIndex } from "@/lib/utils";
+import type { TimeRange } from "./types";
 
-const customDate = customType<{
-  data: Date;
+type TDriverPeriods = { start: string; end: string }[];
+
+const periods = customType<{
+  data: TimeRange[];
+  driverData: TDriverPeriods;
+}>({
+  dataType() {
+    return "jsonb";
+  },
+  fromDriver(dbValue: TDriverPeriods): TimeRange[] {
+    return dbValue.map((p) => ({
+      start: Temporal.PlainTime.from(p.start),
+      end: Temporal.PlainTime.from(p.end),
+    }));
+  },
+  toDriver(appValue: TimeRange[]): TDriverPeriods {
+    return appValue.map((p) => ({
+      start: p.start.toString(),
+      end: p.end.toString(),
+    }));
+  },
+});
+
+const temporalDate = customType<{
+  data: Temporal.PlainDate;
   driverData: string;
 }>({
   dataType() {
     return "date";
   },
-  fromDriver(dbValue: string): Date {
-    return new Date(
-      Temporal.PlainDate.from(dbValue).toZonedDateTime(TIMEZONE)
-        .epochMilliseconds,
-    );
+  fromDriver(dbValue: string): Temporal.PlainDate {
+    return Temporal.PlainDate.from(dbValue);
   },
-  toDriver(appValue: Date): string {
-    return Temporal.Instant.fromEpochMilliseconds(appValue.getTime())
-      .toZonedDateTimeISO(TIMEZONE)
-      .toPlainDate()
-      .toString();
+  toDriver(appValue: Temporal.PlainDate): string {
+    return appValue.toString();
+  },
+});
+
+const temporalTime = customType<{
+  data: Temporal.PlainTime;
+  driverData: string;
+}>({
+  dataType() {
+    return "time";
+  },
+  fromDriver(dbValue: string): Temporal.PlainTime {
+    return Temporal.PlainTime.from(dbValue);
+  },
+  toDriver(appValue: Temporal.PlainTime): string {
+    return appValue.toString();
   },
 });
 
@@ -90,8 +119,8 @@ export const bookingsTable = pgTable(
   "bookings",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    date: date().notNull(),
-    time: time().notNull(),
+    date: temporalDate().notNull(),
+    time: temporalTime().notNull(),
     name: text().notNull(),
     email: text(),
     phone: text(),
@@ -120,15 +149,15 @@ export const bookingsTable = pgTable(
 export const weeklyTable = pgTable("weekly", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   day: smallint().notNull().$type<DayIndex>(),
-  start: time().notNull().$type<HM>(),
-  end: time().notNull().$type<HM>(),
+  start: temporalTime().notNull(),
+  end: temporalTime().notNull(),
 }).enableRLS();
 
 export const exceptionsTable = pgTable("exceptions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  from: customDate().notNull(),
-  to: customDate(), // Nullable for a single day
-  periods: jsonb().$type<Period[]>().default([]).notNull(), // Closed if empty
+  from: temporalDate().notNull(),
+  to: temporalDate(), // Nullable for a single day
+  periods: periods().default([]).notNull(), // Closed if empty
   note: text(),
 }).enableRLS();
 

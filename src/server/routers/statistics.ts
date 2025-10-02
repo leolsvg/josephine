@@ -20,6 +20,8 @@ export const statistics = createTRPCRouter({
         cause: result.error.cause,
       });
     }
-    return result.value.toSorted((a, b) => a.date.localeCompare(b.date));
+    return result.value.toSorted((a, b) =>
+      Temporal.PlainDate.compare(a.date, b.date),
+    );
   }),
 });

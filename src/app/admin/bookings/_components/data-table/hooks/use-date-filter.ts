@@ -1,4 +1,4 @@
-import { TIMEZONE } from "@/lib/utils";
+import { TIMEZONE } from "@/lib/utils/date";
 import { useColumnFilters } from "./use-column-filters";
 
 export function useDateFilter() {

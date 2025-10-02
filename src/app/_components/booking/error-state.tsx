@@ -2,7 +2,6 @@ import type { TRPCClientErrorLike } from "@trpc/client";
 import { CircleAlert } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { AppRouter } from "@/server/routers";
 
 export function ErrorState({
@@ -14,9 +13,6 @@ export function ErrorState({
 }) {
   return (
     <div className="px-2">
-      <DialogHeader>
-        <DialogTitle>Une erreur est survenue</DialogTitle>
-      </DialogHeader>
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -37,7 +33,7 @@ export function ErrorState({
             <CircleAlert className="mx-auto my-5 size-16 text-destructive" />
           </motion.div>
           <p className="text-muted-foreground p-3">{error?.message}</p>
-          <Button onClick={() => reset()}>Réssayer</Button>
+          <Button onClick={() => reset()}>Réessayer</Button>
         </div>
       </motion.div>
     </div>

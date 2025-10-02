@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
 import { menuCategories, menuSectionTitles } from "@/lib/utils";
@@ -8,7 +8,7 @@ import TableImage from "../../../../public/restaurant/table.jpeg";
 import type { Dish } from "../layout";
 
 export default function DinnerPage() {
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["menus", "dinner"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -23,14 +23,12 @@ export default function DinnerPage() {
     },
   });
 
-  if (!data) return;
-
   return (
     <>
       <div className="hidden lg:block w-full lg:w-1/2 h-64 lg:h-screen lg:fixed lg:right-0 lg:top-0">
         <Image
           src={TableImage}
-          alt="Josephine Table Fenêtre"
+          alt="Josephine Table"
           fill
           placeholder="blur"
           className="object-cover object-center"

@@ -18,7 +18,7 @@ import {
 import type { ComponentProps, ReactNode } from "react";
 import { env } from "@/lib/env";
 import { Josephine } from "@/lib/josephine";
-import { FullDateTimeFormat } from "@/lib/utils";
+import { FullDateTimeFormat } from "@/lib/utils/date";
 
 function Link(props: ComponentProps<typeof BaseLink>) {
   return <BaseLink {...props} className="underline text-black" />;

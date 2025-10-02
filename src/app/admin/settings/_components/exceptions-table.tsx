@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useTRPC } from "@/lib/trpc/react";
-import { DateFormat } from "@/lib/utils";
+import { DateFormat } from "@/lib/utils/date";
 import { SubTable } from "./sub-table";
 
 export function ExceptionsTable() {
@@ -44,7 +44,8 @@ export function ExceptionsTable() {
                         <div />
                       )}
                       <div className="font-bold">
-                        Du {DateFormat.format(e.from)}
+                        {e.to && "Du "}
+                        {DateFormat.format(e.from)}
                         {e.to && ` au ${DateFormat.format(e.to)}`}
                         {!hasPeriods && " (fermé)"}
                       </div>
