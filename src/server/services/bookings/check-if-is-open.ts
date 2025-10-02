@@ -14,7 +14,7 @@ export const checkIfIsOpen = (
   time: Temporal.PlainTime,
   effective: TimeRange[],
 ): ResultAsync<void, ClosedError> => {
-  const open = isDateTimeOpen(time, effective);
+  const open = isDateTimeOpen(date, time, effective);
   if (!open) return errAsync(new ClosedError(date.toString(), time.toString()));
   return okAsync();
 };

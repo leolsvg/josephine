@@ -104,15 +104,18 @@ export function isDateOpen(
  * Check if a specific time is within any of the active periods (for server side validation).
  * Only future periods are considered.
  *
+ * @param date - Temporal.PlainDate to check
  * @param time - Temporal.PlainTime to check
  * @param effective - Array of TimeRange objects for the day
  * @returns `true` if the time falls within any future period, otherwise `false`
  */
 export function isDateTimeOpen(
+  date: Temporal.PlainDate,
   time: Temporal.PlainTime,
   effective: TimeRange[],
 ): boolean {
-  return futureTimeRanges(effective).some(
+  const ranges = isToday(date) ? futureTimeRanges(effective) : effective;
+  return ranges.some(
     ({ start, end }) =>
       Temporal.PlainTime.compare(time, start) >= 0 &&
       Temporal.PlainTime.compare(time, end) === -1,
