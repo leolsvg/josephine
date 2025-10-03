@@ -41,8 +41,7 @@ export const SBooking = z.object({
       MAX_NOTES_LENGTH,
       `Les notes ne peuvent pas dépasser ${MAX_NOTES_LENGTH} caractères.`,
     )
-    .optional()
-    .nullable(),
+    .nullish(),
 });
 
 export type TBooking = z.infer<typeof SBooking>;
@@ -52,7 +51,7 @@ export const SBookingAdminPut = SBooking.extend({
   email: z.union([z.literal(""), SBooking.shape.email]),
   status: z
     .enum(["absent", "canceled", "pending", "present"] as TStatus[])
-    .nullish(),
+    .optional(),
   table: z.number().nullish(),
 });
 
