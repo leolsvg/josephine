@@ -5,7 +5,7 @@ import { Edit } from "lucide-react";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { BookingBaseForm } from "@/components/booking/booking-base-form";
-import { SBookingAdminPut } from "@/components/booking/booking-schema";
+import { SBookingAdminPatch } from "@/components/booking/booking-schema";
 import { PendingFormData } from "@/components/form/pending-form-data";
 import {
   type TDefaultBooking,
@@ -45,10 +45,10 @@ export function PatchBookingDialog({
   const form = useBookingForm({
     defaultValues: booking,
     validators: {
-      onSubmit: SBookingAdminPut,
+      onSubmit: SBookingAdminPatch,
     },
-    onSubmit: async ({ value }) => {
-      mutate({ id, value: SBookingAdminPut.parse(value) });
+    onSubmit: ({ value }) => {
+      mutate({ id, value: SBookingAdminPatch.parse(value) });
     },
   });
   return (

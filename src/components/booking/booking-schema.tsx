@@ -50,8 +50,10 @@ export type TBooking = z.infer<typeof SBooking>;
 export const SBookingAdminPut = SBooking.extend({
   phone: z.union([z.literal(""), SBooking.shape.phone]),
   email: z.union([z.literal(""), SBooking.shape.email]),
-  status: z.enum(["absent", "canceled", "pending", "present"] as TStatus[]),
-  table: z.number().nullable(),
+  status: z
+    .enum(["absent", "canceled", "pending", "present"] as TStatus[])
+    .nullish(),
+  table: z.number().nullish(),
 });
 
 export const SBookingAdminPatch = SBookingAdminPut.partial();

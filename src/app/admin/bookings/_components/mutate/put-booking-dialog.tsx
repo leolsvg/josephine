@@ -42,7 +42,7 @@ export function PutBookingDialog() {
     validators: {
       onSubmit: SBookingAdminPut,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       mutate(SBookingAdminPut.parse(value));
     },
   });
