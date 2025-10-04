@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import { SBooking } from "@/components/booking/booking-schema";
+import { useSchedule } from "@/components/booking/use-schedule";
 import {
   bookingFormOptions,
   useBookingForm,
@@ -27,9 +28,7 @@ export function BookingDialog({ className }: { className?: string }) {
   const { mutate, status, reset, error } = useMutation(
     trpc.bookings.book.mutationOptions(),
   );
-  const { data: bookingEnabled } = useQuery(
-    trpc.settings.bookingEnabled.queryOptions(),
-  );
+  const { settings } = useSchedule();
   const form = useBookingForm({
     ...bookingFormOptions,
     validators: {
@@ -39,7 +38,7 @@ export function BookingDialog({ className }: { className?: string }) {
       mutate(SBooking.parse(value));
     },
   });
-  if (bookingEnabled)
+  if (settings.bookingEnabled)
     return (
       <Dialog
         onOpenChange={(open) => {

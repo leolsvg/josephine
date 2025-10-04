@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { MAX_GUESTS } from "@/components/booking/booking-schema";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import {
   createTRPCRouter,
@@ -9,17 +10,23 @@ import type { DB } from "../db";
 import { settingsTable } from "../db/schema";
 import { SSettings } from "../db/types";
 
-async function getenableBooking(db: DB) {
+async function getPublicSettings(db: DB) {
   const [settings] = await db
-    .select({ bookingEnabled: settingsTable.bookingEnabled })
+    .select({
+      bookingEnabled: settingsTable.bookingEnabled,
+      maxGuestsPerBooking: settingsTable.maxGuestsPerBooking,
+    })
     .from(settingsTable);
-  return settings.bookingEnabled;
+  return settings;
 }
 
 export const settings = createTRPCRouter({
-  bookingEnabled: publicProcedure.query(async ({ ctx }) => {
-    const result = await safeDrizzleQuery(getenableBooking(ctx.db));
-    return result.unwrapOr(undefined);
+  getPublic: publicProcedure.query(async ({ ctx }) => {
+    const result = await safeDrizzleQuery(getPublicSettings(ctx.db));
+    return result.unwrapOr({
+      bookingEnabled: false,
+      maxGuestsPerBooking: MAX_GUESTS,
+    });
   }),
   get: protectedProcedure.query(async ({ ctx }) => {
     const result = await safeDrizzleQuery(

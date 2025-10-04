@@ -1,16 +1,15 @@
-import { DateTimeField } from "@/components/form/date-time-field";
+import { DateTimeField } from "@/components/form/fields/date-time-field";
 import {
   bookingFormOptions,
   withBookingForm,
 } from "@/components/form/use-booking-form";
 import { isDateOpen, timesGroupsForDate } from "@/lib/utils/schedule";
-import { MAX_GUESTS, MIN_GUESTS } from "./booking-schema";
 import { useSchedule } from "./use-schedule";
 
 export const BookingBaseForm = withBookingForm({
   ...bookingFormOptions,
   render: ({ form }) => {
-    const { exceptions, weekly } = useSchedule();
+    const { exceptions, weekly, settings } = useSchedule();
     return (
       <>
         <form.AppField name="name">
@@ -45,12 +44,10 @@ export const BookingBaseForm = withBookingForm({
 
         <form.AppField name="guests">
           {(field) => (
-            <field.NumberField
+            <field.GuestsField
               id="guests"
               label="Nombre de personnes"
-              type="number"
-              min={MIN_GUESTS}
-              max={MAX_GUESTS}
+              max={settings.maxGuestsPerBooking}
             />
           )}
         </form.AppField>
