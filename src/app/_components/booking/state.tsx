@@ -63,13 +63,11 @@ export function FormStateIcon({ type }: { type: IconType }) {
 interface FormStateContentProps {
   title: string;
   description?: string;
-  type?: IconType;
 }
 
 export function FormStateContent({
   title,
   description,
-  type,
 }: FormStateContentProps) {
   return (
     <motion.div
@@ -104,7 +102,7 @@ export function FormStateProgress() {
         <motion.div
           className="h-full w-1/3 bg-primary"
           initial={{ x: "-100%" }}
-          animate={{ x: ["-100%", "200%"] }}
+          animate={{ x: ["-100%", "300%"] }}
           transition={{
             repeat: Infinity,
             duration: 1.4,
