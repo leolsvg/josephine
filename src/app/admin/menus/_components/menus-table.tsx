@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,9 +30,16 @@ export function MenuTable({ service }: { service: TMenuService }) {
   const { mutate: deleteMenu } = useDeleteMenu();
   const { mutate: updateMenu } = useUpdateMenu();
   const menus = data.filter((p) => p.service === service);
-  const orderedItems = menus.toSorted(
-    (a, b) =>
-      menuCategories.indexOf(a.category) - menuCategories.indexOf(b.category),
+  const orderedItems = useMemo(
+    () =>
+      menus.toSorted((a, b) => {
+        const categoryDiff =
+          menuCategories.indexOf(a.category) -
+          menuCategories.indexOf(b.category);
+        if (categoryDiff !== 0) return categoryDiff;
+        return a.id - b.id;
+      }),
+    [menus],
   );
   return (
     <Card className="py-0 overflow-hidden overflow-x-scroll">
