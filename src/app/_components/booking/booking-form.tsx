@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export const FormState = withBookingForm({
+export const BookingForm = withBookingForm({
   ...bookingFormOptions,
   render: ({ form }) => {
     return (
