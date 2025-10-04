@@ -32,7 +32,7 @@ export function Header() {
       <header className="w-full flex p-4 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative">
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="md:hidden">
-            <Button size="icon" variant="ghost">
+            <Button size="icon" variant="ghost" className="text-white">
               <Menu className="size-7" />
             </Button>
           </DropdownMenuTrigger>
