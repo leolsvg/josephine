@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { JosephineIcon } from "@/components/josephine-icon";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,7 +53,9 @@ export function Header() {
             </Button>
           ))}
         </nav>
-        <BookingDialog />
+        <Suspense>
+          <BookingDialog />
+        </Suspense>
       </header>
     </div>
   );

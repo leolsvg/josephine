@@ -48,7 +48,6 @@ export function useRealtimeBookings() {
         { event: "*", schema: "public", table: "bookings" },
         (payload) => {
           queryClient.cancelQueries({ queryKey: trpc.bookings.get.queryKey() });
-          console.log(payload.new);
           queryClient.setQueryData(trpc.bookings.get.queryKey(), (current) => {
             switch (payload.eventType) {
               case "INSERT":
