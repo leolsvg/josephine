@@ -77,12 +77,9 @@ export const menuCategoryEnum = pgEnum("menu-category", [
 
 export const menuServiceEnum = pgEnum("menu-service", ["soir", "midi"]);
 
-export const statusEnum = pgEnum("status", [
-  "pending",
-  "present",
-  "absent",
-  "canceled",
-]);
+export const statuses = ["pending", "present", "absent", "canceled"] as const;
+
+export const statusEnum = pgEnum("status", statuses);
 
 export const menusTable = pgTable(
   "menus",

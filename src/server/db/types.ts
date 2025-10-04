@@ -4,6 +4,7 @@ import type {
   InferSelectModel,
 } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import z from "zod";
 import {
   type bookingsTable,
   type menuCategoryEnum,
@@ -11,6 +12,7 @@ import {
   type menusTable,
   settingsTable,
   type statusEnum,
+  statuses,
 } from "./schema";
 
 export type TBooking = InferSelectModel<typeof bookingsTable>;
@@ -21,6 +23,20 @@ export type TMenuService = InferEnum<typeof menuServiceEnum>;
 export type TStatus = InferEnum<typeof statusEnum>;
 export const SSettings = createInsertSchema(settingsTable).omit({
   id: true,
+});
+export const SRealtimeBooking = z.object({
+  id: z.number(),
+  date: z.string(),
+  createdAt: z.string(),
+  email: z.string(),
+  guests: z.number(),
+  name: z.string(),
+  notes: z.string(),
+  phone: z.string(),
+  status: z.literal(statuses),
+  table: z.number(),
+  time: z.string(),
+  updatedAt: z.string(),
 });
 export type TPutBooking = InferInsertModel<typeof bookingsTable>;
 
