@@ -5,13 +5,11 @@ import { useTRPC } from "@/lib/trpc/react";
 
 export function useSchedule() {
   const trpc = useTRPC();
-  const [{ data: weekly }, { data: exceptions }, { data: settings }] =
-    useSuspenseQueries({
-      queries: [
-        trpc.schedule.getWeekly.queryOptions(),
-        trpc.schedule.getExceptions.queryOptions(),
-        trpc.settings.getPublic.queryOptions(),
-      ],
-    });
-  return { weekly, exceptions, settings };
+  const [{ data: weekly }, { data: exceptions }] = useSuspenseQueries({
+    queries: [
+      trpc.schedule.getWeekly.queryOptions(),
+      trpc.schedule.getExceptions.queryOptions(),
+    ],
+  });
+  return { weekly, exceptions };
 }

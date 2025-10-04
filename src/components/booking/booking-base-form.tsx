@@ -1,15 +1,23 @@
+"use client";
+
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { DateTimeField } from "@/components/form/fields/date-time-field";
 import {
   bookingFormOptions,
   withBookingForm,
 } from "@/components/form/use-booking-form";
+import { useTRPC } from "@/lib/trpc/react";
 import { isDateOpen, timesGroupsForDate } from "@/lib/utils/schedule";
 import { useSchedule } from "./use-schedule";
 
 export const BookingBaseForm = withBookingForm({
   ...bookingFormOptions,
   render: ({ form }) => {
-    const { exceptions, weekly, settings } = useSchedule();
+    const { exceptions, weekly } = useSchedule();
+    const trpc = useTRPC();
+    const { data: settings } = useSuspenseQuery(
+      trpc.settings.getPublic.queryOptions(),
+    );
     return (
       <>
         <form.AppField name="name">

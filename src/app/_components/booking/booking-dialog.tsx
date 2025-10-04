@@ -1,10 +1,9 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import { CheckCircle, CircleAlert } from "lucide-react";
 import { SBooking } from "@/components/booking/booking-schema";
-import { useSchedule } from "@/components/booking/use-schedule";
 import {
   bookingFormOptions,
   useBookingForm,
@@ -35,13 +34,10 @@ import {
 
 export function BookingDialog({ className }: { className?: string }) {
   const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  queryClient.prefetchQuery(trpc.schedule.getWeekly.queryOptions());
-  queryClient.prefetchQuery(trpc.schedule.getExceptions.queryOptions());
   const { mutate, status, reset, error } = useMutation(
     trpc.bookings.book.mutationOptions(),
   );
-  const { settings } = useSchedule();
+  const { data: settings } = useQuery(trpc.settings.getPublic.queryOptions());
   const form = useBookingForm({
     ...bookingFormOptions,
     validators: {
@@ -51,7 +47,7 @@ export function BookingDialog({ className }: { className?: string }) {
       mutate(SBooking.parse(value));
     },
   });
-  if (settings.bookingEnabled)
+  if (settings?.bookingEnabled)
     return (
       <Dialog
         onOpenChange={(open) => {

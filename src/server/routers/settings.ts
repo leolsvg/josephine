@@ -23,10 +23,14 @@ async function getPublicSettings(db: DB) {
 export const settings = createTRPCRouter({
   getPublic: publicProcedure.query(async ({ ctx }) => {
     const result = await safeDrizzleQuery(getPublicSettings(ctx.db));
-    return result.unwrapOr({
-      bookingEnabled: false,
-      maxGuestsPerBooking: MAX_GUESTS,
-    });
+    if (result.isErr()) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        cause: result.error,
+        message: result.error.message,
+      });
+    }
+    return result.value;
   }),
   get: protectedProcedure.query(async ({ ctx }) => {
     const result = await safeDrizzleQuery(
