@@ -7,13 +7,19 @@ import z from "zod";
 import { MAX_GUESTS, MIN_GUESTS } from "@/components/booking/booking-schema";
 import { FormField } from "@/components/form/form-field";
 import { useSettingsForm } from "@/components/form/use-settings-form";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
-import { RadioGroup } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTRPC } from "@/lib/trpc/react";
 import { SSettings } from "@/server/db/types";
-import { RadioCard } from "./radio-card";
 
-export function CapacityForm() {
+export function SettingsForm() {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.settings.get.queryOptions());
   const { mutate, isPending } = useMutation(
@@ -89,20 +95,38 @@ export function CapacityForm() {
           <FormField>
             <Label className="mb-3">Réservations en ligne</Label>
             <RadioGroup
-              className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
+              className="gap-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
               onValueChange={(v) => field.handleChange(v === "true")}
               defaultValue={field.state.value ? "true" : "false"}
             >
-              <RadioCard value="true" title="Activer les réservations">
-                Les clients peuvent réserver à tout moment
-              </RadioCard>
-              <RadioCard value="false" title="Désactiver les réservations">
-                <div className="flex items-center gap-2 text-warning">
-                  <TriangleAlert className="size-4 shrink-0" />
-                  <span>Suspend les réservations en ligne</span>
-                </div>
-                <span>Seules les réservations admin restent possibles</span>
-              </RadioCard>
+              <FieldLabel htmlFor="enable-bookings">
+                <Field orientation="horizontal">
+                  <FieldContent>
+                    <FieldTitle>Activer les réservations</FieldTitle>
+                    <FieldDescription>
+                      Les clients peuvent réserver à tout moment.
+                    </FieldDescription>
+                  </FieldContent>
+                  <RadioGroupItem value="true" id="enable-bookings" />
+                </Field>
+              </FieldLabel>
+              <FieldLabel htmlFor="disable-bookings">
+                <Field orientation="horizontal">
+                  <FieldContent>
+                    <FieldTitle>Désactiver les réservations</FieldTitle>
+                    <FieldDescription>
+                      <div className="flex items-center gap-2 text-warning">
+                        <TriangleAlert className="size-4 shrink-0" />
+                        <span>Suspend les réservations en ligne</span>
+                      </div>
+                      <span>
+                        Seules les réservations admin restent possibles
+                      </span>{" "}
+                    </FieldDescription>
+                  </FieldContent>
+                  <RadioGroupItem value="false" id="disable-bookings" />
+                </Field>
+              </FieldLabel>
             </RadioGroup>
           </FormField>
         )}
