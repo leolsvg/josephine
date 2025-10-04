@@ -5,16 +5,15 @@ import { TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import z from "zod";
 import { MAX_GUESTS, MIN_GUESTS } from "@/components/booking/booking-schema";
-import { FormField } from "@/components/form/form-field";
 import { useSettingsForm } from "@/components/form/use-settings-form";
 import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldError,
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTRPC } from "@/lib/trpc/react";
 import { SSettings } from "@/server/db/types";
@@ -92,8 +91,8 @@ export function SettingsForm() {
       </form.AppField>
       <form.AppField name="bookingEnabled">
         {(field) => (
-          <FormField>
-            <Label className="mb-3">Réservations en ligne</Label>
+          <Field>
+            <FieldLabel>Réservations en ligne</FieldLabel>
             <RadioGroup
               className="gap-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
               onValueChange={(v) => field.handleChange(v === "true")}
@@ -120,15 +119,16 @@ export function SettingsForm() {
                         <span>Suspend les réservations en ligne</span>
                       </div>
                       <span>
-                        Seules les réservations admin restent possibles
-                      </span>{" "}
+                        Seules les réservations admin restent possibles.
+                      </span>
                     </FieldDescription>
                   </FieldContent>
                   <RadioGroupItem value="false" id="disable-bookings" />
+                  <FieldError errors={field.state.meta.errors} />
                 </Field>
               </FieldLabel>
             </RadioGroup>
-          </FormField>
+          </Field>
         )}
       </form.AppField>
       <form.AppForm>
