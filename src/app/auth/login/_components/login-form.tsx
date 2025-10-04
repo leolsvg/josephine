@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { scopes } from "@/lib/google";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useLoginForm } from "./use-login-form";
@@ -27,6 +29,37 @@ const defaultValues: TLogin = {
   email: "",
   password: "",
 };
+
+function useGoogleAuth() {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: async () => {
+      const { error, data } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          scopes: scopes.join(" "),
+          redirectTo: "http://localhost:3000/auth/callback",
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      });
+      console.log(data);
+      localStorage.setItem("test", JSON.stringify(data));
+      if (error) throw error;
+    },
+    onSuccess: () => router.push("/admin/bookings"),
+    onError: (e) => {
+      if (e instanceof AuthError && e.code === "invalid_credentials")
+        return toast.error("Email ou mot de passe invalide.");
+      if (e instanceof Error) {
+        return toast.error(`Une erreur est survenue : ${e.message}.`);
+      }
+      return toast.error(`Une erreur inconnue est survenue.`);
+    },
+  });
+}
 
 function useAuth() {
   const router = useRouter();
@@ -48,6 +81,15 @@ function useAuth() {
       return toast.error(`Une erreur inconnue est survenue.`);
     },
   });
+}
+
+function GoogleButton() {
+  const { mutate, isPending } = useGoogleAuth();
+  return (
+    <Button disabled={isPending} onClick={() => mutate()}>
+      Google
+    </Button>
+  );
 }
 
 export function LoginForm({
@@ -111,6 +153,7 @@ export function LoginForm({
               </form.AppForm>
             </div>
           </form>
+          <GoogleButton />
         </CardContent>
       </Card>
     </div>
