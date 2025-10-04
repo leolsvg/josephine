@@ -12,7 +12,7 @@ export const size = {
 export const contentType = "image/png";
 
 const logoData = await readFile(
-  join(process.cwd(), "./public/favicon-dark.png"),
+  join(process.cwd(), "./public/favicon-dark/android-chrome-192x192.png"),
   "base64",
 );
 const logoSrc = `data:image/png;base64,${logoData}`;
