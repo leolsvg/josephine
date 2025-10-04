@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import { useTRPC } from "@/lib/trpc/react";
 import { cn } from "@/lib/utils";
 import type { TBooking } from "@/server/db/types";
@@ -66,7 +66,7 @@ export function TableBadge({
             isPending ? "opacity-50" : "hover:opacity-50",
           )}
         >
-          {isPending && <Loader2 className="animate-spin" />}
+          {isPending && <Spinner />}
           {table ? <>Table {table}</> : "À placer"}
         </Badge>
       </PopoverTrigger>

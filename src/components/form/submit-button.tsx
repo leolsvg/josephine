@@ -1,9 +1,9 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 import { useFormContext } from "./types";
 
 export function SubmitButton({
@@ -28,7 +28,7 @@ export function SubmitButton({
         >
           {isPending ? (
             <>
-              <Loader2 className="animate-spin" />
+              <Spinner />
               Chargement
             </>
           ) : (
