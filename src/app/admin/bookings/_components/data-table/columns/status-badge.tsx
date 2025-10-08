@@ -1,5 +1,6 @@
+"use client";
+
 import { useMutation } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,6 +10,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/spinner";
 import { useTRPC } from "@/lib/trpc/react";
 import { cn } from "@/lib/utils";
 import type { TBooking, TStatus } from "@/server/db/types";
@@ -62,7 +64,7 @@ export function StatusBadge({
             isPending ? "opacity-50" : "hover:opacity-50",
           )}
         >
-          {isPending && <Loader2 className="animate-spin" />}
+          {isPending && <Spinner />}
           {EStatusConfig[status].label}
         </Badge>
       </DropdownMenuTrigger>

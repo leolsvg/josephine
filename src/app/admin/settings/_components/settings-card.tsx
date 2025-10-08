@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CapacityForm } from "./capacity-form";
+import { SettingsForm } from "./settings-form";
 
-export function CapacityCard() {
+export function SettingsCard() {
   return (
     <Card>
       <CardHeader>
@@ -22,7 +22,7 @@ export function CapacityCard() {
 
       <CardContent>
         <Suspense fallback={<PendingFormData />}>
-          <CapacityForm />
+          <SettingsForm />
         </Suspense>
       </CardContent>
     </Card>

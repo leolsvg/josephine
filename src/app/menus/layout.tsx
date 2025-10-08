@@ -1,6 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 import { BookingDialog } from "../_components/booking/booking-dialog";
 
 export type CategoryItem = {
@@ -34,7 +34,9 @@ export default function MenuLayout({ children }: { children: ReactNode }) {
         <ChevronLeft />
       </Link>
       {children}
-      <BookingDialog className="fixed bottom-4 right-4 z-50 rounded-full py-5" />
+      <Suspense>
+        <BookingDialog className="fixed bottom-4 right-4 z-50 rounded-full py-5" />
+      </Suspense>
     </div>
   );
 }

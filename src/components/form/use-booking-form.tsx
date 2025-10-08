@@ -1,14 +1,15 @@
 "use client";
 
 import { createFormHook, formOptions } from "@tanstack/react-form";
-import { NumberField } from "@/components/form/number-field";
+import { NumberField } from "@/components/form/fields/number-field";
+import { TextField } from "@/components/form/fields/text-field";
+import { TextAreaField } from "@/components/form/fields/textarea-field";
 import { SubmitButton } from "@/components/form/submit-button";
-import { TextField } from "@/components/form/text-field";
-import { TextAreaField } from "@/components/form/textarea-field";
 import { fieldContext, formContext } from "@/components/form/types";
 import type { TBooking } from "@/server/db/types";
-import { DateTimeField } from "./date-time-field";
-import { PhoneField } from "./phone-field";
+import { GuestsField } from "../booking/guests-field";
+import { DateTimeField } from "./fields/date-time-field";
+import { PhoneField } from "./fields/phone-field";
 
 export const { useAppForm: useBookingForm, withForm: withBookingForm } =
   createFormHook({
@@ -18,6 +19,7 @@ export const { useAppForm: useBookingForm, withForm: withBookingForm } =
       DateTimeField,
       NumberField,
       PhoneField,
+      GuestsField,
     },
     formComponents: {
       SubmitButton,

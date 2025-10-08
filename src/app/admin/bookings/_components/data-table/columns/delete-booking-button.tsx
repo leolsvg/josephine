@@ -1,6 +1,9 @@
+"use-client";
+
 import { useMutation } from "@tanstack/react-query";
-import { Loader2, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useTRPC } from "@/lib/trpc/react";
 
 export function DeleteBookingButton({ id }: { id: number }) {
@@ -10,7 +13,6 @@ export function DeleteBookingButton({ id }: { id: number }) {
   );
   return (
     <Button
-      className=""
       variant="ghost"
       size="icon"
       disabled={isPending}
@@ -18,7 +20,7 @@ export function DeleteBookingButton({ id }: { id: number }) {
         mutate({ id });
       }}
     >
-      {isPending && <Loader2 className="animate-spin" />}
+      {isPending && <Spinner />}
       <Trash className="stroke-destructive" />
     </Button>
   );

@@ -1,10 +1,14 @@
-import { Loader2 } from "lucide-react";
+import { Empty, EmptyHeader, EmptyMedia } from "../ui/empty";
+import { Spinner } from "../ui/spinner";
 
 export function PendingFormData() {
   return (
-    <div className="min-h-100 text-center flex flex-col gap-3 items-center justify-center">
-      <Loader2 className="animate-spin" />
-      <span>Chargement ...</span>
-    </div>
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <Spinner />
+        </EmptyMedia>
+      </EmptyHeader>
+    </Empty>
   );
 }

@@ -32,7 +32,7 @@ export function Header() {
       <Link href="/" className="flex gap-3 items-center">
         <JosephineIcon className="dark:brightness-0 dark:invert size-8" />
         <div className="text-xl font-bold hidden md:block">
-          Restautant Josephine
+          Restaurant Josephine
         </div>
       </Link>
       <div className="grow" />

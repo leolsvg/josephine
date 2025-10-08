@@ -22,12 +22,19 @@ export function useColumnFilters() {
   );
 
   function reset() {
-    setColumnFilters([]);
+    setColumnFilters(null);
+  }
+
+  function allDaysAndMeals() {
+    setColumnFilters((p) =>
+      p.filter((f) => f.id !== "date" && f.id !== "time"),
+    );
   }
 
   return {
     columnFilters,
     setColumnFilters,
     reset,
+    allDaysAndMeals,
   };
 }

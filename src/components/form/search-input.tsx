@@ -1,7 +1,12 @@
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import type { ChangeEvent, ComponentProps } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import type { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "../ui/input-group";
 
 export function SearchInput({
   value,
@@ -9,22 +14,32 @@ export function SearchInput({
   ...props
 }: ComponentProps<typeof Input>) {
   return (
-    <div className="relative">
-      <Input type="search" value={value} onChange={onChange} {...props} />
+    <InputGroup>
+      <InputGroupInput
+        type="search"
+        value={value}
+        onChange={onChange}
+        {...props}
+      />
+      <InputGroupAddon>
+        <Search />
+      </InputGroupAddon>
       {value && onChange && (
-        <Button
-          type="button"
-          variant="ghost"
-          className="absolute right-1 top-1/2 -translate-y-1/2 p-3 size-4"
-          onClick={() =>
-            onChange({
-              target: { value: "" },
-            } as ChangeEvent<HTMLInputElement>)
-          }
-        >
-          <X className="size-4" />
-        </Button>
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton
+            aria-label="Copy"
+            title="Copy"
+            size="icon-xs"
+            onClick={() =>
+              onChange({
+                target: { value: "" },
+              } as ChangeEvent<HTMLInputElement>)
+            }
+          >
+            <X />
+          </InputGroupButton>
+        </InputGroupAddon>
       )}
-    </div>
+    </InputGroup>
   );
 }

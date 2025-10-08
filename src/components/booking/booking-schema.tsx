@@ -28,12 +28,20 @@ export const SBooking = z.object({
       MAX_GUESTS,
       `Nos réservations en ligne sont limitées à ${MAX_GUESTS} personnes. Pour un groupe plus large, merci de nous contacter directement.`,
     ),
-  date: z.instanceof(Temporal.PlainDate, {
-    error: "Merci de choisir une date valide pour votre réservation.",
-  }),
-  time: z.instanceof(Temporal.PlainTime, {
-    error: "Merci d'indiquer l'heure de votre réservation.",
-  }),
+  date: z.custom<Temporal.PlainDate>(
+    (data) => data instanceof Temporal.PlainDate,
+    "Merci de choisir une date valide pour votre réservation.",
+  ),
+  time: z.custom<Temporal.PlainTime>(
+    (data) => data instanceof Temporal.PlainTime,
+    "Merci d'indiquer l'heure de votre réservation.",
+  ),
+  // date: z.instanceof(Temporal.PlainDate, {
+  //   error: "Merci de choisir une date valide pour votre réservation.",
+  // }),
+  // time: z.instanceof(Temporal.PlainTime, {
+  //   error: "Merci d'indiquer l'heure de votre réservation.",
+  // }),
   notes: z
     .string()
     .trim()
