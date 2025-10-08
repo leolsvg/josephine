@@ -22,7 +22,7 @@ export function useColumnFilters() {
   );
 
   function reset() {
-    setColumnFilters([]);
+    setColumnFilters(null);
   }
 
   return {
