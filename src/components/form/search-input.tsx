@@ -15,12 +15,7 @@ export function SearchInput({
 }: ComponentProps<typeof Input>) {
   return (
     <InputGroup>
-      <InputGroupInput
-        type="search"
-        value={value}
-        onChange={onChange}
-        {...props}
-      />
+      <InputGroupInput value={value} onChange={onChange} {...props} />
       <InputGroupAddon>
         <Search />
       </InputGroupAddon>
