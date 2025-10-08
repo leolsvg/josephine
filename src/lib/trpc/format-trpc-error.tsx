@@ -19,5 +19,8 @@ export function FormatTRPCError({
   if (error.shape?.message) {
     return error.shape.message;
   }
+  if (error.message) {
+    return error.message;
+  }
   return "Une erreur inconnue est survenue.";
 }
