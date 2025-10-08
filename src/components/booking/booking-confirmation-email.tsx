@@ -112,13 +112,11 @@ export function BookingConfirmationEmail({
                 className="mx-auto"
               />
             </Section>
-
             <Section>
               <Img
                 src={Josephine.heroUrl}
                 alt="Restaurant Joséphine"
-                width={600}
-                className="h-72 object-cover object-center"
+                className="w-max object-cover object-center"
               />
             </Section>
             <Section className="p-8">

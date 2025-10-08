@@ -8,7 +8,7 @@ export const Josephine = {
   email: `contact@${env.NEXT_PUBLIC_DOMAIN}`,
   website: `https://www.${env.NEXT_PUBLIC_DOMAIN}/`,
   timezone: TIMEZONE,
-  logoUrl: `https://${env.NEXT_PUBLIC_DOMAIN}/favicon-dark/android-chrome-192x192.png`,
+  logoUrl: `https://${env.NEXT_PUBLIC_DOMAIN}/favicon/android-chrome-192x192.png`,
   heroUrl: `https://${env.NEXT_PUBLIC_DOMAIN}/restaurant/bar.jpeg`,
   mapsUrl: "https://maps.app.goo.gl/AW8EGJAZfBkc57nGA",
   noreply: `no-reply@${env.NEXT_PUBLIC_DOMAIN}`,
