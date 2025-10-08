@@ -116,7 +116,9 @@ export function BookingConfirmationEmail({
               <Img
                 src={Josephine.heroUrl}
                 alt="Restaurant Joséphine"
-                className="w-max object-cover object-center"
+                width={550}
+                height={280}
+                className="object-cover object-center"
               />
             </Section>
             <Section className="p-8">
