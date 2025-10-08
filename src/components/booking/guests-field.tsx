@@ -13,12 +13,12 @@ export function GuestsField({ id, label, max }: GuestsFieldProps) {
   return (
     <Field>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <div className="flex gap-1 flex-wrap justify-center">
+      <div className="flex gap-1 flex-wrap">
         {Array.from({ length: max }).map((_, i) => (
           <Button
             key={crypto.randomUUID()}
             variant={field.state.value === i + 1 ? "default" : "outline"}
-            className="size-12"
+            className="grow"
             onClick={() => field.handleChange(i + 1)}
           >
             {i + 1}
