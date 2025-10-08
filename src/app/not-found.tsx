@@ -19,11 +19,11 @@ export default function NotFoundPage() {
         </EmptyMedia>
         <EmptyTitle>404 - Page introuvable</EmptyTitle>
         <EmptyDescription>
-          La page que vous recherchez n'existe pas.
+          La page que vous cherchez n'existe pas.
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button variant="outline" size="sm">
+        <Button size="sm">
           <Link href="/">Retour à l'accueil</Link>
         </Button>
       </EmptyContent>
