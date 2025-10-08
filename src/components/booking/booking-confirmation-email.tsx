@@ -101,7 +101,7 @@ export function BookingConfirmationEmail({
           {guests > 1 ? "couverts" : "couvert"}
         </Preview>
 
-        <Body className="bg-neutral-200 p-5">
+        <Body className="bg-neutral-200 p-1">
           <Container className="mx-auto bg-white shadow-sm rounded-2xl overflow-hidden">
             <Section className="py-6">
               <Img
