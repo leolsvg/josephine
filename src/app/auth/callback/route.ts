@@ -30,13 +30,37 @@ export async function GET(request: Request) {
         access_token: session.data.session?.provider_token,
         refresh_token: session.data.session?.provider_refresh_token,
       });
-      const res = await google
-        .mybusinessbusinessinformation("v1")
-        .locations.get({
-          name: "locations/14049702224434991114",
-          auth: oauth2Client,
-        });
-      console.log(session, await res.json());
+
+      const discovery = google.discovery({ version: "v1", auth: oauth2Client });
+      const apis = await discovery.apis.list();
+      console.log(
+        "Discovery API test:",
+        apis.data.items?.length,
+        "APIs available",
+      );
+      const myBusiness = google.mybusinessbusinessinformation({
+        version: "v1",
+        auth: oauth2Client,
+      });
+
+      const myBusinessAccount = google.mybusinessaccountmanagement({
+        version: "v1",
+        auth: oauth2Client,
+      });
+
+      const acc = await myBusinessAccount.accounts.list();
+      console.log("Accounts:", acc.data);
+
+      const bu = await myBusiness.accounts.locations.list({
+        parent: "accounts/105416875119788294546",
+      });
+
+      console.log("Locations:", bu.data);
+
+      const res = await myBusiness.locations.get({
+        name: "locations/14049702224434991114",
+      });
+      console.log(session, res.data);
       if (isLocalEnv) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`);
