@@ -25,9 +25,16 @@ export function useColumnFilters() {
     setColumnFilters(null);
   }
 
+  function allDaysAndMeals() {
+    setColumnFilters((p) =>
+      p.filter((f) => f.id !== "date" && f.id !== "time"),
+    );
+  }
+
   return {
     columnFilters,
     setColumnFilters,
     reset,
+    allDaysAndMeals,
   };
 }

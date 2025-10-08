@@ -43,10 +43,6 @@ export function useDateFilter() {
     }
   }
 
-  function allDays() {
-    setDate(null);
-  }
-
   return {
     date,
     isToday,
@@ -55,7 +51,6 @@ export function useDateFilter() {
     tomorrow,
     prevDay,
     nextDay,
-    allDays,
     setDate,
   };
 }

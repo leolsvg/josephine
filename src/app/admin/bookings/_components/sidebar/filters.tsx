@@ -13,19 +13,11 @@ import { useGlobalFilter } from "../data-table/hooks/use-global-filter";
 import { useTimeFilter } from "../data-table/hooks/use-time-filter";
 
 export function Filters() {
-  const { reset } = useColumnFilters();
+  const { reset, allDaysAndMeals } = useColumnFilters();
   const { dinner, lunch, meal, allMeals } = useTimeFilter();
   const { reset: resetGlobalFilter } = useGlobalFilter();
-  const {
-    date,
-    nextDay,
-    prevDay,
-    allDays,
-    today,
-    tomorrow,
-    isToday,
-    isTomorrow,
-  } = useDateFilter();
+  const { date, nextDay, prevDay, today, tomorrow, isToday, isTomorrow } =
+    useDateFilter();
   return (
     <div className="grid grid-cols-6 gap-2">
       <Button
@@ -47,10 +39,7 @@ export function Filters() {
       <Button
         type="button"
         variant={!date ? "default" : "outline"}
-        onClick={() => {
-          allDays();
-          allMeals();
-        }}
+        onClick={allDaysAndMeals}
         className="col-span-2"
       >
         Afficher tout
