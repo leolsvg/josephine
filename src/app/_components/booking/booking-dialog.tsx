@@ -71,7 +71,7 @@ export function BookingDialog({ className }: { className?: string }) {
           </Button>
         </DialogTrigger>
         <DialogContent
-          className="sm:max-w-lg max-h-[calc(100svh-1.5rem)] overflow-y-auto"
+          className="sm:max-w-lg max-h-[calc(100dvh-1.5rem)] overflow-y-auto"
           onInteractOutside={(e) => {
             e.preventDefault();
           }}
