@@ -9,7 +9,6 @@ import { SectionTitle } from "./section-title";
 const suppliers = [
   {
     title: "La cave à fromages",
-    src: Cave,
     children: (
       <div>
         <Image
