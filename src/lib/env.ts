@@ -14,6 +14,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1),
     UPSTASH_REDIS_URL: z.string().min(1),
     UPSTASH_REDIS_TOKEN: z.string().min(1),
+    GOOGLE_MAPS_API_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_DOMAIN: z.string().min(1),
@@ -30,5 +31,6 @@ export const env = createEnv({
     NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
     UPSTASH_REDIS_URL: process.env.UPSTASH_REDIS_URL,
     UPSTASH_REDIS_TOKEN: process.env.UPSTASH_REDIS_TOKEN,
+    GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
   },
 });

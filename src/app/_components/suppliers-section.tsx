@@ -9,20 +9,41 @@ import { SectionTitle } from "./section-title";
 const suppliers = [
   {
     title: "La cave à fromages",
-    src: Cave,
+    children: (
+      <div>
+        <Image
+          src={Cave}
+          alt="La cave à fromages"
+          className="max-h-full max-w-full"
+        />
+        <div className="text-center text-white/80">La cave à fromages</div>
+      </div>
+    ),
     href: "https://www.lacaveafromagescherbourg.com/",
   },
   {
     title: "Chatel",
-    src: Chatel,
+    children: (
+      <Image
+        src={Chatel}
+        alt="Boulangerie Chatel"
+        className="max-h-full max-w-full"
+      />
+    ),
     href: "https://www.facebook.com/boulangeriechatel/",
   },
   {
     title: "Les vergers de la passion",
-    src: Vergers,
+    children: (
+      <Image
+        src={Vergers}
+        alt="Les vergers de la passion"
+        className="max-h-full max-w-full"
+      />
+    ),
     href: "https://les-vergers-de-la-passion-cidrerie.fr/",
   },
-];
+] as const;
 
 export function SuppliersSection() {
   return (
@@ -45,9 +66,7 @@ export function SuppliersSection() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <SupplierCard>
-              <Image src={s.src} alt={s.title} className="max-h-40" />
-            </SupplierCard>
+            <SupplierCard>{s.children}</SupplierCard>
           </a>
         ))}
       </div>
@@ -57,7 +76,7 @@ export function SuppliersSection() {
 
 function SupplierCard({ children }: { children: ReactNode }) {
   return (
-    <div className="size-60 bg-gray-400 flex justify-center items-center">
+    <div className="size-60 bg-gray-400 flex justify-center items-center p-10">
       {children}
     </div>
   );

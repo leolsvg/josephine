@@ -7,6 +7,10 @@ export const Josephine = {
   phone: "+33 2 33 87 31 64",
   email: `contact@${env.NEXT_PUBLIC_DOMAIN}`,
   website: `https://www.${env.NEXT_PUBLIC_DOMAIN}/`,
+  socials: {
+    instagram: "https://www.instagram.com/josephine_cherbourg/",
+    google: "https://share.google/1ZJew6hmdhpNmNvTI",
+  },
   timezone: TIMEZONE,
   logoUrl: `https://${env.NEXT_PUBLIC_DOMAIN}/favicon/android-chrome-192x192.png`,
   heroUrl: `https://${env.NEXT_PUBLIC_DOMAIN}/restaurant/bar.jpeg`,
