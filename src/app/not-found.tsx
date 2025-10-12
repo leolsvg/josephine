@@ -23,7 +23,7 @@ export default function NotFoundPage() {
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button size="sm">
+        <Button size="sm" asChild>
           <Link href="/">Retour à l'accueil</Link>
         </Button>
       </EmptyContent>
