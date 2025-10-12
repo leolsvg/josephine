@@ -4,6 +4,9 @@ import { HeroSection } from "./_components/hero-section";
 import { MenusSection } from "./_components/menus-section";
 import { SuppliersSection } from "./_components/suppliers-section";
 
+// Ensure home page is static
+export const dynamic = "force-static";
+
 export default function HomePage() {
   return (
     <>
