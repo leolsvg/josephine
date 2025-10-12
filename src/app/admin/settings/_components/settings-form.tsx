@@ -56,11 +56,13 @@ export function SettingsForm() {
   });
   return (
     <form
+      id="settings-form"
       className="space-y-4"
       autoComplete="on"
       noValidate
       onSubmit={(e) => {
         e.preventDefault();
+        form.handleSubmit();
       }}
     >
       <form.AppField name="maxGuestsPerBooking">

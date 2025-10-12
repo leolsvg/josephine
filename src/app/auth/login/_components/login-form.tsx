@@ -76,8 +76,10 @@ export function LoginForm({
         </CardHeader>
         <CardContent>
           <form
+            id="login-form"
             onSubmit={(e) => {
               e.preventDefault();
+              form.handleSubmit();
             }}
           >
             <div className="flex flex-col gap-6">

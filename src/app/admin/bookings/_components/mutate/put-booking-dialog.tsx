@@ -54,34 +54,34 @@ export function PutBookingDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <form
-          className="contents"
-          autoComplete="on"
-          noValidate
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>Ajouter une réservation</DialogTitle>
-            <DialogDescription>
-              En tant qu'administrateur, vous pouvez créer une réservation
-              directement sans envoi d'un mail de confirmation.
-            </DialogDescription>
-          </DialogHeader>
-          <Suspense fallback={<PendingFormData />}>
-            <div className="flex flex-col gap-3">
-              <BookingBaseForm form={form} />
-            </div>
-            <DialogFooter>
-              <form.AppForm>
-                <form.SubmitButton isPending={isPending}>
-                  Ajouter
-                </form.SubmitButton>
-              </form.AppForm>
-            </DialogFooter>
-          </Suspense>
-        </form>
+        <DialogHeader>
+          <DialogTitle>Ajouter une réservation</DialogTitle>
+          <DialogDescription>
+            En tant qu'administrateur, vous pouvez créer une réservation
+            directement sans envoi d'un mail de confirmation.
+          </DialogDescription>
+        </DialogHeader>
+        <Suspense fallback={<PendingFormData />}>
+          <form
+            id="put-booking-form"
+            className="flex flex-col gap-3"
+            autoComplete="on"
+            noValidate
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
+            <BookingBaseForm form={form} />
+          </form>
+          <DialogFooter>
+            <form.AppForm>
+              <form.SubmitButton isPending={isPending} form="put-booking-form">
+                Ajouter
+              </form.SubmitButton>
+            </form.AppForm>
+          </DialogFooter>
+        </Suspense>
       </DialogContent>
     </Dialog>
   );

@@ -32,6 +32,7 @@ export const BookingForm = withBookingForm({
             noValidate
             onSubmit={(e) => {
               e.preventDefault();
+              form.handleSubmit();
             }}
           >
             <BookingBaseForm form={form} />

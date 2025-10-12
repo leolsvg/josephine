@@ -24,7 +24,6 @@ export function SubmitButton({
           type="submit"
           aria-disabled={!canSubmit || isPending}
           disabled={!canSubmit || isPending}
-          onClick={() => context.handleSubmit()}
           {...props}
         >
           {isPending ? (

@@ -59,33 +59,33 @@ export function PatchBookingDialog({
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <form
-          className="contents"
-          autoComplete="on"
-          noValidate
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>Modifier une réservation</DialogTitle>
-            <DialogDescription>
-              En tant qu'administrateur, vous pouvez modifier une réservation.
-            </DialogDescription>
-          </DialogHeader>
-          <Suspense fallback={<PendingFormData />}>
-            <div className="flex flex-col gap-3">
-              <BookingBaseForm form={form} />
-            </div>
-            <DialogFooter>
-              <form.AppForm>
-                <form.SubmitButton isPending={isPending}>
-                  Modifier
-                </form.SubmitButton>
-              </form.AppForm>
-            </DialogFooter>
-          </Suspense>
-        </form>
+        <DialogHeader>
+          <DialogTitle>Modifier une réservation</DialogTitle>
+          <DialogDescription>
+            En tant qu'administrateur, vous pouvez modifier une réservation.
+          </DialogDescription>
+        </DialogHeader>
+        <Suspense fallback={<PendingFormData />}>
+          <form
+            id="patch-booking-form"
+            className="flex flex-col gap-3"
+            autoComplete="on"
+            noValidate
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
+            <BookingBaseForm form={form} />
+          </form>
+        </Suspense>
+        <DialogFooter>
+          <form.AppForm>
+            <form.SubmitButton isPending={isPending} form="patch-booking-form">
+              Modifier
+            </form.SubmitButton>
+          </form.AppForm>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
