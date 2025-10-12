@@ -25,24 +25,30 @@ export default function GlobalErrorPage({
   }, [error]);
 
   return (
-    <Empty className="h-dvh">
-      <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <Bug />
-        </EmptyMedia>
-        <EmptyTitle>Oups… quelque chose s'est mal passé</EmptyTitle>
-        <EmptyDescription>Une erreur inattendue est survenue.</EmptyDescription>
-      </EmptyHeader>
-      <EmptyContent>
-        <div className="flex gap-2">
-          <Button size="sm" onClick={reset}>
-            Réessayer
-          </Button>
-          <Button size="sm" asChild variant="outline">
-            <Link href="/">Retour à l'accueil</Link>
-          </Button>
-        </div>
-      </EmptyContent>
-    </Empty>
+    <html lang="fr">
+      <body>
+        <Empty className="h-dvh">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Bug />
+            </EmptyMedia>
+            <EmptyTitle>Oups… quelque chose s'est mal passé</EmptyTitle>
+            <EmptyDescription>
+              Une erreur inattendue est survenue.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <div className="flex gap-2">
+              <Button size="sm" onClick={reset}>
+                Réessayer
+              </Button>
+              <Button size="sm" asChild variant="outline">
+                <Link href="/">Retour à l'accueil</Link>
+              </Button>
+            </div>
+          </EmptyContent>
+        </Empty>
+      </body>
+    </html>
   );
 }
