@@ -1,3 +1,4 @@
+import { fromPromise } from "neverthrow";
 import { env } from "@/lib/env";
 import { createTRPCRouter, publicProcedure } from "@/lib/trpc/init";
 
@@ -26,12 +27,16 @@ export type Place = {
   };
 };
 
+async function getPlace() {
+  const res = await fetch(
+    `https://places.googleapis.com/v1/places/${placeId}?fields=${fields.join(",")}&languageCode=fr&regionCode=fr&key=${env.GOOGLE_MAPS_API_KEY}`,
+  );
+  return (await res.json()) as Place;
+}
+
 export const places = createTRPCRouter({
   get: publicProcedure.query(async () => {
-    const res = await fetch(
-      `https://places.googleapis.com/v1/places/${placeId}?fields=${fields.join(",")}&languageCode=fr&regionCode=fr&key=${env.GOOGLE_MAPS_API_KEY}`,
-    );
-    const data = (await res.json()) as Place;
-    return data;
+    const res = await fromPromise(getPlace(), (e) => e);
+    return res.unwrapOr(undefined);
   }),
 });

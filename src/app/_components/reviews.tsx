@@ -39,9 +39,10 @@ function useDots(api: CarouselApi) {
   };
 }
 
-export function Reviews({ reviews }: { reviews: Review[] }) {
+export function Reviews({ reviews }: { reviews: Review[] | undefined }) {
   const [api, setApi] = useState<CarouselApi>();
   const { scrollSnaps, selected } = useDots(api);
+  if (!reviews) return;
   return (
     <div className="absolute bottom-0 py-5 w-full">
       <Carousel
@@ -50,7 +51,7 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
         opts={{
           loop: true,
         }}
-        plugins={[Autoplay({ delay: 7000 })]}
+        plugins={[Autoplay({ delay: 10000 })]}
       >
         <CarouselContent>
           {reviews.map((r) => (
@@ -77,7 +78,7 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
                 stiffness: 300,
                 damping: 25,
               }}
-            ></motion.button>
+            />
           ))}
         </div>
       </Carousel>

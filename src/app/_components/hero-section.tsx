@@ -5,7 +5,6 @@ import { Reviews } from "./reviews";
 
 export async function HeroSection() {
   const data = await caller.places.get();
-
   return (
     <main>
       <section className="relative h-svh">
@@ -28,7 +27,7 @@ export async function HeroSection() {
             expérience culinaire unique.
           </div>
         </div>
-        <Reviews reviews={data.reviews} />
+        <Reviews reviews={data?.reviews} />
       </section>
     </main>
   );
