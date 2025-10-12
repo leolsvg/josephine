@@ -19,7 +19,7 @@ export function MenusSection() {
   return (
     <Section id="menu">
       <SectionTitle>Menu & Cartes</SectionTitle>
-      <div className="flex flex-wrap gap-6 justify-center">
+      <div className="flex flex-wrap gap-6 justify-center max-w-250">
         {menus.map((m) => (
           <Link key={m.href} href={m.href}>
             <MenuCard title={m.title} />
@@ -33,8 +33,8 @@ export function MenusSection() {
 function MenuCard({ title }: { title: string }) {
   return (
     <div className="hover:scale-105 transition-transform">
-      <div className="bg-gray-900 p-6 w-70 h-50">
-        <div className="bg-white flex flex-col justify-center items-center gap-6 p-6 size-full">
+      <div className="bg-gray-900 p-6 w-70 h-50 rounded-sm">
+        <div className="bg-white flex flex-col justify-center items-center gap-6 p-6 size-full rounded-sm">
           <JosephineIcon className="size-14" />
           <span className="text-yellow-700 font-bold text-sm">{title}</span>
         </div>
