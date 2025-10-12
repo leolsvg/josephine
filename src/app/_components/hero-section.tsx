@@ -20,10 +20,10 @@ export async function HeroSection() {
         {/* Padding top to ensure below header and min-h to let overflow (cant use h-full since parent does not have fixed height) */}
         <div className="min-h-svh flex flex-col text-white gap-6 pt-22 pb-6 px-6">
           <div className="grow flex flex-col items-center justify-center gap-6">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-center text-shadow-lg">
               Bienvenue chez Joséphine
             </h1>
-            <div className="text-base sm:text-lg lg:text-xl text-center max-w-2xl">
+            <div className="text-base sm:text-lg lg:text-xl text-center max-w-2xl text-shadow-lg">
               Joséphine est un restaurant de bistronomie situé à Cherbourg, nous
               utilisons des produits locaux et de saison pour vous offrir une
               expérience culinaire unique.

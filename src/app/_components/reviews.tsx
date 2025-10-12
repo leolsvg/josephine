@@ -112,7 +112,9 @@ export function Testimonial({ r }: { r: Review }) {
           <div className="flex">
             <StarRating rating={r.rating} />
           </div>
-          <div className="text-xs">{r.relativePublishTimeDescription}</div>
+          <div className="text-xs text-white/60">
+            {r.relativePublishTimeDescription}
+          </div>
         </div>
       </div>
     </a>
