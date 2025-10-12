@@ -14,6 +14,7 @@ import RPNInput, {
   type Value,
 } from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
+import fr from "react-phone-number-input/locale/fr";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -46,6 +47,7 @@ export const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
       return (
         <RPNInput
           ref={ref}
+          labels={fr}
           className={cn("flex rounded-lg", className)}
           flagComponent={FlagComponent}
           countrySelectComponent={CountrySelect}
@@ -145,7 +147,7 @@ function CountrySelect({
                 }
               }, 0);
             }}
-            placeholder="Search country..."
+            placeholder="Chercher un pays..."
           />
           <CommandList>
             <ScrollArea ref={scrollAreaRef} className="h-72">
