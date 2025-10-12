@@ -5,10 +5,18 @@ import type { ComponentProps } from "react";
 
 export interface FieldProps {
   label: string;
-  id: string;
 }
 
 export type InputProps = ComponentProps<"input"> & FieldProps;
 
-export const { fieldContext, formContext, useFieldContext, useFormContext } =
-  createFormHookContexts();
+const formHooks = createFormHookContexts();
+
+export function useFieldContext<T>() {
+  const field = formHooks.useFieldContext<T>();
+  return {
+    field,
+    isInvalid: field.state.meta.isTouched && !field.state.meta.isValid,
+  };
+}
+
+export const { fieldContext, formContext, useFormContext } = formHooks;

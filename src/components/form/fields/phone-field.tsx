@@ -6,26 +6,23 @@ import { PhoneInput } from "../phone-input";
 
 type PhoneFieldProps = ComponentProps<typeof PhoneInput> & FieldProps;
 
-export function PhoneField({
-  label,
-  id,
-  className,
-  ...props
-}: PhoneFieldProps) {
-  const field = useFieldContext<string>();
+export function PhoneField({ label, className, ...props }: PhoneFieldProps) {
+  const { field, isInvalid } = useFieldContext<string>();
   return (
-    <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+    <Field data-invalid={isInvalid}>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <PhoneInput
         className={cn("shadow-sm", className)}
         defaultCountry="FR"
-        id={id}
+        id={field.name}
+        name={field.name}
+        aria-invalid={isInvalid}
         value={field.state.value}
         onChange={(v) => field.handleChange(v)}
         onBlur={field.handleBlur}
         {...props}
       />
-      <FieldError errors={field.state.meta.errors} />
+      {isInvalid && <FieldError errors={field.state.meta.errors} />}
     </Field>
   );
 }
