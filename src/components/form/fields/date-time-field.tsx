@@ -3,15 +3,23 @@ import { DateTimeInput } from "@/components/form/date-time-input";
 import type { FieldProps } from "@/components/form/types";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 
-type DateTimeFieldProps = ComponentProps<typeof DateTimeInput> & FieldProps;
+type DateTimeFieldProps = ComponentProps<typeof DateTimeInput> &
+  FieldProps & {
+    isInvalid: boolean;
+    errors: undefined[];
+  };
 
-export function DateTimeField({ label, ...props }: DateTimeFieldProps) {
+export function DateTimeField({
+  label,
+  errors,
+  isInvalid,
+  ...props
+}: DateTimeFieldProps) {
   return (
-    <Field>
+    <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={props.id}>{label}</FieldLabel>
-      <DateTimeInput {...props} />
-      {/* TODO missing errors */}
-      <FieldError />
+      <DateTimeInput aria-invalid={isInvalid} {...props} />
+      {isInvalid && <FieldError errors={errors} />}
     </Field>
   );
 }

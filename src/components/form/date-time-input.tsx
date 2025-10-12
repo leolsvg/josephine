@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarIcon } from "lucide-react";
-import { Fragment } from "react";
+import { type ComponentProps, Fragment } from "react";
 import { fr } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -17,23 +17,26 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 
+type DateTimeInputProps = ComponentProps<typeof Button> & {
+  id: string;
+  date: string | undefined;
+  time: string | undefined;
+  onDateChange: (date: string | undefined) => void;
+  onTimeChange: (time: string | undefined) => void;
+  disabledDates: (date: Date) => boolean;
+  timeSlots: (date: Date) => Temporal.PlainTime[][];
+};
+
 export function DateTimeInput({
   id,
   date,
   time,
   onDateChange,
   onTimeChange,
-  disabled,
+  disabledDates,
   timeSlots,
-}: {
-  id: string;
-  date: string | undefined;
-  time: string | undefined;
-  onDateChange: (date: string | undefined) => void;
-  onTimeChange: (time: string | undefined) => void;
-  disabled: (date: Date) => boolean;
-  timeSlots: (date: Date) => Temporal.PlainTime[][];
-}) {
+  ...props
+}: DateTimeInputProps) {
   const dateDate = date ? new Date(date) : undefined;
   return (
     <Dialog>
@@ -42,15 +45,16 @@ export function DateTimeInput({
           variant="outline"
           className="shadow-sm flex justify-between"
           id={id}
+          {...props}
         >
           {dateDate && time ? (
             <span>
               {FullDateFormat.format(dateDate)} à {timeFormat(time)}
             </span>
           ) : (
-            <span className="text-muted-foreground">Sélectionner une date</span>
+            <span>Sélectionner une date</span>
           )}
-          <CalendarIcon className="text-muted-foreground" />
+          <CalendarIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-min p-0 gap-0" showCloseButton={false}>
@@ -74,7 +78,7 @@ export function DateTimeInput({
                 onTimeChange(undefined);
               }}
               defaultMonth={dateDate}
-              disabled={disabled}
+              disabled={disabledDates}
               showOutsideDays={false}
               className="bg-transparent p-6 [--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
             />

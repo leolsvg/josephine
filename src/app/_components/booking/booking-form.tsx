@@ -16,34 +16,33 @@ export const BookingForm = withBookingForm({
   ...bookingFormOptions,
   render: ({ form }) => {
     return (
-      <form
-        className="contents"
-        autoComplete="on"
-        noValidate
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <DialogHeader className="px-2">
+      <>
+        <DialogHeader>
           <DialogTitle>Réserver une table</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             Merci de compléter les informations nécessaires afin de planifier
             votre réservation.
           </DialogDescription>
         </DialogHeader>
-        <div className="overflow-y-auto px-2 py-1">
-          <Suspense fallback={<PendingFormData />}>
-            <div className="flex flex-col gap-3">
-              <BookingBaseForm form={form} />
-            </div>
-          </Suspense>
-        </div>
-        <DialogFooter className="px-2">
+        <Suspense fallback={<PendingFormData />}>
+          <form
+            id="booking-form"
+            className="flex flex-col gap-3"
+            autoComplete="on"
+            noValidate
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <BookingBaseForm form={form} />
+          </form>
+        </Suspense>
+        <DialogFooter>
           <form.AppForm>
-            <form.SubmitButton>Réserver</form.SubmitButton>
+            <form.SubmitButton form="booking-form">Réserver</form.SubmitButton>
           </form.AppForm>
         </DialogFooter>
-      </form>
+      </>
     );
   },
 });

@@ -1,20 +1,20 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { useFormContext } from "./types";
 
+type SubmitButtonProps = ComponentProps<typeof Button> & {
+  isPending?: boolean;
+};
 export function SubmitButton({
   children,
   isPending,
   className,
-}: {
-  children: ReactNode;
-  isPending?: boolean;
-  className?: string;
-}) {
+  ...props
+}: SubmitButtonProps) {
   const context = useFormContext();
   return (
     <context.Subscribe selector={({ canSubmit }) => ({ canSubmit })}>
@@ -25,6 +25,7 @@ export function SubmitButton({
           aria-disabled={!canSubmit || isPending}
           disabled={!canSubmit || isPending}
           onClick={() => context.handleSubmit()}
+          {...props}
         >
           {isPending ? (
             <>
