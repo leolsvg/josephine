@@ -31,9 +31,7 @@ export const BookingBaseForm = withBookingForm({
           )}
         </form.AppField>
         <form.AppField name="phone">
-          {(field) => (
-            <field.PhoneField label="Téléphone" autoComplete="phone" />
-          )}
+          {(field) => <field.PhoneField label="Téléphone" autoComplete="tel" />}
         </form.AppField>
 
         <form.AppField name="guests">
