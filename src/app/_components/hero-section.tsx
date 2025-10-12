@@ -7,7 +7,7 @@ export async function HeroSection() {
   const data = await caller.places.get();
   return (
     <main>
-      <section className="relative h-svh">
+      <section className="relative min-h-svh">
         <Image
           src={Background}
           alt="Bar du restaurant Joséphine"
@@ -17,17 +17,20 @@ export async function HeroSection() {
           className="object-cover object-center -z-10"
         />
         <div className="absolute inset-0 bg-black/50 -z-10" />
-        <div className="absolute w-full top-[35%] flex flex-col justify-center items-center text-white gap-6">
-          <h1 className="text-5xl sm:text-6xl font-bold leading-tight text-center px-6">
-            Bienvenue chez Joséphine
-          </h1>
-          <div className="text-lg sm:text-xl text-center max-w-2xl px-6 hidden sm:block">
-            Joséphine est un restaurant de bistronomie situé à Cherbourg, nous
-            utilisons des produits locaux et de saison pour vous offrir une
-            expérience culinaire unique.
+        {/* Padding top to ensure below header and min-h to let overflow (cant use h-full since parent does not have fixed height) */}
+        <div className="min-h-svh flex flex-col text-white gap-6 pt-22 pb-6 px-6">
+          <div className="grow flex flex-col items-center justify-center gap-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-center">
+              Bienvenue chez Joséphine
+            </h1>
+            <div className="text-base sm:text-lg lg:text-xl text-center max-w-2xl">
+              Joséphine est un restaurant de bistronomie situé à Cherbourg, nous
+              utilisons des produits locaux et de saison pour vous offrir une
+              expérience culinaire unique.
+            </div>
           </div>
+          <Reviews reviews={data?.reviews} />
         </div>
-        <Reviews reviews={data?.reviews} />
       </section>
     </main>
   );

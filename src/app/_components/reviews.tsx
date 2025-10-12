@@ -44,7 +44,7 @@ export function Reviews({ reviews }: { reviews: Review[] | undefined }) {
   const { scrollSnaps, selected } = useDots(api);
   if (!reviews) return;
   return (
-    <div className="absolute bottom-0 py-5 w-full">
+    <div>
       <Carousel
         setApi={setApi}
         className="container mx-auto"
