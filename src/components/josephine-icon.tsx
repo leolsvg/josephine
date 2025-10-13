@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export function JosephineIcon({ className }: { className: string }) {
+export function JosephineIcon({ className }: { className?: string }) {
   return (
     <Image
       src="/favicon/favicon.ico"
