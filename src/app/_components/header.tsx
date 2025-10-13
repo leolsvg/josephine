@@ -34,8 +34,12 @@ export function Header() {
       <header className="flex md:grid md:grid-cols-3 p-3 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md">
         <div>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild className="md:hidden">
-              <Button variant="outline" size="icon" className="p-1 shadow-md">
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="p-1 shadow-md block md:hidden"
+              >
                 <JosephineIcon className="size-6" />
               </Button>
             </DropdownMenuTrigger>
@@ -47,7 +51,7 @@ export function Header() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/" className="hidden md:block">
+          <Link href="/" className="hidden md:inline">
             <JosephineIcon className="size-8" />
           </Link>
         </div>
@@ -67,7 +71,7 @@ export function Header() {
           >
             <a href={`tel:${Josephine.phone}`}>
               <Phone />
-              <span className="hidden xl:block">{Josephine.phone}</span>
+              <span className="hidden xl:inline">{Josephine.phone}</span>
             </a>
           </Button>
           <Button
