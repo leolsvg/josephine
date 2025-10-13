@@ -35,13 +35,8 @@ export function Header() {
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
-              <Button
-                asChild
-                variant="outline"
-                size="icon"
-                className="p-1 shadow-md"
-              >
-                <JosephineIcon />
+              <Button variant="outline" size="icon" className="p-1 shadow-md">
+                <JosephineIcon className="size-6" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -52,8 +47,8 @@ export function Header() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/">
-            <JosephineIcon className="size-8 hidden md:block" />
+          <Link href="/" className="hidden md:block">
+            <JosephineIcon className="size-8" />
           </Link>
         </div>
         <nav className="gap-6 hidden md:flex justify-center">
