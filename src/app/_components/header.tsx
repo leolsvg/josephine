@@ -1,3 +1,4 @@
+import { MapPinned, Phone } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { JosephineIcon } from "@/components/josephine-icon";
@@ -8,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Josephine } from "@/lib/josephine";
 import type { NavItem } from "@/lib/utils";
 import { BookingDialog } from "./booking/booking-dialog";
 
@@ -29,34 +31,68 @@ export const navigationItems: NavItem[] = [
 export function Header() {
   return (
     <div className="fixed top-0 z-20 w-full p-2">
-      <header className="flex p-3 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="md:hidden">
-            <div className="rounded-md bg-white/80 p-1 backdrop-blur-md shadow-md">
-              <JosephineIcon className="size-7 cursor-pointer" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {navigationItems.map((l) => (
-              <DropdownMenuItem key={l.href} asChild>
-                <Link href={l.href}>{l.title}</Link>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Link href="/">
-          <JosephineIcon className="size-8 hidden md:block" />
-        </Link>
-        <nav className="gap-6 hidden md:flex absolute left-1/2 -translate-x-1/2">
+      <header className="flex md:grid md:grid-cols-3 p-3 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md">
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="md:hidden">
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className="p-1 shadow-md"
+              >
+                <JosephineIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {navigationItems.map((l) => (
+                <DropdownMenuItem key={l.href} asChild>
+                  <Link href={l.href}>{l.title}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Link href="/">
+            <JosephineIcon className="size-8 hidden md:block" />
+          </Link>
+        </div>
+        <nav className="gap-6 hidden md:flex justify-center">
           {navigationItems.map((i) => (
             <Button asChild variant="link" key={i.href}>
               <a href={i.href}>{i.title}</a>
             </Button>
           ))}
         </nav>
-        <Suspense>
-          <BookingDialog className="backdrop-blur-md shadow-md" />
-        </Suspense>
+        <div className="flex gap-1 justify-end">
+          <Button
+            variant="outline"
+            asChild
+            size="sm"
+            className="shadow-md md:shadow-none"
+          >
+            <a href={`tel:${Josephine.phone}`}>
+              <Phone />
+              <span className="hidden xl:block">{Josephine.phone}</span>
+            </a>
+          </Button>
+          <Button
+            size="icon-sm"
+            variant="outline"
+            asChild
+            className="shadow-md md:shadow-none"
+          >
+            <a
+              href={Josephine.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MapPinned />
+            </a>
+          </Button>
+          <Suspense>
+            <BookingDialog className="shadow-md md:shadow-none" />
+          </Suspense>
+        </div>
       </header>
     </div>
   );
