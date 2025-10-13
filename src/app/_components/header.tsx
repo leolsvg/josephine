@@ -60,10 +60,10 @@ export function Header() {
         </nav>
         <div className="flex gap-1 justify-end">
           <Button
-            variant="outline"
             asChild
             size="sm"
-            className="shadow-md md:shadow-none"
+            variant="outline"
+            className="shadow-md md:shadow-none w-8 xl:w-auto"
           >
             <a href={`tel:${Josephine.phone}`}>
               <Phone />
@@ -71,9 +71,9 @@ export function Header() {
             </a>
           </Button>
           <Button
+            asChild
             size="icon-sm"
             variant="outline"
-            asChild
             className="shadow-md md:shadow-none"
           >
             <a
