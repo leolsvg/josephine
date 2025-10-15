@@ -1,7 +1,4 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/lib/trpc/react";
+import { getCachedPlace } from "@/server/routers/places";
 import { FooterSectionContent, FooterSectionTitle } from "./footer-section";
 
 export function ScheduleSection() {
@@ -15,13 +12,12 @@ export function ScheduleSection() {
   );
 }
 
-function Schedule() {
-  const trpc = useTRPC();
-  const { data } = useQuery(trpc.places.get.queryOptions());
-  if (!data) return;
+async function Schedule() {
+  const place = await getCachedPlace();
+  if (!place) return;
   return (
     <ul className="text-sm">
-      {data.regularOpeningHours.weekdayDescriptions.map((d) => (
+      {place.regularOpeningHours.weekdayDescriptions.map((d) => (
         <li key={d}>{d}</li>
       ))}
     </ul>

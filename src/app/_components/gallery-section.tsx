@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { caller } from "@/lib/trpc/server";
+import { getCachedMedia, getCachedPlace } from "@/server/routers/places";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
 export async function GallerySection() {
-  const place = await caller.places.get();
+  const place = await getCachedPlace();
   return (
     <Section id="menu">
       <SectionTitle>Galerie</SectionTitle>
@@ -34,9 +34,7 @@ async function GalleryImage({
   width: number;
   height: number;
 }) {
-  const src = await caller.places.getMedia({
-    name,
-  });
+  const src = await getCachedMedia(name);
   if (!src) return <div className="bg-muted rounded-md mb-4 w-full h-50" />;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer">

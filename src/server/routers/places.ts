@@ -38,22 +38,40 @@ export type Place = {
   photos: Photo[];
 };
 
-async function getPlace() {
+async function getPlace(init?: RequestInit) {
   const res = await fetch(
     `https://places.googleapis.com/v1/places/${placeId}?fields=${fields.join(",")}&languageCode=fr&regionCode=fr&key=${env.GOOGLE_MAPS_API_KEY}`,
+    init,
   );
   return (await res.json()) as Place;
 }
 
-async function getMedia(name: string) {
+export function getCachedPlace() {
+  return getPlace({
+    cache: "force-cache",
+    next: {
+      // Revalidate every day to update reviews, images, and schedule
+      revalidate: 86400,
+    },
+  });
+}
+
+async function getMedia(name: string, init?: RequestInit) {
   const res = await fetch(
     `https://places.googleapis.com/v1/${name}/media?maxWidthPx=300&key=${env.GOOGLE_MAPS_API_KEY}`,
+    init,
   );
   const blob = await res.blob();
   const arrayBuffer = await blob.arrayBuffer();
   const base64 = Buffer.from(arrayBuffer).toString("base64");
   const mime = blob.type || "image/jpeg";
   return `data:${mime};base64,${base64}`;
+}
+
+export async function getCachedMedia(name: string) {
+  return getMedia(name, {
+    cache: "force-cache",
+  });
 }
 
 export const places = createTRPCRouter({

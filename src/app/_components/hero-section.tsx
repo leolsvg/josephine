@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { caller } from "@/lib/trpc/server";
+import { getCachedPlace } from "@/server/routers/places";
 import Background from "../../../public/restaurant/bar.jpeg";
 import { Reviews } from "./reviews";
 
 export async function HeroSection() {
-  const data = await caller.places.get();
+  const place = await getCachedPlace();
   return (
     <main>
       <section className="relative min-h-svh">
@@ -30,7 +30,7 @@ export async function HeroSection() {
               expérience culinaire unique.
             </div>
           </div>
-          <Reviews reviews={data?.reviews} />
+          <Reviews reviews={place?.reviews} />
         </div>
       </section>
     </main>
