@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { JosephineIcon } from "@/components/josephine-icon";
 import { LoginForm } from "./_components/login-form";
