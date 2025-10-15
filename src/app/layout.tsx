@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Devtools } from "@/components/devtools";
 import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/lib/trpc/react";
-import { geistMono, geistSans } from "@/styles/fonts";
+import { alexBrush, geistMono, geistSans } from "@/styles/fonts";
 
 export const metadata: Metadata = {
   title: "Restaurant Joséphine - Cherbourg",
@@ -78,7 +78,7 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${alexBrush.variable} antialiased`}
       >
         <TRPCReactProvider>
           {children}

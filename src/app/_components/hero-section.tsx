@@ -21,7 +21,8 @@ export async function HeroSection() {
         <div className="min-h-svh flex flex-col text-white gap-6 pt-22 pb-6 px-6">
           <div className="grow flex flex-col items-center justify-center gap-6">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-center text-shadow-lg">
-              Bienvenue chez Joséphine
+              Bienvenue chez{" "}
+              <span className="font-alex text-7xl">Joséphine</span>
             </h1>
             <div className="text-base sm:text-lg lg:text-xl text-center max-w-2xl text-shadow-lg">
               Joséphine est un restaurant de bistronomie situé à Cherbourg, nous
