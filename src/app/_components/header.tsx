@@ -31,7 +31,7 @@ export const navigationItems: NavItem[] = [
 export function Header() {
   return (
     <div className="fixed top-0 z-20 w-full p-2">
-      <header className="flex md:grid md:grid-cols-3 p-3 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md md:border-gray-100 md:border">
+      <header className="flex md:grid md:grid-cols-3 md:container mx-auto px-3 py-2 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md md:border-gray-100 md:border">
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
