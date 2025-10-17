@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
-import { BookingBaseForm } from "@/components/booking/booking-base-form";
+import { BookingAdminForm } from "@/components/booking/booking-admin-form";
 import { SBookingAdminPut } from "@/components/booking/booking-schema";
 import { PendingFormData } from "@/components/form/pending-form-data";
 import {
@@ -72,7 +72,7 @@ export function PutBookingDialog() {
               form.handleSubmit();
             }}
           >
-            <BookingBaseForm form={form} />
+            <BookingAdminForm form={form} />
           </form>
           <DialogFooter>
             <form.AppForm>
