@@ -1,3 +1,4 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { PendingFormData } from "@/components/form/pending-form-data";
 import {
@@ -6,9 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { createQueryClient } from "@/lib/trpc/query-client";
+import { trpc } from "@/lib/trpc/server";
 import { ExceptionsTable } from "./exceptions-table";
 
 export function ExceptionsCard() {
+  const queryClient = createQueryClient();
+  queryClient.prefetchQuery(trpc.schedule.getExceptions.queryOptions());
   return (
     <Card className="pb-0 lg:min-w-100 grow overflow-hidden">
       <CardHeader>
@@ -28,9 +33,11 @@ export function ExceptionsCard() {
           </Dialog>
         </CardAction> */}
       </CardHeader>
-      <Suspense fallback={<PendingFormData />}>
-        <ExceptionsTable />
-      </Suspense>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Suspense fallback={<PendingFormData />}>
+          <ExceptionsTable />
+        </Suspense>
+      </HydrationBoundary>
     </Card>
   );
 }

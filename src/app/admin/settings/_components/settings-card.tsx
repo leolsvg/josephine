@@ -1,3 +1,4 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { PendingFormData } from "@/components/form/pending-form-data";
 import {
@@ -7,9 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { createQueryClient } from "@/lib/trpc/query-client";
+import { trpc } from "@/lib/trpc/server";
 import { SettingsForm } from "./settings-form";
 
 export function SettingsCard() {
+  const queryClient = createQueryClient();
+  queryClient.prefetchQuery(trpc.settings.get.queryOptions());
   return (
     <Card>
       <CardHeader>
@@ -21,9 +26,11 @@ export function SettingsCard() {
       </CardHeader>
 
       <CardContent>
-        <Suspense fallback={<PendingFormData />}>
-          <SettingsForm />
-        </Suspense>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Suspense fallback={<PendingFormData />}>
+            <SettingsForm />
+          </Suspense>
+        </HydrationBoundary>
       </CardContent>
     </Card>
   );
