@@ -5,23 +5,16 @@ import postgres from "postgres";
 import { env } from "@/lib/env";
 import * as schema from "./schema";
 
-class Database {
-  private static instance: Database;
-  public db;
-
-  private constructor() {
-    // Disable prefetch as it is not supported for "Transaction" pool mode
-    const client = postgres(env.DATABASE_URL, { prepare: false });
-    this.db = drizzle(client, { casing: "snake_case", schema });
-  }
-
-  public static getInstance() {
-    if (!Database.instance) {
-      Database.instance = new Database();
-    }
-    return Database.instance;
-  }
+declare global {
+  var _db: ReturnType<typeof drizzle> | undefined;
 }
 
-export const { db } = Database.getInstance();
+const client = postgres(env.DATABASE_URL, { max: 2, prepare: false });
+const db = globalThis._db ?? drizzle(client, { schema, casing: "snake_case" });
+
+if (process.env.NODE_ENV !== "production") {
+  globalThis._db = db;
+}
+
+export { db };
 export type DB = typeof db;
