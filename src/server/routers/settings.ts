@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { MAX_GUESTS } from "@/components/booking/booking-schema";
 import { safeDrizzleQuery } from "@/lib/errors/drizzle";
 import {
   createTRPCRouter,

@@ -1,7 +1,7 @@
 "use client";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,15 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { menuCategories } from "@/lib/utils";
+import { useTRPC } from "@/lib/trpc/react";
+import { menuCategories } from "@/server/db/schema";
 import type { TMenuCategory, TMenuService } from "@/server/db/types";
-import { useDeleteMenu } from "./use-delete-menu";
-import { useMenus } from "./use-menus";
+import { DeleteMenuButton } from "./delete-menu-button";
 import { useUpdateMenu } from "./use-update-menu";
 
 export function MenuTable({ service }: { service: TMenuService }) {
-  const { data } = useMenus();
-  const { mutate: deleteMenu } = useDeleteMenu();
+  const trpc = useTRPC();
+  const { data } = useSuspenseQuery(trpc.menus.get.queryOptions());
   const { mutate: updateMenu } = useUpdateMenu();
   const menus = data.filter((p) => p.service === service);
   const orderedItems = useMemo(
@@ -47,9 +47,9 @@ export function MenuTable({ service }: { service: TMenuService }) {
         <TableHeader>
           <TableRow className="bg-accent hover:bg-accent">
             <TableHead>Description</TableHead>
-            <TableHead>Prix</TableHead>
-            <TableHead>Catégorie</TableHead>
-            <TableHead>Service</TableHead>
+            <TableHead className="w-30">Prix</TableHead>
+            <TableHead className="w-0">Catégorie</TableHead>
+            <TableHead className="w-0">Service</TableHead>
             <TableHead className="w-0" />
           </TableRow>
         </TableHeader>
@@ -62,20 +62,24 @@ export function MenuTable({ service }: { service: TMenuService }) {
                   onBlur={(e) =>
                     updateMenu({
                       id: plat.id,
-                      field: "description",
-                      value: e.target.value,
+                      value: {
+                        description: e.target.value,
+                      },
                     })
                   }
                 />
               </TableCell>
               <TableCell>
                 <Input
+                  type="number"
+                  step={0.5}
                   defaultValue={String(plat.price)}
                   onBlur={(e) =>
                     updateMenu({
                       id: plat.id,
-                      field: "price",
-                      value: e.target.value,
+                      value: {
+                        price: Number(e.target.value),
+                      },
                     })
                   }
                 />
@@ -86,8 +90,9 @@ export function MenuTable({ service }: { service: TMenuService }) {
                   onValueChange={(v) =>
                     updateMenu({
                       id: plat.id,
-                      field: "category",
-                      value: v as TMenuCategory,
+                      value: {
+                        category: v as TMenuCategory,
+                      },
                     })
                   }
                 >
@@ -103,14 +108,15 @@ export function MenuTable({ service }: { service: TMenuService }) {
                   </SelectContent>
                 </Select>
               </TableCell>
-              <TableCell className="p-2 min-w-[100px]">
+              <TableCell>
                 <Select
                   defaultValue={plat.service}
                   onValueChange={(v) =>
                     updateMenu({
                       id: plat.id,
-                      field: "service",
-                      value: v as TMenuService,
+                      value: {
+                        service: v as TMenuService,
+                      },
                     })
                   }
                 >
@@ -123,14 +129,8 @@ export function MenuTable({ service }: { service: TMenuService }) {
                   </SelectContent>
                 </Select>
               </TableCell>
-              <TableCell className="p-2 min-w-[90px]">
-                <Button
-                  onClick={() => deleteMenu({ id: plat.id })}
-                  variant="ghost"
-                  className="text-destructive"
-                >
-                  Supprimer
-                </Button>
+              <TableCell>
+                <DeleteMenuButton id={plat.id} />
               </TableCell>
             </TableRow>
           ))}

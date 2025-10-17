@@ -6,13 +6,13 @@ import type {
 import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
 import {
+  type bookingStatusEnum,
+  bookingStatuses,
   type bookingsTable,
   type menuCategoryEnum,
   type menuServiceEnum,
   type menusTable,
   settingsTable,
-  type statusEnum,
-  statuses,
 } from "./schema";
 
 export type TBooking = InferSelectModel<typeof bookingsTable>;
@@ -20,7 +20,7 @@ export type TSettings = InferSelectModel<typeof settingsTable>;
 export type TMenu = InferSelectModel<typeof menusTable>;
 export type TMenuCategory = InferEnum<typeof menuCategoryEnum>;
 export type TMenuService = InferEnum<typeof menuServiceEnum>;
-export type TStatus = InferEnum<typeof statusEnum>;
+export type TStatus = InferEnum<typeof bookingStatusEnum>;
 export const SSettings = createInsertSchema(settingsTable).omit({
   id: true,
 });
@@ -33,7 +33,7 @@ export const SRealtimeBooking = z.object({
   name: z.string(),
   notes: z.string(),
   phone: z.string(),
-  status: z.literal(statuses),
+  status: z.literal(bookingStatuses),
   table: z.number(),
   time: z.string(),
   updatedAt: z.string(),

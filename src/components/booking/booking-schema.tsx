@@ -1,9 +1,21 @@
 import z from "zod";
-import type { TStatus } from "@/server/db/types";
+import { bookingStatuses } from "@/server/db/schema";
 
 export const MIN_GUESTS = 1;
 export const MAX_GUESTS = 10;
 export const MAX_NOTES_LENGTH = 500;
+
+const SGuests = z
+  .number({
+    error: "Merci d'indiquer pour combien de personnes vous réservez.",
+  })
+  .min(MIN_GUESTS, "La réservation doit concerner au moins une personne.");
+
+const SPhone = z.e164("Merci d'indiquer un numéro de téléphone valide.");
+
+const SEmail = z.email(
+  "L'adresse e-mail ne semble pas valide. Vérifiez qu'elle contient bien un « @ ».",
+);
 
 export const SBooking = z.object({
   name: z
@@ -15,19 +27,12 @@ export const SBooking = z.object({
       1,
       "Merci d'indiquer votre nom afin que nous puissions vous identifier.",
     ),
-  email: z.email(
-    "L'adresse e-mail ne semble pas valide. Vérifiez qu'elle contient bien un « @ ».",
+  email: SEmail,
+  phone: SPhone,
+  guests: SGuests.max(
+    MAX_GUESTS,
+    `Nos réservations en ligne sont limitées à ${MAX_GUESTS} personnes. Pour un groupe plus large, merci de nous contacter directement.`,
   ),
-  phone: z.e164("Merci d'indiquer un numéro de téléphone valide."),
-  guests: z
-    .number({
-      error: "Merci d'indiquer pour combien de personnes vous réservez.",
-    })
-    .min(MIN_GUESTS, "La réservation doit concerner au moins une personne.")
-    .max(
-      MAX_GUESTS,
-      `Nos réservations en ligne sont limitées à ${MAX_GUESTS} personnes. Pour un groupe plus large, merci de nous contacter directement.`,
-    ),
   date: z.custom<Temporal.PlainDate>(
     (data) => data instanceof Temporal.PlainDate,
     "Merci de choisir une date valide pour votre réservation.",
@@ -55,11 +60,10 @@ export const SBooking = z.object({
 export type TBooking = z.infer<typeof SBooking>;
 
 export const SBookingAdminPut = SBooking.extend({
-  phone: z.union([z.literal(""), SBooking.shape.phone]),
-  email: z.union([z.literal(""), SBooking.shape.email]),
-  status: z
-    .enum(["absent", "canceled", "pending", "present"] as TStatus[])
-    .optional(),
+  phone: z.union([z.literal(""), SPhone]),
+  email: z.union([z.literal(""), SEmail]),
+  guests: SGuests,
+  status: z.enum(bookingStatuses).optional(),
   table: z.number().nullish(),
 });
 

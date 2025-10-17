@@ -31,18 +31,16 @@ export const DayConfig = [
   { label: "Samedi", slug: "saturday" },
 ] as const satisfies Record<DayIndex, { label: string; slug: string }>;
 
-export const menuCategories = [
-  "partager",
-  "entree",
-  "plat",
-  "fromage",
-  "dessert",
-] as const satisfies TMenuCategory[];
-
 export const menuSectionTitles = {
   partager: "À PARTAGER",
   entree: "ENTRÉES",
   plat: "PLATS",
   fromage: "FROMAGE",
   dessert: "DESSERTS",
-} as const;
+} as const satisfies Record<TMenuCategory, string>;
+
+export const priceIntl = new Intl.NumberFormat("fr-FR", {
+  style: "currency",
+  currency: "EUR",
+  trailingZeroDisplay: "stripIfInteger",
+});

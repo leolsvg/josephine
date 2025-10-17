@@ -2,12 +2,22 @@
 
 import Image from "next/image";
 import TableWindowImage from "../../../../public/restaurant/table-window.jpeg";
+import {
+  Menu,
+  MenuImage,
+  MenuPrice,
+  MenuSectionContent,
+  MenuSectionItem,
+  MenuSectionItemDescription,
+  MenuSectionTitle,
+  MenuTitle,
+} from "../_components/menu";
 import { drinks } from "./drinks";
 
 export default function DrinksPage() {
   return (
     <>
-      <div className="hidden lg:block w-full lg:w-1/2 h-64 lg:h-screen lg:fixed lg:right-0 lg:top-0">
+      <MenuImage>
         <Image
           src={TableWindowImage}
           alt="Josephine Table Fenêtre"
@@ -16,37 +26,30 @@ export default function DrinksPage() {
           className="object-cover object-center"
           priority
         />
-      </div>
-      <div className="w-full lg:w-1/2 px-6 sm:px-8 py-20 space-y-20 lg:ml-0 lg:mr-auto">
-        <h1 className="text-[32px] sm:text-[42px] lg:text-[46px] mb-10 text-black text-center lg:text-left">
-          NOS BOISSONS
-        </h1>
+      </MenuImage>
+      <Menu>
+        <MenuTitle>NOS BOISSONS</MenuTitle>
         {drinks.map((cat) => (
           <section key={cat.title}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-black">
-              {cat.title}
-            </h2>
-            <ul className="space-y-4">
+            <MenuSectionTitle>{cat.title}</MenuSectionTitle>
+            <MenuSectionContent>
               {cat.items.map((item) => (
-                <li
-                  key={item.name}
-                  className="flex justify-between border-b pb-2 text-black text-sm sm:text-base"
-                >
+                <MenuSectionItem key={item.name}>
                   <div>
-                    <p className="font-medium">{item.name}</p>
+                    <div className="font-medium">{item.name}</div>
                     {item.description && (
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <MenuSectionItemDescription>
                         {item.description}
-                      </p>
+                      </MenuSectionItemDescription>
                     )}
                   </div>
-                  <span className="font-semibold">{item.price}</span>
-                </li>
+                  <MenuPrice>{item.price}</MenuPrice>
+                </MenuSectionItem>
               ))}
-            </ul>
+            </MenuSectionContent>
           </section>
         ))}
-      </div>
+      </Menu>
     </>
   );
 }

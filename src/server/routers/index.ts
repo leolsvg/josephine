@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "../../lib/trpc/init";
 import { bookings } from "./bookings";
+import { menus } from "./menus";
 import { places } from "./places";
 import { schedule } from "./schedule";
 import { settings } from "./settings";
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   settings,
   statistics,
   places,
+  menus,
 });
 
 export type AppRouter = typeof appRouter;

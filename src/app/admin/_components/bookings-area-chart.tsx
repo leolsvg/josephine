@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
@@ -30,7 +30,7 @@ const chartConfig = {
 
 export function BookingsAreaChart() {
   const trpc = useTRPC();
-  const { data } = useQuery(
+  const { data } = useSuspenseQuery(
     trpc.statistics.getBookingsByInterval.queryOptions(),
   );
 

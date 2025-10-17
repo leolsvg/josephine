@@ -5,7 +5,7 @@ import { BookingDialog } from "../_components/booking/booking-dialog";
 
 export type CategoryItem = {
   name: string;
-  price: string;
+  price: number;
   description?: string;
 };
 
@@ -14,14 +14,6 @@ export type Category = {
   subtitle?: string;
   items: CategoryItem[];
 };
-
-export interface Dish {
-  id: number;
-  description: string;
-  category: string;
-  service: string;
-  price: string;
-}
 
 export default function MenuLayout({ children }: { children: ReactNode }) {
   return (
