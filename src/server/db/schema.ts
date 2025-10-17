@@ -67,19 +67,29 @@ const temporalTime = customType<{
   },
 });
 
-export const menuCategoryEnum = pgEnum("menu-category", [
-  "fromage",
+// Define order of categories to display
+export const menuCategories = [
+  "partager",
   "entree",
   "plat",
+  "fromage",
   "dessert",
-  "partager",
-]);
+] as const;
 
-export const menuServiceEnum = pgEnum("menu-service", ["soir", "midi"]);
+export const menuCategoryEnum = pgEnum("menu-category", menuCategories);
 
-export const statuses = ["pending", "present", "absent", "canceled"] as const;
+export const menuServices = ["soir", "midi"] as const;
 
-export const statusEnum = pgEnum("status", statuses);
+export const menuServiceEnum = pgEnum("menu-service", menuServices);
+
+export const bookingStatuses = [
+  "pending",
+  "present",
+  "absent",
+  "canceled",
+] as const;
+
+export const bookingStatusEnum = pgEnum("status", bookingStatuses);
 
 export const menusTable = pgTable(
   "menus",
@@ -124,7 +134,7 @@ export const bookingsTable = pgTable(
     phone: text(),
     guests: integer().notNull(),
     notes: text(),
-    status: statusEnum().notNull().default("pending"),
+    status: bookingStatusEnum().notNull().default("pending"),
     table: integer(), // Nullable until seating
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp()

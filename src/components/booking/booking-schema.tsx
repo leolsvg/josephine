@@ -1,5 +1,5 @@
 import z from "zod";
-import type { TStatus } from "@/server/db/types";
+import { bookingStatuses } from "@/server/db/schema";
 
 export const MIN_GUESTS = 1;
 export const MAX_GUESTS = 10;
@@ -57,9 +57,7 @@ export type TBooking = z.infer<typeof SBooking>;
 export const SBookingAdminPut = SBooking.extend({
   phone: z.union([z.literal(""), SBooking.shape.phone]),
   email: z.union([z.literal(""), SBooking.shape.email]),
-  status: z
-    .enum(["absent", "canceled", "pending", "present"] as TStatus[])
-    .optional(),
+  status: z.enum(bookingStatuses).optional(),
   table: z.number().nullish(),
 });
 
