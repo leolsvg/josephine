@@ -7,6 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { usePrefetchSchedule } from "@/components/booking/use-schedule";
 import { FullDateFormat } from "@/lib/utils/date";
 import { BookingsCards } from "./bookings-cards";
 import { columns } from "./bookings-columns";
@@ -31,6 +32,7 @@ export function Bookings({ className }: DataTableProps) {
   const { columnVisibility, onColumnVisibilityChange } = useColumnVisibility();
   const { columnFilters, setColumnFilters } = useColumnFilters();
   const { date } = useDateFilter();
+  usePrefetchSchedule();
   const table = useReactTable({
     data,
     columns,
