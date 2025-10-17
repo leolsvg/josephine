@@ -33,6 +33,9 @@ export function Header() {
     <div className="fixed top-0 z-20 w-full p-2">
       <header className="flex md:grid md:grid-cols-3 md:container mx-auto px-3 py-2 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md md:border-gray-100 md:border">
         <div>
+          <Link href="/" className="hidden md:inline">
+            <JosephineIcon className="size-8" />
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -51,9 +54,6 @@ export function Header() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/" className="hidden md:inline">
-            <JosephineIcon className="size-8" />
-          </Link>
         </div>
         <nav className="gap-6 hidden md:flex justify-center">
           {navigationItems.map((i) => (
