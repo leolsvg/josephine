@@ -5,29 +5,34 @@ import { useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useTRPC } from "@/lib/trpc/react";
 import { SId } from "@/lib/utils";
-import { SRealtimeBooking, type TBooking } from "@/server/db/types";
+import {
+  SRealtimeBooking,
+  type TBooking,
+  type TRealtimeBooking,
+} from "@/server/db/types";
+
+function realtimeToBooking(booking: TRealtimeBooking): TBooking {
+  return {
+    ...booking,
+    date: Temporal.PlainDate.from(booking.date),
+    time: Temporal.PlainTime.from(booking.time),
+    createdAt: new Date(booking.created_at),
+    updatedAt: new Date(booking.updated_at),
+  };
+}
 
 function insertBooking(current: TBooking[] | undefined, raw: unknown) {
   const { success, data } = SRealtimeBooking.safeParse(raw);
-  if (success)
-    return current
-      ? [
-          ...current,
-          {
-            ...data,
-            date: Temporal.PlainDate.from(data.date),
-            time: Temporal.PlainTime.from(data.time),
-            createdAt: new Date(data.createdAt),
-            updatedAt: new Date(data.updatedAt),
-          },
-        ]
-      : undefined;
+  if (current && success) return [...current, realtimeToBooking(data)];
   return current;
 }
 
 function updateBooking(current: TBooking[] | undefined, raw: unknown) {
   const { success, data } = SRealtimeBooking.safeParse(raw);
-  if (success) current?.map((item) => (item.id === data.id ? data : item));
+  if (current && success)
+    return current.map((item) =>
+      item.id === data.id ? realtimeToBooking(data) : item,
+    );
   return current;
 }
 

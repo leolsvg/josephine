@@ -27,17 +27,18 @@ export const SSettings = createInsertSchema(settingsTable).omit({
 export const SRealtimeBooking = z.object({
   id: z.number(),
   date: z.string(),
-  createdAt: z.string(),
+  created_at: z.string(),
   email: z.string(),
   guests: z.number(),
   name: z.string(),
-  notes: z.string(),
+  notes: z.string().nullable(),
   phone: z.string(),
   status: z.literal(bookingStatuses),
-  table: z.number(),
+  table: z.number().nullable(),
   time: z.string(),
-  updatedAt: z.string(),
+  updated_at: z.string(),
 });
+export type TRealtimeBooking = z.infer<typeof SRealtimeBooking>;
 export type TPutBooking = InferInsertModel<typeof bookingsTable>;
 
 export type TimeRange = { start: Temporal.PlainTime; end: Temporal.PlainTime };
