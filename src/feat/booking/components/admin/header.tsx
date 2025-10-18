@@ -1,7 +1,6 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { JosephineIcon } from "@/components/josephine-icon";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserMenu } from "@/feat/auth/user-menu";
 import type { NavItem } from "@/lib/utils";
 
 export const navigationItems: NavItem[] = [
@@ -28,10 +28,10 @@ export const navigationItems: NavItem[] = [
 
 export function Header() {
   return (
-    <header className="flex items-center p-3 border-b gap-3">
+    <header className="flex items-center px-3 py-2 border-b gap-3">
       <Link href="/" className="flex gap-3 items-center">
-        <JosephineIcon className="dark:brightness-0 dark:invert size-8" />
-        <div className="text-xl font-bold hidden md:block">
+        <JosephineIcon className="dark:brightness-0 dark:invert size-7" />
+        <div className="text-lg font-bold hidden md:block">
           Restaurant Josephine
         </div>
       </Link>
@@ -57,7 +57,7 @@ export function Header() {
           </Button>
         ))}
       </nav>
-      <ThemeToggle />
+      <UserMenu />
     </header>
   );
 }
