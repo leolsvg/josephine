@@ -16,9 +16,7 @@ export const bookingStatuses = [
 export type TBooking = InferSelectModel<typeof bookingsTable>;
 export type TSettings = InferSelectModel<typeof settingsTable>;
 export type TStatus = InferEnum<typeof bookingStatusEnum>;
-// export const SSettings = createInsertSchema(settingsTable).omit({
-//   id: true,
-// });
+
 export const SRealtimeBooking = z.object({
   id: z.number(),
   date: z.string(),
