@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { PendingFormData } from "@/components/form/pending-form-data";
 import { withForm } from "@/components/form/use-app-form";
+import { PendingData } from "@/components/pending-data";
 import {
   DialogDescription,
   DialogFooter,
@@ -22,7 +22,7 @@ export const BookingDialogForm = withForm({
             votre réservation.
           </DialogDescription>
         </DialogHeader>
-        <Suspense fallback={<PendingFormData />}>
+        <Suspense fallback={<PendingData />}>
           <form
             id="booking-form"
             className="flex flex-col gap-3"

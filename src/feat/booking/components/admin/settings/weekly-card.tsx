@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { PendingFormData } from "@/components/form/pending-form-data";
+import { PendingData } from "@/components/pending-data";
 import {
   Card,
   CardDescription,
@@ -24,7 +24,7 @@ export function WeeklyCard() {
         </CardDescription>
       </CardHeader>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<PendingFormData />}>
+        <Suspense fallback={<PendingData />}>
           <WeeklyTable />
         </Suspense>
       </HydrationBoundary>

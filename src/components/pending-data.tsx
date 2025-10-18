@@ -1,7 +1,7 @@
-import { Empty, EmptyHeader, EmptyMedia } from "../ui/empty";
-import { Spinner } from "../ui/spinner";
+import { Empty, EmptyHeader, EmptyMedia } from "./ui/empty";
+import { Spinner } from "./ui/spinner";
 
-export function PendingFormData() {
+export function PendingData() {
   return (
     <Empty>
       <EmptyHeader>

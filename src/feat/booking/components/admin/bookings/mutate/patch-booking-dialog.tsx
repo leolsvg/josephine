@@ -4,8 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { Edit } from "lucide-react";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
-import { PendingFormData } from "@/components/form/pending-form-data";
 import { useAppForm } from "@/components/form/use-app-form";
+import { PendingData } from "@/components/pending-data";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -58,11 +58,9 @@ export function PatchBookingDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Modifier une réservation</DialogTitle>
-          <DialogDescription>
-            En tant qu'administrateur, vous pouvez modifier une réservation.
-          </DialogDescription>
+          <DialogDescription>Modifier une réservation.</DialogDescription>
         </DialogHeader>
-        <Suspense fallback={<PendingFormData />}>
+        <Suspense fallback={<PendingData />}>
           <form
             id="patch-booking-form"
             className="flex flex-col gap-3"
