@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
 import type { TLogin } from "./use-login-form";
 
-export function useAuth() {
+export function useSignIn() {
   const router = useRouter();
   return useMutation({
     mutationFn: async ({ email, password }: TLogin) => {

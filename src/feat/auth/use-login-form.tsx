@@ -2,7 +2,7 @@
 
 import z from "zod";
 import { useAppForm } from "@/components/form/use-app-form";
-import { useAuth } from "./use-auth";
+import { useSignIn } from "./use-sign-in";
 
 const SLogin = z.object({
   email: z.email("Adresse mail invalide."),
@@ -17,7 +17,7 @@ const defaultValues: TLogin = {
 };
 
 export function useLoginForm() {
-  const { mutate, isPending } = useAuth();
+  const { mutate, isPending } = useSignIn();
   const form = useAppForm({
     defaultValues,
     validators: {
