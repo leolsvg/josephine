@@ -12,10 +12,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       disableTransitionOnChange
     >
       <NuqsAdapter>
-        <div className="flex h-screen flex-col">
-          <Header />
-          <main className="grow overflow-auto p-5">{children}</main>
-        </div>
+        <Header />
+        <main className="p-3">{children}</main>
       </NuqsAdapter>
     </ThemeProvider>
   );
