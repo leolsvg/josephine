@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     >
       <NuqsAdapter>
         <Header />
-        <main className="p-3">{children}</main>
+        <main className="p-5">{children}</main>
       </NuqsAdapter>
     </ThemeProvider>
   );
