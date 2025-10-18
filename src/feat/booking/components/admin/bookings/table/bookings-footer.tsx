@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { PAGE_SIZES } from "../hooks/use-pagination";
 
-const variant = "secondary";
+const variant = "outline";
 
 export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
   "use no memo"; // TODO: Remove after tanstack table fix

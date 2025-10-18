@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { PendingFormData } from "@/components/form/pending-form-data";
+import { PendingData } from "@/components/pending-data";
 import { Card } from "@/components/ui/card";
 import { Sidebar } from "@/feat/booking/components/admin/bookings/sidebar";
 import { Bookings } from "@/feat/booking/components/admin/bookings/table";
@@ -19,7 +19,7 @@ export default function BookingsPage() {
         <Suspense
           fallback={
             <Card className="py-0 overflow-hidden grow">
-              <PendingFormData />
+              <PendingData />
             </Card>
           }
         >
