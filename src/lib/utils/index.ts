@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import type { Route } from "next";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
-import type { TMenuCategory } from "@/server/db/types";
+import type { TMenuCategory } from "@/feat/menus/db/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

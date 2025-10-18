@@ -1,6 +1,6 @@
-import { ExceptionsCard } from "./_components/exceptions-card";
-import { SettingsCard } from "./_components/settings-card";
-import { WeeklyCard } from "./_components/weekly-card";
+import { ExceptionsCard } from "@/feat/booking/components/admin/settings/exceptions-card";
+import { SettingsCard } from "@/feat/booking/components/admin/settings/settings-card";
+import { WeeklyCard } from "@/feat/booking/components/admin/settings/weekly-card";
 
 export default function SettingsPage() {
   return (

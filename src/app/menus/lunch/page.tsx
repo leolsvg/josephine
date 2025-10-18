@@ -1,7 +1,4 @@
 import Image from "next/image";
-import { caller } from "@/lib/trpc/server";
-import { menuSectionTitles, priceIntl } from "@/lib/utils";
-import TableImage from "../../../../public/restaurant/table.jpeg";
 import {
   Menu,
   MenuImage,
@@ -9,7 +6,10 @@ import {
   MenuSectionItem,
   MenuSectionTitle,
   MenuTitle,
-} from "../_components/menu";
+} from "@/feat/menus/components/menu";
+import { caller } from "@/lib/trpc/server";
+import { menuSectionTitles, priceIntl } from "@/lib/utils";
+import TableImage from "../../../../public/restaurant/table.jpeg";
 
 export default async function LunchPage() {
   const menu = await caller.menus.getByService({ service: "midi" });

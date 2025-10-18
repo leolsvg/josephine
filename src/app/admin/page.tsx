@@ -1,9 +1,9 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { BookingsAreaChart } from "@/feat/booking/components/admin/statistics/bookings-area-chart";
+import { StatusPieChart } from "@/feat/booking/components/admin/statistics/status-pie-chart";
 import { createQueryClient } from "@/lib/trpc/query-client";
 import { trpc } from "@/lib/trpc/server";
-import { BookingsAreaChart } from "./_components/bookings-area-chart";
-import { StatusPieChart } from "./bookings/_components/sidebar/status-pie-chart";
 
 export default function DashboardPage() {
   const queryClient = createQueryClient();
