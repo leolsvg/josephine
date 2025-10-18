@@ -11,11 +11,11 @@ export function DeleteMenuButton({ id }: { id: TMenu["id"] }) {
   return (
     <Button
       onClick={() => deleteMenu({ id })}
-      variant="destructive"
+      variant="ghost"
+      size="icon"
       disabled={isPending}
     >
-      {isPending && <Spinner />}
-      <Trash />
+      {isPending ? <Spinner /> : <Trash className="stroke-destructive" />}
     </Button>
   );
 }
