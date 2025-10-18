@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "../../ui/button";
 import { type FieldProps, useFieldContext } from "../types";
@@ -10,15 +11,20 @@ type GuestsFieldProps = {
 
 export function GuestsField({ label, max }: GuestsFieldProps) {
   const { field, isInvalid } = useFieldContext<number | undefined>();
+  const variant = useCallback(
+    (i: number) => (field.state.value === i + 1 ? "default" : "outline"),
+    [field.state.value],
+  );
   return (
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <div className="flex gap-1 flex-wrap" id={field.name}>
-        {Array.from({ length: max }).map((_, i) => (
+        {Array.from({ length: max }, (_, i) => i + 1).map((i) => (
           <Button
-            key={crypto.randomUUID()}
+            key={i}
             aria-invalid={isInvalid}
-            variant={field.state.value === i + 1 ? "default" : "outline"}
+            type="button"
+            variant={variant(i)}
             className="grow"
             onClick={() => field.handleChange(i + 1)}
           >

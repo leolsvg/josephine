@@ -23,6 +23,7 @@ export function BookingsTable({
   table: TanStackTable<TBooking>;
   className?: string;
 }) {
+  "use no memo"; // TODO: Remove after tanstack table fix
   const rows = table.getRowModel().rows;
   const isEmpty = rows.length === 0;
   const bookingIds = useRealtimeBookingIds();

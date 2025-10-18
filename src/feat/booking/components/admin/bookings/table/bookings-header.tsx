@@ -17,6 +17,7 @@ export function BookingsHeader({
   globalFilter,
   table,
 }: DataTableHeaderProps) {
+  "use no memo"; // TODO: Remove after tanstack table fix
   return (
     <div className="flex pb-3 md:items-center gap-3 flex-col md:flex-row">
       <div className="grow text-lg md:text-2xl whitespace-nowrap font-semibold">

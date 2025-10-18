@@ -23,6 +23,7 @@ import { PAGE_SIZES } from "../hooks/use-pagination";
 const variant = "secondary";
 
 export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
+  "use no memo"; // TODO: Remove after tanstack table fix
   const pageCount = table.getPageCount();
   const pageIndex = table.getState().pagination.pageIndex;
   const rows = table.getFilteredRowModel().rows.length;
@@ -102,7 +103,7 @@ export function BookingsFooter<TData>({ table }: { table: Table<TData> }) {
           value={String(table.getState().pagination.pageSize)}
           onValueChange={(value) => table.setPageSize(Number(value))}
         >
-          <SelectTrigger className="w-[80px]">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

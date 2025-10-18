@@ -10,6 +10,7 @@ import {
 import type { TBooking } from "@/feat/booking/db/types";
 
 export function ColumnVisibilitySelect({ table }: { table: Table<TBooking> }) {
+  "use no memo"; // TODO: Remove after tanstack table fix
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

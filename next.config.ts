@@ -5,6 +5,9 @@ import { env } from "@/lib/env";
 env;
 
 const nextConfig: NextConfig = {
+  experimental: {
+    reactCompiler: true,
+  },
   typedRoutes: true,
   images: {
     remotePatterns: [
