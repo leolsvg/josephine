@@ -1,4 +1,4 @@
-import type { DateRange } from "@/server/db/types";
+import type { DateRange } from "@/feat/booking/db/types";
 
 export const TIMEZONE = "Europe/Paris";
 

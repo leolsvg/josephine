@@ -13,7 +13,7 @@ import {
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { type ReactNode, useState } from "react";
 import { env } from "@/lib/env";
-import SuperJSON from "@/lib/superjson";
+import SuperJSON from "@/lib/trpc/superjson";
 import type { AppRouter } from "../../server/routers";
 import { createQueryClient } from "./query-client";
 

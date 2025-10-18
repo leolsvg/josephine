@@ -1,9 +1,9 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { AddMenuButton } from "@/feat/menus/components/add-menu-button";
+import { MenuTable } from "@/feat/menus/components/menus-table";
 import { createQueryClient } from "@/lib/trpc/query-client";
 import { trpc } from "@/lib/trpc/server";
-import { AddMenuButton } from "./_components/add-menu-button";
-import { MenuTable } from "./_components/menus-table";
 
 export default function MenusPage() {
   const queryClient = createQueryClient();

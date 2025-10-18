@@ -2,10 +2,10 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { PendingFormData } from "@/components/form/pending-form-data";
 import { Card } from "@/components/ui/card";
+import { Sidebar } from "@/feat/booking/components/admin/bookings/sidebar";
+import { Bookings } from "@/feat/booking/components/admin/bookings/table";
 import { createQueryClient } from "@/lib/trpc/query-client";
 import { trpc } from "@/lib/trpc/server";
-import { Bookings } from "./_components/data-table/bookings";
-import { Sidebar } from "./_components/sidebar/sidebar";
 
 export default function BookingsPage() {
   const queryClient = createQueryClient();

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { JosephineIcon } from "@/components/josephine-icon";
-import { LoginForm } from "./_components/login-form";
+import { LoginForm } from "@/feat/auth/login-form";
 
 export default function LoginPage() {
   return (

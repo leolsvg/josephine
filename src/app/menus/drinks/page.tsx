@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import TableWindowImage from "../../../../public/restaurant/table-window.jpeg";
 import {
   Menu,
   MenuImage,
@@ -11,8 +10,9 @@ import {
   MenuSectionItemDescription,
   MenuSectionTitle,
   MenuTitle,
-} from "../_components/menu";
-import { drinks } from "./drinks";
+} from "@/feat/menus/components/menu";
+import { drinks } from "@/feat/menus/db/drinks";
+import TableWindowImage from "../../../../public/restaurant/table-window.jpeg";
 
 export default function DrinksPage() {
   return (

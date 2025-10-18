@@ -2,7 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { ipAddress } from "@vercel/functions";
 import z, { ZodError } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import SuperJSON from "@/lib/superjson";
+import SuperJSON from "@/lib/trpc/superjson";
 import { db } from "@/server/db";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {

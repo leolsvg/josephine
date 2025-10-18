@@ -1,9 +1,9 @@
-import { Footer } from "./_components/footer";
-import { GallerySection } from "./_components/gallery-section";
-import { Header } from "./_components/header";
-import { HeroSection } from "./_components/hero-section";
-import { MenusSection } from "./_components/menus-section";
-import { SuppliersSection } from "./_components/suppliers-section";
+import { Footer } from "@/feat/home/components/footer";
+import { GallerySection } from "@/feat/home/components/gallery-section";
+import { Header } from "@/feat/home/components/header";
+import { HeroSection } from "@/feat/home/components/hero-section";
+import { MenusSection } from "@/feat/home/components/menus-section";
+import { SuppliersSection } from "@/feat/home/components/suppliers-section";
 
 export default function HomePage() {
   return (

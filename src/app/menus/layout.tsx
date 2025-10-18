@@ -1,7 +1,7 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, Suspense } from "react";
-import { BookingDialog } from "../_components/booking/booking-dialog";
+import { BookingDialog } from "@/feat/booking/components/home/booking-dialog";
 
 export type CategoryItem = {
   name: string;
