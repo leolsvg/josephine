@@ -7,7 +7,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Activity } from "react";
 import { usePrefetchSchedule } from "@/feat/booking/components/home/use-schedule";
 import { FullDateFormat } from "@/lib/utils/date";
 import { useColumnFilters } from "../hooks/use-column-filters";
