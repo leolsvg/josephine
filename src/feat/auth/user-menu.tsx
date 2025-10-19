@@ -14,33 +14,42 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSignOut, useUser } from "@/lib/auth/use-user";
 
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2);
+  }
+
+  return parts
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("");
+}
+
 export function UserMenu() {
   const user = useUser();
   const { signOut } = useSignOut();
   const { setTheme, theme } = useTheme();
-
   if (!user) return;
+  const username = user?.user_metadata?.name
+    ? user.user_metadata.name
+    : user.email?.split("@")[0];
+  const initials = getInitials(username);
+  const avatar = user?.user_metadata?.avatar_url;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          <UserAvatar
-            name={user.user_metadata.name}
-            url={user.user_metadata.avatar_url}
-          />
+          <UserAvatar initials={initials} url={avatar} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>
           <div className="flex gap-3 items-center">
-            <UserAvatar
-              name={user.user_metadata.name}
-              url={user.user_metadata.avatar_url}
-            />
+            <UserAvatar initials={initials} url={avatar} />
             <div className="flex flex-col">
-              <span className="truncate font-medium">
-                {user.user_metadata.full_name}
-              </span>
+              <span className="truncate font-medium">{username}</span>
               <span className="text-xs truncate text-muted-foreground">
                 {user.email}
               </span>
@@ -84,16 +93,11 @@ export function UserMenu() {
   );
 }
 
-function UserAvatar({ url, name }: { url: string; name: string }) {
-  const initials =
-    name
-      .match(/\b(\w)/g)
-      ?.join("")
-      .toUpperCase() ?? "??";
+function UserAvatar({ url, initials }: { url: string; initials: string }) {
   return (
     <Avatar className="size-7">
       <AvatarImage src={url} />
-      <AvatarFallback>{initials}</AvatarFallback>
+      <AvatarFallback className="uppercase">{initials}</AvatarFallback>
     </Avatar>
   );
 }
