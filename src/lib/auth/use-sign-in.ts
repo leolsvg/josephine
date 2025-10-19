@@ -4,8 +4,15 @@ import { AuthError } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import z from "zod";
 import { supabase } from "@/lib/supabase/client";
-import type { TLogin } from "./use-login-form";
+
+export const SLogin = z.object({
+  email: z.email("Adresse mail invalide."),
+  password: z.string().min(1, "Merci de saisir votre mot de passe."),
+});
+
+export type TLogin = z.infer<typeof SLogin>;
 
 export function useSignIn() {
   const router = useRouter();

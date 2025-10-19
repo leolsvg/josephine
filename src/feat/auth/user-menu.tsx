@@ -12,7 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSignOut, useUser } from "@/lib/auth/use-user";
+import { useSignOut } from "@/lib/auth/use-sign-out";
+import { useUser } from "@/lib/auth/use-user";
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);

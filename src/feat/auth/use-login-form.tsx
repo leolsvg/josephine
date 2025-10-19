@@ -1,15 +1,7 @@
 "use client";
 
-import z from "zod";
 import { useAppForm } from "@/components/form/use-app-form";
-import { useSignIn } from "./use-sign-in";
-
-const SLogin = z.object({
-  email: z.email("Adresse mail invalide."),
-  password: z.string().min(1, "Merci de saisir votre mot de passe."),
-});
-
-export type TLogin = z.infer<typeof SLogin>;
+import { SLogin, type TLogin, useSignIn } from "@/lib/auth/use-sign-in";
 
 const defaultValues: TLogin = {
   email: "",
