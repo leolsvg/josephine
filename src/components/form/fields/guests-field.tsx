@@ -18,14 +18,16 @@ export function GuestsField({ label, max }: GuestsFieldProps) {
   return (
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
-      <div className="flex gap-1 flex-wrap" id={field.name}>
-        {Array.from({ length: max }, (_, i) => i + 1).map((i) => (
+      <div
+        className="grid grid-cols-[repeat(auto-fit,minmax(3rem,1fr))] gap-1"
+        id={field.name}
+      >
+        {Array.from({ length: max }, (_, i) => i).map((i) => (
           <Button
             key={i}
             aria-invalid={isInvalid}
             type="button"
             variant={variant(i)}
-            className="grow"
             onClick={() => field.handleChange(i + 1)}
           >
             {i + 1}
