@@ -8,11 +8,25 @@ import { createCallerFactory, createTRPCContext } from "./init";
 import { createQueryClient } from "./query-client";
 
 /**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
+ * Wraps the `createTRPCContext` helper and provides the required context
+ * for the tRPC API when handling a call from a React Server Component.
  */
 const createContext = cache(async () => {
-  const heads = new Headers(await headers());
+  let heads = new Headers();
+
+  try {
+    // Tentative de récupération des headers (échoue normalement durant le build statique)
+    const nextHeaders = await headers();
+    for (const [key, value] of nextHeaders.entries()) {
+      heads.set(key, value);
+    }
+  } catch (error) {
+    // On ignore l'erreur pendant le build/SSG
+    console.warn(
+      "[tRPC Server] Headers not available (likely during build/static generation)",
+    );
+  }
+
   heads.set("x-trpc-source", "rsc");
 
   return createTRPCContext({
@@ -36,16 +50,17 @@ export function HydrateClient(props: { children: React.ReactNode }) {
     </HydrationBoundary>
   );
 }
+
 // biome-ignore lint/suspicious/noExplicitAny: TRPC code
-export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
+export async function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
   queryOptions: T,
 ) {
   const queryClient = getQueryClient();
   if (queryOptions.queryKey[1]?.type === "infinite") {
     // biome-ignore lint/suspicious/noExplicitAny: TRPC code
-    void queryClient.prefetchInfiniteQuery(queryOptions as any);
+    await queryClient.prefetchInfiniteQuery(queryOptions as any);
   } else {
-    void queryClient.prefetchQuery(queryOptions);
+    await queryClient.prefetchQuery(queryOptions);
   }
 }
 

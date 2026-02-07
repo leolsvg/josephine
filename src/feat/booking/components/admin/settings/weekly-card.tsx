@@ -1,6 +1,6 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { PendingData } from "@/components/pending-data";
 import {
   Card,
   CardDescription,
@@ -11,9 +11,12 @@ import { createQueryClient } from "@/lib/trpc/query-client";
 import { trpc } from "@/lib/trpc/server";
 import { WeeklyTable } from "./weekly-table";
 
-export function WeeklyCard() {
+export async function WeeklyCard() {
   const queryClient = createQueryClient();
-  queryClient.prefetchQuery(trpc.schedule.getWeekly.queryOptions());
+
+  // On attend que le prefetch soit terminé pour que les données soient prêtes pour l'hydratation
+  await queryClient.prefetchQuery(trpc.schedule.getWeekly.queryOptions());
+
   return (
     <Card className="pb-0 min-w-80 overflow-hidden">
       <CardHeader>
