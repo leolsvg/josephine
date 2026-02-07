@@ -4,7 +4,7 @@ import { Header } from "@/feat/home/components/header";
 import { HeroSection } from "@/feat/home/components/hero-section";
 import { MenusSection } from "@/feat/home/components/menus-section";
 import { SuppliersSection } from "@/feat/home/components/suppliers-section";
-
+export const dynamic = "force-dynamic";
 export default function HomePage() {
   return (
     <>
