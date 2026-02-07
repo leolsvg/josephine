@@ -1,7 +1,8 @@
 "use client";
 
-import { useQueryClient, useSuspenseQueries } from "@tanstack/react-query";
 import { useTRPC } from "@/lib/trpc/react";
+import { useQueryClient, useSuspenseQueries } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export function useSchedule() {
   const trpc = useTRPC();
@@ -18,6 +19,8 @@ export function usePrefetchSchedule() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   // Preload weekly and exceptions client side (ssr would make home page dynamic)
-  queryClient.prefetchQuery(trpc.schedule.getWeekly.queryOptions());
-  queryClient.prefetchQuery(trpc.schedule.getExceptions.queryOptions());
+  useEffect(() => {
+    queryClient.prefetchQuery(trpc.schedule.getWeekly.queryOptions());
+    queryClient.prefetchQuery(trpc.schedule.getExceptions.queryOptions());
+  }, [queryClient, trpc]);
 }
