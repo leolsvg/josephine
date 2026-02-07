@@ -14,10 +14,13 @@ export function ScheduleSection() {
 
 async function Schedule() {
   const place = await getCachedPlace();
-  if (!place) return;
+  const days = Array.isArray(place?.regularOpeningHours?.weekdayDescriptions)
+    ? place.regularOpeningHours.weekdayDescriptions
+    : [];
+  if (days.length === 0) return null;
   return (
     <ul className="text-sm">
-      {place.regularOpeningHours.weekdayDescriptions.map((d) => (
+      {days.map((d) => (
         <li key={d}>{d}</li>
       ))}
     </ul>

@@ -1,18 +1,19 @@
-import Image from "next/image";
 import {
   getCachedMedia,
   getCachedPlace,
 } from "@/feat/home/server/routers/places";
+import Image from "next/image";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
 export async function GallerySection() {
   const place = await getCachedPlace();
+  const photos = Array.isArray(place?.photos) ? place.photos : [];
   return (
     <Section id="menu">
       <SectionTitle>Galerie</SectionTitle>
       <div className="columns-2 lg:columns-3 gap-4 lg:max-w-2/3">
-        {place?.photos.map((m) => (
+        {photos.map((m) => (
           <GalleryImage
             name={m.name}
             key={m.googleMapsUri}
