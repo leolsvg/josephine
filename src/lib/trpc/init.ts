@@ -1,9 +1,9 @@
-import { initTRPC, TRPCError } from "@trpc/server";
-import { ipAddress } from "@vercel/functions";
-import z, { ZodError } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import SuperJSON from "@/lib/trpc/superjson";
 import { db } from "@/server/db";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { ipAddress } from "@vercel/functions";
+import z, { ZodError } from "zod";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const supabase = await createClient();
@@ -11,7 +11,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     db,
     user: data.user,
-    ip: ipAddress(opts),
+    ip: ipAddress(opts.headers),
     ...opts,
   };
 };
