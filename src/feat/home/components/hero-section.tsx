@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getCachedPlace } from "@/feat/home/server/routers/places";
+import Link from "next/link";
 import Background from "../../../../public/restaurant/bar.jpeg";
 import { Reviews } from "./reviews";
 
@@ -19,6 +19,14 @@ export async function HeroSection() {
         <div className="absolute inset-0 bg-black/50 -z-10" />
         {/* Padding top to ensure below header and min-h to let overflow (cant use h-full since parent does not have fixed height) */}
         <div className="min-h-svh flex flex-col text-white gap-6 pt-22 pb-6 px-6">
+          <div className="flex justify-center">
+            <Link
+              href="/menus/stvalentin"
+              className="text-xs sm:text-sm px-3 py-1 rounded-full border border-rose-200/70 bg-rose-500/20 text-rose-50 backdrop-blur-sm hover:bg-rose-500/30 transition"
+            >
+              Nouveau: Menu Saint-Valentin disponible
+            </Link>
+          </div>
           <div className="grow flex flex-col items-center justify-center gap-6">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-center text-shadow-lg">
               Bienvenue chez{" "}
@@ -36,3 +44,10 @@ export async function HeroSection() {
     </main>
   );
 }
+async function getCachedPlace() {
+  // TODO: Implement this function to fetch place data from your data source
+  return {
+    reviews: [],
+  };
+}
+

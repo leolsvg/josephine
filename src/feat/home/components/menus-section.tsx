@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { JosephineIcon } from "@/components/josephine-icon";
 import type { NavItem } from "@/lib/utils";
+import Link from "next/link";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
@@ -10,6 +10,7 @@ const menus: NavItem[] = [
     title: "Carte soir et week-end",
     href: "/menus/dinner",
   },
+  { title: "Menu Saint-Valentin", href: "/menus/stvalentin" },
   { title: "Nos vins", href: "/menus/wines" },
   { title: "Nos boissons", href: "/menus/drinks" },
   { title: "Nos spiritueux", href: "/menus/spirits" },
