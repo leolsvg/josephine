@@ -1,20 +1,25 @@
 import { JosephineIcon } from "@/components/josephine-icon";
-import type { NavItem } from "@/lib/utils";
 import Link from "next/link";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
-const menus: NavItem[] = [
+interface NavItem {
+  title: string;
+  href: string;
+}
+
+type MenuType = typeof menus[number];
+
+const menus = [
   { title: "Menu déjeuner", href: "/menus/lunch" },
   {
     title: "Carte soir et week-end",
     href: "/menus/dinner",
   },
-  { title: "Menu Saint-Valentin", href: "/menus/stvalentin" },
   { title: "Nos vins", href: "/menus/wines" },
   { title: "Nos boissons", href: "/menus/drinks" },
   { title: "Nos spiritueux", href: "/menus/spirits" },
-];
+] as const;
 
 export function MenusSection() {
   return (
@@ -22,7 +27,7 @@ export function MenusSection() {
       <SectionTitle>Menu & Cartes</SectionTitle>
       <div className="flex flex-wrap gap-6 justify-center max-w-250">
         {menus.map((m) => (
-          <Link key={m.href} href={m.href}>
+          <Link key={m.href} href={m.href as any}>
             <MenuCard title={m.title} />
           </Link>
         ))}
