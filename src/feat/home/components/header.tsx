@@ -1,7 +1,3 @@
-import { MapPinned, Phone } from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
-import { JosephineIcon } from "@/components/josephine-icon";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +7,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Josephine } from "@/lib/josephine";
 import type { NavItem } from "@/lib/utils";
+import { MapPinned, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
 import { BookingDialog } from "../../booking/components/home/booking-dialog";
 
 export const navigationItems: NavItem[] = [
@@ -19,8 +19,8 @@ export const navigationItems: NavItem[] = [
     title: "Menu",
   },
   {
-    href: "#suppliers",
-    title: "Fournisseurs",
+    href: "#gallery",
+    title: "Galerie",
   },
   {
     href: "#contact",
@@ -34,7 +34,13 @@ export function Header() {
       <header className="flex md:grid md:grid-cols-3 md:container mx-auto px-3 py-2 items-center justify-between bg-transparent md:bg-white/80 md:backdrop-blur-md md:shadow-md relative rounded-md md:border-gray-100 md:border">
         <div>
           <Link href="/" className="hidden md:inline">
-            <JosephineIcon className="size-8" />
+            <Image
+              src="/favicon/favicon-32x32.png"
+              alt="Logo Joséphine"
+              width={32}
+              height={32}
+              className="size-8"
+            />
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -43,7 +49,12 @@ export function Header() {
                 size="icon"
                 className="shadow-md block md:hidden"
               >
-                <JosephineIcon className="p-1" />
+                <Image
+                  src="/favicon/favicon-32x32.png"
+                  alt="Logo Joséphine"
+                  width={24}
+                  height={24}
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

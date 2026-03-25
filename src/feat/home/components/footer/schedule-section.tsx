@@ -1,5 +1,12 @@
-import { getCachedPlace } from "@/feat/home/server/routers/places";
 import { FooterSectionContent, FooterSectionTitle } from "./footer-section";
+
+const openingHours = [
+  "mercredi 12:00–14:00, 19:00–21:00",
+  "jeudi 12:00–14:00, 19:00–21:00",
+  "vendredi 12:00–14:00, 19:00–21:30",
+  "samedi 12:00–14:00, 19:00–21:30",
+  "mardi 19:00–21:00",
+] as const;
 
 export function ScheduleSection() {
   return (
@@ -12,16 +19,11 @@ export function ScheduleSection() {
   );
 }
 
-async function Schedule() {
-  const place = await getCachedPlace();
-  const days = Array.isArray(place?.regularOpeningHours?.weekdayDescriptions)
-    ? place.regularOpeningHours.weekdayDescriptions
-    : [];
-  if (days.length === 0) return null;
+function Schedule() {
   return (
     <ul className="text-sm">
-      {days.map((d) => (
-        <li key={d}>{d}</li>
+      {openingHours.map((day) => (
+        <li key={day}>{day}</li>
       ))}
     </ul>
   );

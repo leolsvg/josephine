@@ -29,7 +29,7 @@ export function WeeklyTable() {
         {data.map((w, i) => {
           const hasPeriods = w !== null && w.length > 0;
           return (
-            <React.Fragment key={i}>
+            <React.Fragment key={`day-${DayConfig[i]?.label || i}`}>
               <TableRow className="bg-muted/50">
                 <TableCell>
                   <div className="flex justify-between items-center">

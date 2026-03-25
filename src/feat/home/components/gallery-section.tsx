@@ -1,25 +1,25 @@
-import {
-  getCachedMedia,
-  getCachedPlace,
-} from "@/feat/home/server/routers/places";
 import Image from "next/image";
+import { readdir } from "node:fs/promises";
+import path from "node:path";
 import { Section } from "./section";
 import { SectionTitle } from "./section-title";
 
 export async function GallerySection() {
-  const place = await getCachedPlace();
-  const photos = Array.isArray(place?.photos) ? place.photos : [];
+  const galleryDir = path.join(process.cwd(), "public", "galerie");
+  const files = await readdir(galleryDir);
+  const photos = files
+    .filter((file) => /\.(jpg|jpeg|png|webp|avif)$/i.test(file))
+    .sort((a, b) => a.localeCompare(b));
+
   return (
-    <Section id="menu">
+    <Section id="gallery">
       <SectionTitle>Galerie</SectionTitle>
       <div className="columns-2 lg:columns-3 gap-4 lg:max-w-2/3">
-        {photos.map((m) => (
+        {photos.map((file, index) => (
           <GalleryImage
-            name={m.name}
-            key={m.googleMapsUri}
-            url={m.googleMapsUri}
-            width={m.widthPx}
-            height={m.heightPx}
+            key={file}
+            src={`/galerie/${encodeURIComponent(file)}`}
+            alt={`Photo galerie ${index + 1}`}
           />
         ))}
       </div>
@@ -27,26 +27,14 @@ export async function GallerySection() {
   );
 }
 
-async function GalleryImage({
-  name,
-  url,
-  width,
-  height,
-}: {
-  name: string;
-  url: string;
-  width: number;
-  height: number;
-}) {
-  const src = await getCachedMedia(name);
-  if (!src) return <div className="bg-muted rounded-md mb-4 w-full h-50" />;
+function GalleryImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer">
+    <a href={src} target="_blank" rel="noopener noreferrer">
       <Image
         src={src}
-        alt={name}
-        width={width}
-        height={height}
+        alt={alt}
+        width={1200}
+        height={900}
         className="rounded-md overflow-hidden mb-4 hover:opacity-80 transition-opacity duration-200"
       />
     </a>
