@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,7 +46,7 @@ export function Header() {
               <Button
                 variant="outline"
                 size="icon"
-                className="shadow-md block md:hidden"
+                className="shadow-md block md:hidden flex items-center justify-center"
               >
                 <Image
                   src="/favicon/favicon-32x32.png"

@@ -18,8 +18,9 @@ export async function HeroSection() {
         <div className="absolute inset-0 bg-black/50 -z-10" />
         {/* Padding top to ensure below header and min-h to let overflow (cant use h-full since parent does not have fixed height) */}
         <div className="min-h-svh flex flex-col text-white gap-6 pt-22 pb-6 px-6">
-          <div className="mx-auto rounded-full border border-white/30 bg-black/25 px-4 py-1 text-xs sm:text-sm text-white/90 backdrop-blur-sm">
-            Pâques : ouverture exceptionnelle le dimanche midi
+          <div className="mx-auto rounded-full border border-white/30 bg-black/25 px-4 py-1 text-center text-xs sm:text-sm text-white/90 backdrop-blur-sm">
+            Ouvert le jeudi de l'Ascension · dimanche de Pentecôte · dimanche de
+            la Fête des mères
           </div>
           <div className="grow flex flex-col items-center justify-center gap-6">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-center text-shadow-lg">
