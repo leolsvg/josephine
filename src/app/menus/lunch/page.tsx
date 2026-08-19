@@ -28,7 +28,7 @@ export default async function LunchPage() {
       <Menu>
         <MenuTitle>Carte du déjeuner</MenuTitle>
         <ul className="font-bold text-[16px] sm:text-[28px] lg:text-[22px] text-black text-center lg:text-left leading-relaxed">
-          <li>Entrée + Plat ou Plat + Dessert {priceIntl.format(19)}</li>
+          <li>Entrée + Plat ou Plat + Dessert {priceIntl.format(20)}</li>
           <li>Entrée + Plat + Dessert {priceIntl.format(24)}</li>
           <li>Plat seul {priceIntl.format(16)}</li>
         </ul>
