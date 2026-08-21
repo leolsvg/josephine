@@ -1,11 +1,10 @@
 import { FooterSectionContent, FooterSectionTitle } from "./footer-section";
 
 const openingHours = [
-  "mercredi 12:00–14:00, 19:00–21:00",
-  "jeudi 12:00–14:00, 19:00–21:00",
-  "vendredi 12:00–14:00, 19:00–21:30",
+  "mercredi 12:00–13:30, 19:00–21:00",
+  "jeudi 12:00–13:30, 19:00–21:00",
+  "vendredi 12:00–13:30, 19:00–21:00",
   "samedi 12:00–14:00, 19:00–21:30",
-  "mardi 19:00–21:00",
 ] as const;
 
 export function ScheduleSection() {
